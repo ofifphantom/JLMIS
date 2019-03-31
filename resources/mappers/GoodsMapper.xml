@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jl.mis.mapper.GoodsMapper">
+	
+	<!-- 根据主键查询信息 -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultType="com.jl.mis.model.Goods">
+		select * from jlgxc.goods where id = #{id}
+	</select>
+	
+	<!-- 提交购物车后修改商品数量 -->
+	<update id="updateStockByOrderNum">
+	UPDATE jlgxc.goods gxcGoods	
+	inner join (SELECT
+			gxcG.stock,gxcG.id
+		FROM
+			jlgxc.goods gxcG
+		LEFT JOIN jldatabase.goods_specification_details gsd ON gsd.sale_id = gxcG.id
+		WHERE
+			gsd.id = #{gsdId}) c
+	SET gxcGoods.stock = c.stock-#{goodsQuantity}
+	WHERE
+		gxcGoods.id = c.id
+	</update>
+	
+		<!-- 提交购物车后修改商品数量失败 需要把之前修改过的还原 -->
+	<update id="updateStockByOrderNum_error">
+	UPDATE jlgxc.goods gxcGoods	
+	inner join (SELECT
+			gxcG.stock,gxcG.id
+		FROM
+			jlgxc.goods gxcG
+		LEFT JOIN jldatabase.goods_specification_details gsd ON gsd.sale_id = gxcG.id
+		WHERE
+			gsd.id = #{gsdId}) c
+	SET gxcGoods.stock = c.stock+#{goodsQuantity}
+	WHERE
+		gxcGoods.id = c.id
+	</update>
+	
+	<!-- 修改商品的占用数量 -->
+	<update id="updateCommodityOccupiedInventory">
+	update jlgxc.inventory inv SET inv.occupied_inventory =inv.occupied_inventory+#{goodsQuantity,jdbcType=INTEGER}
+		WHERE
+			inv.specification_id =#{specificationId,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 修改商品的占用数量 失败时要减回去 -->
+	<update id="updateCommodityOccupiedInventoryError">
+	update jlgxc.inventory inv SET inv.occupied_inventory =inv.occupied_inventory-#{goodsQuantity,jdbcType=INTEGER}
+		WHERE
+			inv.specification_id =#{specificationId,jdbcType=INTEGER}
+	</update>
+</mapper>

@@ -1,0 +1,517 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jl.mis.mapper.ShoppingCartMapper">
+	
+	<resultMap id="BaseResultMap" type="com.jl.mis.model.ShoppingCart">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="goods_details_id" jdbcType="INTEGER" property="goodsDetailsId" />
+		<result column="goods_specification_details_id" jdbcType="INTEGER"
+			property="goodsSpecificationDetailsId" />
+		<result column="goods_name" jdbcType="VARCHAR" property="goodsName" />
+		<result column="goods_specification_details_name" jdbcType="VARCHAR"
+			property="goodsSpecificationDetailsName" />
+		<result column="goods_pic_url" jdbcType="VARCHAR" property="goodsPicUrl" />
+		<result column="goods_unitl_price" jdbcType="DOUBLE" property="goodsUnitlPrice" />
+		<result column="goods_num" jdbcType="INTEGER" property="goodsNum" />
+		<result column="user_id" jdbcType="INTEGER" property="userId" />
+		<result column="state" jdbcType="INTEGER" property="state" />
+		<result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+		<result column="activity_id" jdbcType="INTEGER" property="activityId" />
+		<result column="activity_name" jdbcType="VARCHAR" property="activityName" />
+		
+		<association property="goodsDetails" javaType="com.jl.mis.model.GoodsDetails"
+			resultMap="GoodsDetailsResultMap" />
+	</resultMap>
+	
+	<!-- 商品表 -->
+	<resultMap id="GoodsDetailsResultMap" type="com.jl.mis.model.GoodsDetails">
+		<id column="gdId" jdbcType="INTEGER" property="id" />
+		<result column="classification_id" jdbcType="INTEGER" property="classificationId" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="key_word" jdbcType="VARCHAR" property="keyWord" />
+		<result column="introdution" jdbcType="VARCHAR" property="introdution" />
+		<result column="recom" jdbcType="INTEGER" property="recom" />
+		<result column="recom_time" jdbcType="TIMESTAMP" property="recomTime" />
+		<result column="saleCount" jdbcType="INTEGER" property="saleCount" />
+		<result column="zeroStock" jdbcType="INTEGER" property="zeroStock" />
+		<collection property="goodsSpecificationDetails" ofType="com.jl.mis.model.GoodsSpecificationDetails" resultMap="GoodsSpecificationDetailsResultMap"/>
+	</resultMap>
+	
+	<!-- 商品详情 -->
+	<resultMap id="GoodsSpecificationDetailsResultMap" type="com.jl.mis.model.GoodsSpecificationDetails">
+		<id column="gsdId" jdbcType="INTEGER" property="id" />
+		<result column="identifier" jdbcType="VARCHAR" property="identifier" />
+		<result column="specifications" jdbcType="VARCHAR" property="specifications" />
+		<result column="sale_id" jdbcType="INTEGER" property="saleId" />
+		<result column="price" jdbcType="DOUBLE" property="price" />
+		<result column="goods_id" jdbcType="INTEGER" property="goodsId" />
+		<result column="sales_count" jdbcType="INTEGER" property="salesCount" />
+		<result column="gsdState" jdbcType="INTEGER" property="state" />
+		<result column="on_shelves_time" jdbcType="DATE" property="onShelvesTime" />
+		<result column="off_shelves_time" jdbcType="DATE" property="offShelvesTime" />
+		<result column="operator_identifier" jdbcType="VARCHAR"
+			property="operatorIdentifier" />
+		<result column="operator_time" jdbcType="TIMESTAMP" property="operatorTime" />
+		<result column="gxcState" jdbcType="INTEGER" property="gxcGoodsState" />
+		<result column="gxcGoodsStock" jdbcType="INTEGER" property="gxcGoodsStock" />
+		<result column="gxcPurchase" jdbcType="INTEGER" property="gxcPurchase" />
+		<collection property="goodsDisplayPictures" ofType="com.jl.mis.model.GoodsEvaluation" resultMap="goodsDisplayPictureResultMap"/>
+		<collection property="goodsActivitys" ofType="com.jl.mis.model.GoodsActivity" resultMap="GoodsActivityResultMap"/>
+	</resultMap>
+	
+	<!-- 商品展示图 -->
+	<resultMap id="goodsDisplayPictureResultMap" type="com.jl.mis.model.GoodsDisplayPicture">
+		<id column="gdpId" jdbcType="INTEGER" property="id" />
+		<result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
+		<result column="goods_specification_detail_id" jdbcType="INTEGER" property="goodsSpecificationDetailId" />
+	</resultMap>
+	
+	<!-- 商品活动 -->
+	<resultMap id="GoodsActivityResultMap" type="com.jl.mis.model.GoodsActivity">
+		<id column="gaId" jdbcType="INTEGER" property="id" />
+		<result column="gaGoodsId" jdbcType="INTEGER" property="goodsId" />
+		<result column="activity_information_id" jdbcType="INTEGER"
+			property="activityInformationId" />
+		<result column="gaState" jdbcType="INTEGER" property="state" />
+		<association property="activityInformation" javaType="ActivityInformation"
+			resultMap="ActivityInformationMap" />
+	</resultMap>
+
+	<!-- 活动信息 -->
+	<resultMap id="ActivityInformationMap" type="com.jl.mis.model.ActivityInformation">
+		<id column="aiId" jdbcType="INTEGER" property="id" />
+		<result column="aiidentifier" jdbcType="VARCHAR" property="identifier" />
+		<result column="ainame" jdbcType="VARCHAR" property="name" />
+		<result column="activity_type" jdbcType="INTEGER" property="activityType" />
+		<result column="aiprice" jdbcType="DOUBLE" property="price" />
+		<result column="aistate" jdbcType="DOUBLE" property="state" />
+		<result column="discount" jdbcType="DOUBLE" property="discount" />
+		<result column="max_num" jdbcType="INTEGER" property="maxNum" />
+		<result column="begin_validity_time" jdbcType="DATE"
+			property="beginValidityTime" />
+		<result column="end_validity_time" jdbcType="DATE" property="endValidityTime" />
+	</resultMap>
+	
+	
+	<sql id="Base_Column_List">
+		id, goods_details_id, goods_specification_details_id,
+		goods_name,
+		goods_specification_details_name,
+		goods_pic_url,
+		goods_unitl_price, goods_num, user_id, state, add_time,activity_id,activity_name
+	</sql>
+
+	<!-- 根据主键查询信息 -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from shopping_cart
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<!-- 根据主键删除 信息 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		shopping_cart
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	
+	<!-- 批量根据主键删除 信息 -->
+	<delete id="deleteBatchByPrimaryKey">
+		delete from
+		shopping_cart
+		where id in (
+		<foreach collection="list" item="item" separator=",">
+			#{item}
+		</foreach>
+		)
+	</delete>
+
+	<!-- 保存全部信息 -->
+	<insert id="insert" parameterType="com.jl.mis.model.ShoppingCart"  useGeneratedKeys="true" keyProperty="id">
+		insert into shopping_cart (
+		goods_details_id,
+		goods_specification_details_id,
+		goods_name,
+		goods_specification_details_name,
+		goods_pic_url, goods_unitl_price,
+		goods_num,
+		user_id, state, add_time,activity_id,activity_name
+		)
+		values (
+		#{goodsDetailsId,jdbcType=INTEGER},
+		#{goodsSpecificationDetailsId,jdbcType=INTEGER},
+		#{goodsName,jdbcType=VARCHAR},
+		#{goodsSpecificationDetailsName,jdbcType=VARCHAR},
+		#{goodsPicUrl,jdbcType=VARCHAR}, #{goodsUnitlPrice,jdbcType=DOUBLE},
+		#{goodsNum,jdbcType=INTEGER},
+		#{userId,jdbcType=INTEGER},
+		#{state,jdbcType=INTEGER}, #{addTime,jdbcType=TIMESTAMP},
+		#{activityId,jdbcType=INTEGER},#{activityName,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<!-- 保存所选内容的信息 -->
+	<insert id="insertSelective" parameterType="com.jl.mis.model.ShoppingCart">
+		insert into shopping_cart
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="goodsDetailsId != null">
+				goods_details_id,
+			</if>
+			<if test="goodsSpecificationDetailsId != null">
+				goods_specification_details_id,
+			</if>
+			<if test="goodsName != null">
+				goods_name,
+			</if>
+			<if test="goodsSpecificationDetailsName != null">
+				goods_specification_details_name,
+			</if>
+			<if test="goodsPicUrl != null">
+				goods_pic_url,
+			</if>
+			<if test="goodsUnitlPrice != null">
+				goods_unitl_price,
+			</if>
+			<if test="goodsNum != null">
+				goods_num,
+			</if>
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="state != null">
+				state,
+			</if>
+			<if test="addTime != null">
+				add_time,
+			</if>
+			<if test="activityId != null">
+				activity_id,
+			</if>
+			<if test="activityName != null">
+				activity_name,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="goodsDetailsId != null">
+				#{goodsDetailsId,jdbcType=INTEGER},
+			</if>
+			<if test="goodsSpecificationDetailsId != null">
+				#{goodsSpecificationDetailsId,jdbcType=INTEGER},
+			</if>
+			<if test="goodsName != null">
+				#{goodsName,jdbcType=VARCHAR},
+			</if>
+			<if test="goodsSpecificationDetailsName != null">
+				#{goodsSpecificationDetailsName,jdbcType=VARCHAR},
+			</if>
+			<if test="goodsPicUrl != null">
+				#{goodsPicUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="goodsUnitlPrice != null">
+				#{goodsUnitlPrice,jdbcType=DOUBLE},
+			</if>
+			<if test="goodsNum != null">
+				#{goodsNum,jdbcType=INTEGER},
+			</if>
+			<if test="userId != null">
+				#{userId,jdbcType=INTEGER},
+			</if>
+			<if test="state != null">
+				#{state,jdbcType=INTEGER},
+			</if>
+			<if test="addTime != null">
+				#{addTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="activityId != null">
+				#{activityId,jdbcType=INTEGER},
+			</if>
+			<if test="activityName != null">
+				#{activityName,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 根据主键更新所选内容 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.jl.mis.model.ShoppingCart">
+		update shopping_cart
+		<set>
+			<if test="goodsDetailsId != null">
+				goods_details_id = #{goodsDetailsId,jdbcType=INTEGER},
+			</if>
+			<if test="goodsSpecificationDetailsId != null">
+				goods_specification_details_id =
+				#{goodsSpecificationDetailsId,jdbcType=INTEGER},
+			</if>
+			<if test="goodsName != null">
+				goods_name = #{goodsName,jdbcType=VARCHAR},
+			</if>
+			<if test="goodsSpecificationDetailsName != null">
+				goods_specification_details_name =
+				#{goodsSpecificationDetailsName,jdbcType=VARCHAR},
+			</if>
+			<if test="goodsPicUrl != null">
+				goods_pic_url = #{goodsPicUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="goodsUnitlPrice != null">
+				goods_unitl_price = #{goodsUnitlPrice,jdbcType=DOUBLE},
+			</if>
+			<if test="goodsNum != null">
+				goods_num = #{goodsNum,jdbcType=INTEGER},
+			</if>
+			<if test="userId != null">
+				user_id = #{userId,jdbcType=INTEGER},
+			</if>
+			<if test="state != null">
+				state = #{state,jdbcType=INTEGER},
+			</if>
+			<if test="addTime != null">
+				add_time = #{addTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="activityId != null">
+				activity_id = #{activityId,jdbcType=INTEGER},
+			</if>
+			<if test="activityName != null">
+				activity_name = #{activityName,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<!-- 根据主键更新全部内容 -->
+	<update id="updateByPrimaryKey" parameterType="com.jl.mis.model.ShoppingCart">
+		update
+		shopping_cart
+		set goods_details_id =
+		#{goodsDetailsId,jdbcType=INTEGER},
+		goods_specification_details_id =
+		#{goodsSpecificationDetailsId,jdbcType=INTEGER},
+		goods_name =
+		#{goodsName,jdbcType=VARCHAR},
+		goods_specification_details_name =
+		#{goodsSpecificationDetailsName,jdbcType=VARCHAR},
+		goods_pic_url =
+		#{goodsPicUrl,jdbcType=VARCHAR},
+		goods_unitl_price =
+		#{goodsUnitlPrice,jdbcType=DOUBLE},
+		goods_num =
+		#{goodsNum,jdbcType=INTEGER},
+		user_id = #{userId,jdbcType=INTEGER},
+		state = #{state,jdbcType=INTEGER},
+		add_time =
+		#{addTime,jdbcType=TIMESTAMP},
+		activity_id =
+		#{activityId,jdbcType=INTEGER},
+		activity_name =
+		#{activityName,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	
+	
+	
+	
+	
+	<!-- 移动端使用 -->
+	
+	<!-- 根据商品id以及商品详情id获取有效的购物车信息  能加进购物车的规格说明已经是上架的 -->
+	<select id="getShoppingCartByGoodsIdAndSpecId" resultMap="BaseResultMap">
+	SELECT
+		*
+	FROM
+		shopping_cart 
+	where goods_details_id=#{goodsDetailsId}
+	and goods_specification_details_id=#{goodsSpecificationDetailsId}
+	and user_id=#{userId}
+	and state=0
+	and (activity_id is null or activity_id=0)
+	</select>
+	
+	<!-- 根据商品id以及商品详情id以及活动id获取有效的购物车信息  能加进购物车的规格说明已经是上架的 -->
+	<select id="getShoppingCartByGoodsIdAndSpecIdAndActivityId" resultMap="BaseResultMap">
+	SELECT
+		*
+	FROM
+		shopping_cart 
+	where goods_details_id=#{goodsDetailsId}
+	and goods_specification_details_id=#{goodsSpecificationDetailsId}
+	and user_id=#{userId}
+	and state=0
+	and activity_id=#{activityId}
+	</select>
+	
+	<!-- 根据用户id获取该用户购物车里的所有信息（无效和有效）以及商品信息对应的上架的商品详情(供编辑时使用) -->
+	<select id="getShoppingCarByUserId" resultMap="BaseResultMap">	
+	SELECT
+		sc.*, goodsMsg.*
+	FROM
+		shopping_cart sc
+	LEFT JOIN (
+		SELECT
+			gd.id gdId,
+			gd.key_word,
+			co.`name`,
+			gsd.id gsdId,
+			cs.specification_identifier identifier,
+			gsd.goods_id,
+			un.commonly_price price,
+			cs.specification_name specifications,
+			gsd.state gsdState,
+			(
+				(
+					inv.inventory - inv.occupied_inventory
+				) - (
+					SELECT
+						IFNULL(SUM(sca.goods_num), 0)
+					FROM
+						shopping_cart sca
+					LEFT JOIN goods_specification_details gsda ON gsda.id = sca.goods_specification_details_id
+					LEFT JOIN `user` u ON u.id = sca.user_id
+					WHERE
+						u.is_VIP = 1
+					AND UNIX_TIMESTAMP(now()) - UNIX_TIMESTAMP(sca.add_time) &lt;= 3600
+					AND gsda.commodity_specification_id = gsd.commodity_specification_id
+					AND u.id != #{userId,jdbcType=INTEGER}
+				)
+			) gxcGoodsStock,
+			co.zero_stock zeroStock,
+			co.is_presell gxcState,
+			un.mini_price gxcPurchase,
+			gdp.id gdpId,
+			gdp.pic_url,
+			ga.*
+		FROM
+			goods_details gd
+		LEFT JOIN goods_specification_details gsd ON gsd.goods_id = gd.id
+		LEFT JOIN jlgxc.commodity co ON co.id = gd.commodity_id
+		LEFT JOIN jlgxc.commodity_specification cs ON cs.id = gsd.commodity_specification_id
+		LEFT JOIN jlgxc.inventory inv ON inv.specification_id = cs.id
+		LEFT JOIN jlgxc.unit un ON un.specification_id = cs.id
+		AND un.basic_unit = 1
+		LEFT JOIN goods_display_picture gdp ON gdp.goods_specification_detail_id = gsd.id
+		LEFT JOIN (
+			SELECT
+				g.id gaId,
+				g.goods_id gaGoodsId,
+				g.activity_information_id,
+				g.state gaState,
+				ai.id aiId,
+				ai.identifier aiidentifier,
+				ai.`name` ainame,
+				ai.activity_type,
+				ai.price aiprice,
+				ai.state aistate,
+				ai.discount,
+				ai.begin_validity_time,
+				ai.end_validity_time,
+				ai.max_num
+			FROM
+				goods_activity g
+			LEFT JOIN activity_information ai ON ai.id = g.activity_information_id
+			WHERE
+				g.state = 0
+			AND ai.state = 4
+		) ga ON ga.gaGoodsId = gsd.id
+	) goodsMsg ON sc.goods_details_id = goodsMsg.gdId
+	WHERE
+		sc.user_id = #{userId,jdbcType=INTEGER}
+	ORDER BY
+		sc.add_time DESC
+	</select>
+	
+	<!-- 若是从购物车到提交订单页面，此时需要把购物车中的信息删除 -->
+	<delete id="deleteByGoodsIdAndGsdIdAndUId">
+	DELETE 
+	FROM
+		shopping_cart
+	WHERE
+		goods_details_id =#{goodsDetailsId}
+	AND goods_specification_details_id =#{goodsSpecificationDetailsId}
+	AND user_id =#{userId}
+	AND state = 0
+	</delete>
+	
+	<resultMap id="ShouldSendMessageResultMap" type="com.jl.mis.model.ShoppingCart">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="goods_details_id" jdbcType="INTEGER" property="goodsDetailsId" />
+		<result column="goods_specification_details_id" jdbcType="INTEGER"
+			property="goodsSpecificationDetailsId" />
+		<result column="goods_name" jdbcType="VARCHAR" property="goodsName" />
+		<result column="goods_specification_details_name" jdbcType="VARCHAR"
+			property="goodsSpecificationDetailsName" />
+		<result column="goods_pic_url" jdbcType="VARCHAR" property="goodsPicUrl" />
+		<result column="goods_unitl_price" jdbcType="DOUBLE" property="goodsUnitlPrice" />
+		<result column="goods_num" jdbcType="INTEGER" property="goodsNum" />
+		<result column="user_id" jdbcType="INTEGER" property="userId" />
+		<result column="state" jdbcType="INTEGER" property="state" />
+		<result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+		<result column="goodsAllNum" jdbcType="INTEGER" property="goodsAllNum" />
+		<association property="user" javaType="com.jl.mis.model.User"
+			resultMap="UserResultMap" />
+	</resultMap>
+	
+	<!-- 用户详情 -->
+	<resultMap id="UserResultMap" type="com.jl.mis.model.User">
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="phone" jdbcType="VARCHAR" property="phone" />
+	</resultMap>
+	
+	<!-- 查询需要发送短信的购物车信息  加入购物车的时间大于等于30分钟 小于等于40分钟-->
+	<select id="selectShopCartGoodSendMessage" resultMap="ShouldSendMessageResultMap">
+	SELECT
+		*, (
+			SELECT
+				SUM(goods_num)
+			FROM
+				shopping_cart sc
+			WHERE
+				UNIX_TIMESTAMP(now()) - UNIX_TIMESTAMP(sc.add_time) &lt;= 2400 and UNIX_TIMESTAMP(now()) - UNIX_TIMESTAMP(sc.add_time) >= 1800
+			AND sc.user_id = sca.user_id
+			GROUP BY
+				user_id
+		) goodsAllNum
+	FROM
+		shopping_cart sca
+	LEFT JOIN user u on u.id=sca.user_id
+	WHERE
+		UNIX_TIMESTAMP(now()) - UNIX_TIMESTAMP(sca.add_time) &lt;= 2400 and UNIX_TIMESTAMP(now()) - UNIX_TIMESTAMP(sca.add_time) >= 1800
+	AND u.is_VIP = 1
+	ORDER BY user_id desc,add_time desc
+	</select>
+		<!--活动下线后将 购物车状态改为无效 -->
+	<update id="updateStatus" >
+		UPDATE shopping_cart set 
+		state=1
+		where goods_details_id in (
+		SELECT
+			ga.goods_id
+		FROM
+			goods_activity ga
+		WHERE
+			activity_information_id in (
+				SELECT
+					id
+				FROM
+					activity_information
+				WHERE
+				 state = 5
+			)
+		)
+	</update>
+	
+		<!--根据活动id列表更新状态为失效 -->
+	<update id="updateStateByActivityIds" parameterType="java.util.List" >
+		update shopping_cart set state = 1 where activity_id in(
+		<foreach collection="list" item="item" separator=",">
+          #{item}
+      	</foreach>
+      	)
+	</update>
+</mapper>

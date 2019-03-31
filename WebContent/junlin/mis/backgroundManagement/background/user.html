@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8" />
+		<title>用户管理（管理员）</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../../../css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../../css/ace.min.css" />
+		<link rel="stylesheet" href="../../../css/style.css" />
+		<link rel="stylesheet" href="../../../css/style_i.css" />
+		<link rel="stylesheet" href="../../../font/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../../../js/layer/skin/layer.css" />
+		<!--[if IE 7]>
+		  <link rel="stylesheet" href="../../../font/css/font-awesome-ie7.min.css" />
+		  <link rel="stylesheet" href="../../../css/ace-ie.min.css" />
+		<![endif]-->
+
+		<link rel="stylesheet" href="../../../css/mine/all.css" />
+		<link rel="stylesheet" href="../../../css/mine/public.css" />
+		<script src="../../../js/jquery-1.10.2.min.js"></script>
+		<script src="../../../js/bootstrap.min.js"></script>
+		<script src="../../../js/jquery.dataTables.min.js"></script>
+		<script src="../../../js/jquery.dataTables.bootstrap.js"></script>
+		<script src="../../../js/layer/layer.js" type="text/javascript"></script>
+		<script src="../../../js/laydate/laydate.js" type="text/javascript"></script>
+		<script src="../../../script/public.js" type="text/javascript"></script>
+
+
+
+
+		<script src="../../../js/typeahead-bs2.min.js"></script>
+		<!--引入JQuery EasyUI  核心UI 文件 CSS-->
+		<link rel="stylesheet" type="text/css" href="../../../js/easyui-1.3.6/themes/default/easyui.css">
+		<!--引入EasyUI图标文件-->
+		<link rel="stylesheet" type="text/css" href="../../../js/easyui-1.3.6/themes/icon.css">
+		<!--引入JQuery 核心库-->
+		<script type="text/javascript" src="../../../js/easyui-1.3.6/jquery.min.js"></script>
+		<!--引入JQuery EasyUI  核心库 1.3.6版本-->
+		<script type="text/javascript" src="../../../js/easyui-1.3.6/jquery.easyui.min.js"></script>
+		<!--进入 EasyUI中文提示信息-->
+		<script type="text/javascript" src="../../../js/easyui-1.3.6/locale/easyui-lang-zh_CN.js"></script>
+		<style>
+			#editDiv {
+				padding-top: 20px;
+			}
+			
+			#choosetree {
+				overflow-y: hidden;
+				border: 1px solid #ccc;
+    			color: #555555;
+    			padding: 20px 10px;
+			}
+		</style>
+	</head>
+
+	<body class="content">
+		<div class="page-content clearfix">
+			<div id="Member_Ratings">
+				<div class="d_Confirm_Order_style" style="margin-top:10px;">
+					<h4 class="text-title">用户管理</h4>
+					<div class="search-div clearfix">
+						<div class="clearfix">
+							<span class="l_f"> 
+							姓名： <input type="text" value="" />
+						</span>
+							<span class="l_f"> 
+							手机号： <input type="text"  value="" />
+						</span>
+						<span class="r_f"> 
+							<button type="button" class="btncss jl-btn-importent" onclick="userAdd()"><i class="fa fa-plus"></i> 新增</button>
+						</span>
+							
+							<span class="r_f"> 
+							<input type="button"  class="btncss jl-btn-defult" value="搜索"  />
+						</span>
+
+						</div>
+
+					</div>
+					<div class="opration-div clearfix">
+						
+					</div>
+					<div class="table_menu_list">
+						<table class="table table-striped table-hover col-xs-12" id="datatable">
+							<thead class="table-header">
+								<tr>
+									<th>序号</th>
+									<th>姓名</th>
+									<th>手机号</th>
+									<th>用户组</th>
+									<th>创建人</th>
+									<th>创建</th>
+									<th width="32%">操作</th>
+								</tr>
+
+							</thead>
+							<tbody>
+								<tr>
+									<td>01</td>
+									<td>
+										张三
+									</td>
+									<td>15298746521</td>
+									<td>超管</td>
+									<td>王武</td>
+									<td>2017.10.02</td>
+									<td>
+										<input type="button" class="btncss edit" onclick="userEdit()" value="编辑" />
+										<input type="button" class="btncss" onclick="userNouse(this)" value="禁用" />
+										<input type="button" class="btncss" onclick="userDel()" value="删除" />
+									</td>
+								</tr>
+								<tr>
+									<td>02</td>
+									<td>
+										张三
+									</td>
+									<td>15298746521</td>
+									<td>超管</td>
+									<td>王武</td>
+									<td>2017.10.02</td>
+									<td>
+										<input type="button" class="btncss edit" onclick="userEdit()" value="编辑" />
+										<input type="button" class="btncss" onclick="userNouse(this)" value="禁用" />
+										<input type="button" class="btncss" onclick="userDel()" value="删除" />
+									</td>
+								</tr>
+								<tr>
+									<td>03</td>
+									<td>
+										张三
+									</td>
+									<td>15298746521</td>
+									<td>超管</td>
+									<td>王武</td>
+									<td>2017.10.02</td>
+									<td>
+										<input type="button" class="btncss edit" onclick="userEdit()" value="编辑" />
+										<input type="button" class="btncss" onclick="userNouse(this)" value="禁用" />
+										<input type="button" class="btncss" onclick="userDel()" value="删除" />
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!--新增 编辑 -->
+		<div id="editDiv" style="display: none;">
+			<form class="container">
+				<!--<div class="form-group">
+					<div class="col-xs-2"></div>
+					<label for="name" class="col-xs-2 control-label">序号</label>
+					<div class="col-xs-4">
+						001
+					</div>
+				</div>-->
+				<div class="form-group">
+					<div class="col-xs-2"></div>
+					<label for="username" class="col-xs-2 control-label">姓名</label>
+					<div class="col-xs-4">
+						<input type="text" class="form-control" id="username" onblur="usernameCheck(this)" />
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-xs-2"></div>
+					<label for="loginnname" class="col-xs-2 control-label">登录名</label>
+					<div class="col-xs-4">
+						<input type="text" class="form-control" id="loginnname" onblur="loginnnameCheck(this)" />
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-xs-2"></div>
+					<label for="usertel" class="col-xs-2 control-label">手机号</label>
+					<div class="col-xs-4">
+						<input type="text" class="form-control" id="usertel" onblur="usertelCheck(this)" />
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-xs-2"></div>
+					<label for="userpwd" class="col-xs-2 control-label">密码</label>
+					<div class="col-xs-4">
+						<input type="password" class="form-control" id="userpwd" onblur="userpwdCheck(this)" />
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-xs-2"></div>
+					<label for="power" class="col-xs-2 control-label">用户组</label>
+					<div class="col-xs-4">
+						<select class="form-control" id="power" onblur="powerCheck(this)">
+							<option value="0" selected="selected">--请选择--</option>
+							<option value="超管">超管</option>
+							<option value="管理员">管理员</option>
+							<option value="操作员">操作员</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-xs-2"></div>
+					<label class="col-xs-2 control-label">权限</label>
+					<div class="col-xs-4">
+						<ul id="choosetree"></ul>
+						<input class="hidden" type="text" id="limits" />
+					</div>
+
+				</div>
+				
+				<!--<div class="form-group">
+					<div class="col-xs-2"></div>
+					<label for="key_word" class="col-xs-2 control-label">创建人</label>
+					<div class="col-xs-4">
+						王武
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-xs-2"></div>
+					<label for="key_word" class="col-xs-2 control-label">创建时间</label>
+					<div class="col-xs-4">
+						2017.10.02
+					</div>
+				</div>-->
+			</form>
+
+		</div>
+
+	</body>
+
+	<script>
+		/*正则验证*/
+		var usernameres = false;
+		var loginnname = false;
+		var usertel = false;
+		var userpwd = false;
+		var power = false;
+		var limitsinput=false;
+		var checkednodes=[];
+		var checkedStr="";
+
+		function usernameCheck(thisinput) {
+			usernameres = checkChinese($(thisinput).val());
+			if(!isnotEmpty($(thisinput).val())) {
+				laywarn("请输入用户名");
+			} else if(!usernameres) {
+				laywarn("用户名为2-20个汉字");
+			}
+			return usernameres;
+		}
+
+		function loginnnameCheck(thisinput) {
+			loginnname = isnotEmpty($(thisinput).val());
+			if(!loginnname) {
+				laywarn("请输入登录名");
+			}
+			return loginnname;
+			
+		}
+
+		function usertelCheck(thisinput) {
+			usertel = checkMobilePhone($(thisinput).val());
+			if(!isnotEmpty($(thisinput).val())) {
+				laywarn("请输入手机号");
+			} else if(!usertel) {
+				laywarn("用户手机格式错误");
+			}
+			return usertel;
+		}
+
+		function userpwdCheck(thisinput) {
+//			console.log("in")
+			userpwd = checkPassword($(thisinput).val());
+			if(!isnotEmpty($(thisinput).val())) {
+				laywarn("密码不能为空");
+			} else if(!userpwd) {
+				laywarn("密码为8-16位字母数字下划线组合");
+			}
+			return userpwd; 
+		}
+
+		function powerCheck(thisinput) {
+			power = false;
+			if($(thisinput).val() != "0" && isnotEmpty($(thisinput).val())) {
+				power = true;
+			} else {
+				laywarn("请选择用户组");
+			}
+			return power;
+		}
+		function limitsCheck(thisinput){
+			limitsinput = isnotEmpty($(thisinput).val());
+			if(!limitsinput) {
+				laywarn("请选择权限");
+			}
+			return limitsinput;
+		}
+
+		function getresult() {
+			if(usernameCheck("#username")){
+				if(loginnnameCheck("#loginnname")){
+					if(usertelCheck("#usertel")){
+						if(userpwdCheck("#userpwd")){
+							if(powerCheck("#power")){
+								if(limitsCheck("#limits")){
+									return	true;
+								}
+							}
+						}
+					}
+				}
+			}
+//			console.log(usernameres+"##"+loginnname+"##"+usertel+"##"+userpwd+"##"+power+"##"+limitsinput);
+		}
+
+		/*修改*/
+		function userEdit() {
+			layer.open({
+				type: 1,
+				title: "编辑用户",
+				closeBtn: 1,
+				area: ['100%', '100%'],
+				content: $("#editDiv"),
+				btn: ['提交', '取消'],
+				yes: function(index) {
+					getId(checkednodes);
+					var regresult = getresult();
+					if(regresult) {
+						layer.close(index);
+
+						laysuccess("编辑成功");
+						clearForm("editDiv", "","",$("#choosetree"));
+					}
+
+				},
+				end: function(index, layero) {
+					clearForm("editDiv", "","",$("#choosetree"));
+				}
+			});
+		}
+		/*新增*/
+		function userAdd() {
+			layer.open({
+				type: 1,
+				title: "新增用户",
+				closeBtn: 1,
+				area: ['100%', '100%'],
+				content: $("#editDiv"),
+				btn: ['提交', '取消'],
+				yes: function(index) {
+					getId(checkednodes);
+					var regresult = getresult();
+
+					if(regresult) {
+						layer.close(index);
+
+						laysuccess("新增成功");
+						clearForm("editDiv", "","",$("#choosetree"));
+					}
+
+				},
+				end: function(index, layero) {
+					clearForm("editDiv", "","",$("#choosetree"));
+				}
+			});
+		}
+		/*删除*/
+		function userDel() {
+			publicMessageLayer("删除此账号", function() {
+
+				laysuccess("删除成功");
+			})
+		}
+
+		/*禁用*/
+		function userNouse(thisbtn) {
+			var that = thisbtn;
+			if($(that).val() == "取消禁用") {
+				publicMessageLayer("取消此账号的禁用", function() {
+
+					laysuccess("取消禁用成功");
+					$(that).val("禁用");
+				})
+			} else if($(that).val() == "禁用") {
+				publicMessageLayer("禁用此账号", function() {
+
+					laysuccess("禁用成功");
+					$(that).val("取消禁用");
+				})
+			}
+
+		}
+		
+		
+		/*将选中的节点获取ID变成字符串，赋值到id为limits的input框中*/
+		function getId(obj){
+			$(obj).each(function(i, dom) {
+				checkedStr=checkedStr+dom["id"]+","
+			});
+			checkedStr=checkedStr.substring(0, checkedStr.length - 1);
+			$("#limits").val(checkedStr);
+		}
+
+		$("#choosetree").tree({
+			url: null, //获取远程数据URL
+			data: [{
+					"id": 2,
+					"text": "后台配置",
+					"children": [{
+						"id": 6,
+						"text": "分类配置",
+						"children": [{
+							"id": 4,
+							"text": "一级分类",
+							"iconCls": "icon-no"
+						}, {
+							"id": 5,
+							"text": "二级分类",
+							"iconCls": "icon-no"
+						}]
+					}, {
+						"id": 7,
+						"text": "商品配置",
+						"iconCls": "icon-no"
+
+					}, {
+						"id": 8,
+						"text": "活动配置",
+						"iconCls": "icon-no",
+						"children": [{
+							"id": 9,
+							"text": "优惠券",
+							"iconCls": "icon-no"
+						}, {
+							"id": 10,
+							"text": "活动列表",
+							"iconCls": "icon-no"
+						}, {
+							"id": 11,
+							"text": "活动审核",
+							"iconCls": "icon-no"
+						}]
+					}, {
+						"id": 12,
+						"text": "广告配置",
+						"iconCls": "icon-no"
+					}]
+				}, {
+					"id": 3,
+					"text": "VIP管理",
+					"children": [{
+						"id": 13,
+						"text": "VIP管理",
+						"iconCls": "icon-no"
+					}, {
+						"id": 14,
+						"text": "待添加列表",
+						"iconCls": "icon-no"
+					}]
+				}, {
+					"id": 15,
+					"text": "订单管理",
+					"children": [{
+						"id": 16,
+						"text": "订单管理",
+						"iconCls": "icon-no"
+					}, {
+						"id": 17,
+						"text": "发票审核",
+						"iconCls": "icon-no"
+					}]
+				}, {
+					"id": 18,
+					"text": "后台管理",
+					"children": [{
+						"id": 19,
+						"text": "后台管理",
+						"children": [{
+							"id": 20,
+							"text": "用户",
+							"iconCls": "icon-no"
+						}, {
+							"id": 21,
+							"text": "操作日志",
+							"iconCls": "icon-no"
+						}]
+					}]
+				}, {
+					"id": 24,
+					"text": "报表系统",
+					"children": [{
+						"id": 25,
+						"text": "综合检测",
+						"iconCls": "icon-no"
+					}, {
+						"id": 26,
+						"text": "订单报表",
+						"iconCls": "icon-no"
+					}, {
+						"id": 27,
+						"text": "商品销量报表",
+						"iconCls": "icon-no",
+					}]
+				}
+
+			], //节点数据加载
+			lines: true,
+			checkbox: true,
+			onlyLeafCheck: false, //定义是否只在末节点之前显示复选框
+			dnd: false, //定义是否启动拖拽功能
+			onCheck:function(){
+				checkednodes= $('#choosetree').tree('getChecked');
+			},
+			onLoadError: function(arguments) {
+				console.log(arguments);
+			}
+		})
+	
+		
+
+		
+	</script>
+
+</html>

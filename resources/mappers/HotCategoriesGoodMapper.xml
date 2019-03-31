@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jl.mis.mapper.HotCategoriesGoodMapper">
+	
+	<resultMap id="BaseResultMap" type="com.jl.mis.model.HotCategoriesGood">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="advertisement_information_id" jdbcType="INTEGER" property="advertisementInformationId" />
+		<result column="goods_id" jdbcType="INTEGER" property="goodsId" />
+		<result column="state" jdbcType="INTEGER" property="state" />
+		<association property="goodsDetails" javaType="GoodsDetails"
+			resultMap="ResultMapWithBLOBs" />
+		<association property="classification" javaType="Classification"
+			resultMap="ClassificationMap" />
+	</resultMap>
+	
+	<resultMap id="GoodsDetailsMap" type="com.jl.mis.model.GoodsDetails">
+		<id column="gdid" jdbcType="INTEGER" property="id" />
+		<result column="commodity_id" jdbcType="INTEGER" property="commodityId" />
+		<result column="gdclassification_id" jdbcType="INTEGER" property="classificationId" />
+		<result column="gdname" jdbcType="VARCHAR" property="name" />
+		<result column="gdkey_word" jdbcType="VARCHAR" property="keyWord" />
+		<result column="gdintrodution" jdbcType="VARCHAR" property="introdution" />
+		<result column="gdrecom" jdbcType="INTEGER" property="recom" />
+		<result column="gdrecom_time" jdbcType="TIMESTAMP" property="recomTime" />
+	</resultMap>
+	<resultMap extends="GoodsDetailsMap" id="ResultMapWithBLOBs"
+		type="com.jl.mis.model.GoodsDetails">
+		<result column="gddetails" jdbcType="LONGVARCHAR" property="details" />
+	</resultMap>
+
+
+	<resultMap id="ClassificationMap" type="com.jl.mis.model.Classification">
+		<id column="cid" jdbcType="INTEGER" property="id" />
+		<result column="cidentifier" jdbcType="VARCHAR" property="identifier" />
+		<result column="cname" jdbcType="VARCHAR" property="name" />
+		<result column="ckey_word" jdbcType="VARCHAR" property="keyWord" />
+		<result column="cparent_id" jdbcType="INTEGER" property="parentId" />
+		<result column="cpic_url" jdbcType="VARCHAR" property="picUrl" />
+		<result column="csort" jdbcType="INTEGER" property="sort" />
+		<result column="coperator_identifier" jdbcType="VARCHAR"
+			property="operatorIdentifier" />
+		<result column="coperator_time" jdbcType="TIMESTAMP" property="operatorTime" />
+	</resultMap>
+	
+	
+	
+	
+	<sql id="Base_Column_List">
+		id, advertisement_information_id, goods_id, state
+	</sql>
+	
+	<!-- 根据主键查询信息 -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from hot_categories_good
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<!-- 根据广告信息id查询信息 （APP & PC通用） -->
+	<select id="selectByAdvertisementInformationId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		*
+		from hot_categories_good
+		where advertisement_information_id = #{advertisementInformationId}
+	</select>
+	
+	<!-- state=1 联合商品表 根据活动id获取信息 -->
+	<select id="getMsgByAdvertisementInformationId1" resultMap="BaseResultMap">
+		SELECT
+			c. NAME gdname,
+			gd.id gdid,
+			gd.classification_id gdclassification_id
+		FROM
+			hot_categories_good hcg,
+			goods_details gd,
+			jlgxc.commodity c
+		WHERE
+			hcg.goods_id = gd.id
+		AND hcg.advertisement_information_id = #{advertisementInformationId}
+		AND hcg.goods_id = #{goodsId}
+		AND hcg.state = 1
+		and c.id=gd.commodity_id
+	</select>
+
+	<!-- state=2 联合分类表 根据活动id获取信息 -->
+	<select id="getMsgByAdvertisementInformationId2"  resultMap="BaseResultMap">
+		select c.name cname,c.id cid,c.parent_id  cparent_id  
+		from hot_categories_good hcg, classification c
+		where hcg.goods_id = c.id 
+		and hcg.advertisement_information_id = #{advertisementInformationId} 
+		and hcg.goods_id = #{goodsId}
+		and hcg.state = 2
+	</select>
+	
+	<!-- 根据主键删除 信息 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from hot_categories_good
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	
+	<!-- 删除全部信息 -->
+	<delete id="deleteAll" >
+		delete from hot_categories_good
+	</delete>
+	
+	<!-- 保存全部信息  -->
+	<insert id="insert" parameterType="com.jl.mis.model.HotCategoriesGood">
+		insert into hot_categories_good (id, advertisement_information_id, goods_id,
+		state)
+		values (#{id,jdbcType=INTEGER}, #{advertisementInformationId,jdbcType=INTEGER},
+		#{goodsId,jdbcType=INTEGER},
+		#{state,jdbcType=INTEGER})
+	</insert>
+	
+	<!-- 保存所选内容的信息 -->
+	<insert id="insertSelective" parameterType="com.jl.mis.model.HotCategoriesGood">
+		insert into hot_categories_good
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="advertisementInformationId != null">
+				advertisement_information_id,
+			</if>
+			<if test="goodsId != null">
+				goods_id,
+			</if>
+			<if test="state != null">
+				state,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="advertisementInformationId != null">
+				#{advertisementInformationId,jdbcType=INTEGER},
+			</if>
+			<if test="goodsId != null">
+				#{goodsId,jdbcType=INTEGER},
+			</if>
+			<if test="state != null">
+				#{state,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 根据主键更新所选内容 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.jl.mis.model.HotCategoriesGood">
+		update hot_categories_good
+		<set>
+			<if test="advertisementInformationId != null">
+				advertisement_information_id = #{advertisementInformationId,jdbcType=INTEGER},
+			</if>
+			<if test="goodsId != null">
+				goods_id = #{goodsId,jdbcType=INTEGER},
+			</if>
+			<if test="state != null">
+				state = #{state,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 根据主键更新全部内容 -->
+	<update id="updateByPrimaryKey" parameterType="com.jl.mis.model.HotCategoriesGood">
+		update hot_categories_good
+		set advertisement_information_id = #{advertisementInformationId,jdbcType=INTEGER},
+		goods_id = #{goodsId,jdbcType=INTEGER},
+		state = #{state,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<!--勿改 根据商品分类Id查询热门分类商品 -->
+	<select id="selectHotCategoriesGoodBySpecificationId" resultMap="BaseResultMap">
+	SELECT
+		hcg.*
+	FROM
+		hot_categories_good hcg
+	LEFT JOIN goods_details gd on gd.id=hcg.goods_id
+	LEFT JOIN goods_specification_details gsd on gsd.goods_id=gd.id
+	where gsd.id=#{goodsSpecificationDetailsId}
+	and hcg.state=1
+	</select>
+	
+	
+	
+		
+	<select id="getNews_List" resultMap="ClassificationMap">
+		SELECT
+			C.id AS cid,
+			C.`name` AS cname,
+			C.key_word AS ckey_word,
+			C.pic_url AS cpic_url
+		FROM
+			advertisement_information AS AD ,
+			hot_categories_good AS HTG ,
+			classification AS C
+		WHERE
+			AD.type = 4 AND
+			AD.id = HTG.advertisement_information_id AND
+			AD.`name` = '新品上架' AND
+			HTG.state = 2 AND
+			HTG.goods_id = C.id
+		ORDER BY
+			HTG.id ASC
+	</select>
+	
+	<select id="getNew_GoodsList_ByClassId" resultMap="GoodsDetailsMap">
+		SELECT
+			C.id AS cid,
+			C.`name` AS cname,
+			C.key_word AS ckey_word,
+			C.pic_url AS cpic_url
+		FROM
+			advertisement_information AS AD ,
+			hot_categories_good AS HTG ,
+			classification AS C
+		WHERE
+			AD.type = 4 AND
+			AD.id = HTG.advertisement_information_id AND
+			AD.`name` = '新品上架' AND
+			HTG.state = 2 AND
+			HTG.goods_id = C.id
+		ORDER BY
+			C.identifier ASC
+	</select>
+	
+</mapper>

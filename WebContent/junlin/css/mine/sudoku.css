@@ -1,0 +1,28 @@
+.sudoku .box{
+	width:122px;
+	height: 123px;
+	margin: 0 50px;
+    margin-bottom: 50px;
+	float: left;
+	background: url(../../img/sdoukenbg.png);
+}
+.sudoku{
+	width: 666px;
+    margin: 0 auto;
+    margin-top:10%;
+    font-size: 16px;
+    letter-spacing: 1px;
+}
+.sudoku .box{
+	padding:20px;
+	cursor: pointer;
+}
+.sudoku .img-box{
+	height: 60px;
+}
+.title{
+    color: #a0a0a0;
+}
+.title1{
+	color: #fff;
+}

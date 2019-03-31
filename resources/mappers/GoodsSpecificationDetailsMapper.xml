@@ -1,0 +1,1095 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jl.mis.mapper.GoodsSpecificationDetailsMapper">
+
+	<resultMap id="BaseResultMap" type="com.jl.mis.model.GoodsSpecificationDetails">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="commodity_specification_id" jdbcType="INTEGER" property="commoditySpecificationId" />
+		<result column="old_price" jdbcType="DOUBLE" property="oldPrice" />
+		<result column="goods_id" jdbcType="INTEGER" property="goodsId" />
+		<result column="sales_count" jdbcType="INTEGER" property="salesCount" />
+		<result column="state" jdbcType="INTEGER" property="state" />		
+		<result column="brand" jdbcType="VARCHAR" property="brand" />
+		<result column="on_shelves_time" jdbcType="DATE" property="onShelvesTime" />
+		<result column="off_shelves_time" jdbcType="DATE" property="offShelvesTime" />
+		<result column="operator_identifier" jdbcType="VARCHAR"
+			property="operatorIdentifier" />
+		<result column="operator_time" jdbcType="TIMESTAMP" property="operatorTime" />
+		<result column="identifier" jdbcType="VARCHAR" property="identifier" />
+		<result column="specifications" jdbcType="VARCHAR" property="specifications" />
+		<result column="sale_id" jdbcType="INTEGER" property="saleId" />
+		<result column="price" jdbcType="DOUBLE" property="price" />
+		<result column="miniPrice" jdbcType="DOUBLE" property="miniPrice" />
+		<result column="gxcState" jdbcType="INTEGER" property="gxcGoodsState" />
+		<result column="gxcGoodsStock" jdbcType="INTEGER" property="gxcGoodsStock" />
+		<result column="gxcPurchase" jdbcType="INTEGER" property="gxcPurchase" />
+		<association property="goodsDetails" javaType="com.jl.mis.model.GoodsDetails"
+			resultMap="ResultMapWithBLOBs" />
+		<association property="user" javaType="com.jl.mis.model.User"
+			resultMap="UserResultMap" />
+		<collection property="goodsDisplayPictures" ofType="com.jl.mis.model.GoodsDisplayPicture" resultMap="goodsDisplayPictureResultMap"/>
+		<collection property="goodsActivitys" ofType="com.jl.mis.model.GoodsActivity" resultMap="GoodsActivityResultMap"/>
+	</resultMap>
+	
+	<!-- 操作人 -->
+	<resultMap id="UserResultMap" type="com.jl.mis.model.User">
+		<result column="uname" jdbcType="VARCHAR" property="name" />
+	</resultMap>
+	
+	<!-- 商品详情图片 -->
+	<resultMap id="goodsDisplayPictureResultMap" type="com.jl.mis.model.GoodsDisplayPicture">
+		<id column="gdpId" jdbcType="INTEGER" property="id" />
+		<result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
+		<result column="goods_specification_detail_id" jdbcType="INTEGER" property="goodsSpecificationDetailId" />
+	</resultMap>
+	
+	<!-- 商品表 -->
+	<resultMap id="goodsDetailsMap" type="com.jl.mis.model.GoodsDetails">
+		<id column="gdId" jdbcType="INTEGER" property="id" />
+		<result column="classification_id" jdbcType="INTEGER" property="classificationId" />
+		<result column="commodity_id" jdbcType="INTEGER" property="commodityId" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="key_word" jdbcType="VARCHAR" property="keyWord" />
+		<result column="introdution" jdbcType="VARCHAR" property="introdution" />
+		<result column="recom" jdbcType="INTEGER" property="recom" />
+		<result column="recom_time" jdbcType="TIMESTAMP" property="recomTime" />
+		<result column="zeroStock" jdbcType="INTEGER" property="zeroStock" />
+		<association property="classification" javaType="com.jl.mis.model.Classification"
+			resultMap="classificationResultMap" />
+	</resultMap>
+
+	<resultMap extends="goodsDetailsMap" id="ResultMapWithBLOBs"
+		type="com.jl.mis.model.GoodsDetails">
+		<result column="details" jdbcType="LONGVARCHAR" property="details" />
+	</resultMap>
+
+	<!-- 分类信息 -->
+	<resultMap id="classificationResultMap" type="com.jl.mis.model.Classification">
+		<id column="cid" jdbcType="INTEGER" property="id" />
+		<result column="identifier" jdbcType="VARCHAR" property="identifier" />
+		<result column="cname" jdbcType="VARCHAR" property="name" />
+		<result column="key_word" jdbcType="VARCHAR" property="keyWord" />
+		<result column="parent_id" jdbcType="INTEGER" property="parentId" />
+		<result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
+		<result column="sort" jdbcType="INTEGER" property="sort" />
+		<result column="operator_identifier" jdbcType="VARCHAR"
+			property="operatorIdentifier" />
+		<result column="operator_time" jdbcType="TIMESTAMP" property="operatorTime" />
+	</resultMap>
+	
+	<!-- 商品活动 -->
+	<resultMap id="GoodsActivityResultMap" type="com.jl.mis.model.GoodsActivity">
+		<id column="gaId" jdbcType="INTEGER" property="id" />
+		<result column="gaGoodsId" jdbcType="INTEGER" property="goodsId" />
+		<result column="activity_information_id" jdbcType="INTEGER"
+			property="activityInformationId" />
+		<result column="gaState" jdbcType="INTEGER" property="state" />
+		<association property="activityInformation" javaType="ActivityInformation"
+			resultMap="ActivityInformationMap" />
+	</resultMap>
+
+	<!-- 活动信息 -->
+	<resultMap id="ActivityInformationMap" type="com.jl.mis.model.ActivityInformation">
+		<id column="aiId" jdbcType="INTEGER" property="id" />
+		<result column="aiidentifier" jdbcType="VARCHAR" property="identifier" />
+		<result column="ainame" jdbcType="VARCHAR" property="name" />
+		<result column="activity_type" jdbcType="INTEGER" property="activityType" />
+		<result column="aiprice" jdbcType="DOUBLE" property="price" />
+		<result column="discount" jdbcType="DOUBLE" property="discount" />
+		<result column="max_num" jdbcType="INTEGER" property="maxNum" />
+		<result column="begin_validity_time" jdbcType="DATE"
+			property="beginValidityTime" />
+		<result column="end_validity_time" jdbcType="DATE" property="endValidityTime" />
+	</resultMap>
+	
+	<!-- 移动端显示的结果集 -->
+	<!-- 只返回商品详情的信息 -->
+	<resultMap id="appGoodsSpecificationResultMap" type="com.jl.mis.model.GoodsSpecificationDetails">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="identifier" jdbcType="VARCHAR" property="identifier" />
+		<result column="specifications" jdbcType="VARCHAR" property="specifications" />
+		<result column="sale_id" jdbcType="INTEGER" property="saleId" />
+		<result column="price" jdbcType="DOUBLE" property="price" />
+		<result column="old_price" jdbcType="DOUBLE" property="oldPrice" />
+		<result column="goods_id" jdbcType="INTEGER" property="goodsId" />
+		<result column="sales_count" jdbcType="INTEGER" property="salesCount" />
+		<result column="state" jdbcType="INTEGER" property="state" />		
+		<result column="brand" jdbcType="VARCHAR" property="brand" />
+		<result column="on_shelves_time" jdbcType="DATE" property="onShelvesTime" />
+		<result column="off_shelves_time" jdbcType="DATE" property="offShelvesTime" />
+		<result column="operator_identifier" jdbcType="VARCHAR"
+			property="operatorIdentifier" />
+		<result column="operator_time" jdbcType="TIMESTAMP" property="operatorTime" />
+		<result column="gxcState" jdbcType="INTEGER" property="gxcGoodsState" />
+		<result column="gxcGoodsStock" jdbcType="INTEGER" property="gxcGoodsStock" />
+		<result column="gxcPurchase" jdbcType="INTEGER" property="gxcPurchase" />
+		<collection property="goodsDisplayPictures" ofType="com.jl.mis.model.GoodsDisplayPicture" resultMap="goodsDisplayPictureResultMap"/>
+	</resultMap>
+	
+	<!-- 返回商品详情的信息以及商品规格参与的活动信息 -->
+	<resultMap id="appGoodsActivitysResultMap" type="com.jl.mis.model.GoodsSpecificationDetails">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="identifier" jdbcType="VARCHAR" property="identifier" />
+		<result column="specifications" jdbcType="VARCHAR" property="specifications" />
+		<result column="sale_id" jdbcType="INTEGER" property="saleId" />
+		<result column="price" jdbcType="DOUBLE" property="price" />
+		<result column="old_price" jdbcType="DOUBLE" property="oldPrice" />
+		<result column="goods_id" jdbcType="INTEGER" property="goodsId" />
+		<result column="sales_count" jdbcType="INTEGER" property="salesCount" />
+		<result column="state" jdbcType="INTEGER" property="state" />		
+		<result column="brand" jdbcType="VARCHAR" property="brand" />
+		<result column="on_shelves_time" jdbcType="DATE" property="onShelvesTime" />
+		<result column="off_shelves_time" jdbcType="DATE" property="offShelvesTime" />
+		<result column="operator_identifier" jdbcType="VARCHAR"
+			property="operatorIdentifier" />
+		<result column="operator_time" jdbcType="TIMESTAMP" property="operatorTime" />
+		<result column="gxcState" jdbcType="INTEGER" property="gxcGoodsState" />
+		<result column="gxcGoodsStock" jdbcType="INTEGER" property="gxcGoodsStock" />
+		<result column="gxcPurchase" jdbcType="INTEGER" property="gxcPurchase" />
+		<collection property="goodsDisplayPictures" ofType="com.jl.mis.model.GoodsDisplayPicture" resultMap="goodsDisplayPictureResultMap"/>
+		<collection property="goodsActivitys" ofType="com.jl.mis.model.GoodsActivity" resultMap="GoodsActivityResultMap"/>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id,commodity_specification_id,old_price, identifier, specifications, price, goods_id,
+		sales_count,
+		state, on_shelves_time,
+		off_shelves_time,
+		operator_identifier, operator_time
+	</sql>
+
+	<!--定义一个sql片段 -->
+	<sql id="query_where">
+		<if test="identifier!=null and identifier!=''">
+			AND cs.specification_identifier like '%${identifier}%'
+		</if>
+		<if test="name!=null and name!=''">
+			AND co.name like '%${name}%'
+		</if>
+		<if test="operatorName!=null and operatorName!=''">
+			AND u.name like '%${operatorName}%'
+		</if>
+		<if test="operatorTime!=null and operatorTime!=''">
+			AND DATE_FORMAT(gsd.operator_time,'%Y-%m-%d') = '${operatorTime}'
+		</if>
+		<!-- 查询有库存 -->
+		<if test="gxcGoodsStock==0">
+			AND inv.inventory-inv.occupied_inventory >0
+		</if>
+		<!-- 查询没有库存 -->
+		<if test="gxcGoodsStock==1">
+			AND inv.inventory-inv.occupied_inventory &lt;= 0 or inv.inventory is null
+		</if>
+		<if test="classificationId!=null and classificationId!='' and oneOrTwo=='one'">
+			AND c.parent_id =#{classificationId}
+		</if>
+		<if test="classificationId!=null and classificationId!='' and oneOrTwo=='two'">
+			AND c.id =#{classificationId}
+		</if>
+	</sql>
+
+	<!-- 根据主键查询信息 -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+			gsd.id,gsd.commodity_specification_id,
+			gsd.old_price,gsd.goods_id,
+			gsd.sales_count,
+			gsd.state, gsd.on_shelves_time,
+			gsd.off_shelves_time,
+			gsd.operator_identifier, gsd.operator_time,
+			cs.specification_name specifications,
+			cs.specification_identifier identifier,
+			un.commonly_price price,
+			un.mini_price miniPrice,
+			inv.inventory-inv.occupied_inventory gxcGoodsStock
+		from 
+			goods_specification_details gsd
+		LEFT JOIN jlgxc.commodity_specification cs ON cs.id = gsd.commodity_specification_id
+		LEFT JOIN jlgxc.unit un ON un.specification_id = cs.id
+		LEFT JOIN jlgxc.inventory inv on inv.specification_id=cs.id 
+		where gsd.id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<!--勿改 根据商品Id查询信息 -->
+	<select id="selectByGoodsId" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		SELECT
+			gsd.*, cs.specification_name specifications,
+			cs.specification_identifier identifier,
+			un.commonly_price price,
+			un.mini_price miniPrice
+		FROM
+			goods_specification_details gsd
+		LEFT JOIN jlgxc.commodity_specification cs ON cs.id = gsd.commodity_specification_id
+		LEFT JOIN jlgxc.unit un ON un.specification_id = cs.id
+		AND un.basic_unit = 1
+		where gsd.goods_id = #{goodId}
+	</select>
+	
+	<!--勿改 根据商品id查询正在上架的商品-->
+	<select id="selectOnByGoodsId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+	 SELECT
+		gsd.*, cs.specification_name specifications,
+		cs.specification_identifier identifier,
+		un.commonly_price price,
+		un.mini_price miniPrice
+	FROM
+		goods_specification_details gsd
+	LEFT JOIN jlgxc.commodity_specification cs ON cs.id = gsd.commodity_specification_id
+	LEFT JOIN jlgxc.unit un ON un.specification_id = cs.id
+	AND un.basic_unit = 1
+	WHERE
+		gsd.goods_id = #{goodsId} 
+		and gsd.state=0
+	</select>
+
+	<!-- 根据输入框的值查询信息 -->
+	<!-- <select id="selectMsgByInputValue" resultMap="BaseResultMap">
+		select
+		gsd.id,gsd.identifier,gsd.specifications,gd.key_word,gd.name
+		from
+		goods_specification_details gsd
+		LEFT JOIN goods_details gd on
+		gsd.goods_id=gd.id
+		where 1=1
+		<if test="inputValue!=null and inputValue!=''">
+			and (
+			gsd.identifier like
+			CONCAT(CONCAT("%",#{inputValue}),"%")
+			or gd.name like
+			CONCAT(CONCAT("%",#{inputValue}),"%")
+			or gd.key_word like
+			CONCAT(CONCAT("%",#{inputValue}),"%")
+			)
+		</if>
+	</select> -->
+	
+	<!-- 根据主键批量查询信息 -->
+	<select id="selectBatchByPrimaryKey" resultMap="BaseResultMap">
+		select
+			gsd.id,  
+			gsd.goods_id,
+			gsd.commodity_specification_id,
+			gsd.state,
+			cs.specification_identifier identifier
+		from goods_specification_details gsd
+		LEFT JOIN jlgxc.commodity_specification cs ON cs.id = gsd.commodity_specification_id
+		where gsd.id in (
+		<foreach collection="list" item="item" separator=",">
+			#{item}
+		</foreach>
+		)
+	</select>
+
+	<!-- 根据主键删除 信息 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		goods_specification_details
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	
+	<!-- 根据主键批量删除 信息 -->
+	<delete id="deleteBatchByPrimaryKey">
+		delete from
+		goods_specification_details
+		where id in (
+		<foreach collection="list" item="item" separator=",">
+			#{item}
+		</foreach>
+		)
+	</delete>
+
+	<!-- 保存全部信息 -->
+	<insert id="insert" parameterType="com.jl.mis.model.GoodsSpecificationDetails">
+		insert into
+		goods_specification_details (id, commodity_specification_id,old_price,identifier, specifications,
+		sale_id,
+		price, goods_id,
+		sales_count, state, on_shelves_time,
+		off_shelves_time,
+		operator_identifier, operator_time
+		)
+		values (#{id,jdbcType=INTEGER},
+		#{commoditySpecificationId,jdbcType=INTEGER}, #{oldPrice,jdbcType=DOUBLE},
+		#{identifier,jdbcType=VARCHAR},
+		#{specifications,jdbcType=VARCHAR},
+		#{saleId,jdbcType=INTEGER}, #{price,jdbcType=DOUBLE},
+		#{goodsId,jdbcType=INTEGER},
+		#{salesCount,jdbcType=INTEGER},
+		#{state,jdbcType=INTEGER},
+		#{onShelvesTime,jdbcType=DATE},
+		#{offShelvesTime,jdbcType=DATE},
+		#{operatorIdentifier,jdbcType=VARCHAR},
+		#{operatorTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+
+	<!-- 保存所选内容的信息 -->
+	<insert id="insertSelective" parameterType="com.jl.mis.model.GoodsSpecificationDetails"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into goods_specification_details
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="commoditySpecificationId != null">
+				commodity_specification_id,
+			</if>
+			<if test="oldPrice != null">
+				old_price,
+			</if>
+			<if test="identifier != null">
+				identifier,
+			</if>
+			<if test="specifications != null">
+				specifications,
+			</if>
+			<if test="saleId != null">
+				sale_id,
+			</if>
+			<if test="price != null">
+				price,
+			</if>
+			<if test="goodsId != null">
+				goods_id,
+			</if>
+			<if test="salesCount != null">
+				sales_count,
+			</if>
+			<if test="state != null">
+				state,
+			</if>
+			<if test="onShelvesTime != null">
+				on_shelves_time,
+			</if>
+			<if test="offShelvesTime != null">
+				off_shelves_time,
+			</if>
+			<if test="operatorIdentifier != null">
+				operator_identifier,
+			</if>
+			<if test="operatorTime != null">
+				operator_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="commoditySpecificationId != null">
+				#{commoditySpecificationId,jdbcType=INTEGER},
+			</if>
+			<if test="oldPrice != null">
+				#{oldPrice,jdbcType=DOUBLE},
+			</if>
+			<if test="identifier != null">
+				#{identifier,jdbcType=VARCHAR},
+			</if>
+			<if test="specifications != null">
+				#{specifications,jdbcType=VARCHAR},
+			</if>
+			<if test="saleId != null">
+				#{saleId,jdbcType=INTEGER},
+			</if>
+			<if test="price != null">
+				#{price,jdbcType=DOUBLE},
+			</if>
+			<if test="goodsId != null">
+				#{goodsId,jdbcType=INTEGER},
+			</if>
+			<if test="salesCount != null">
+				#{salesCount,jdbcType=INTEGER},
+			</if>
+			<if test="state != null">
+				#{state,jdbcType=INTEGER},
+			</if>
+			<if test="onShelvesTime != null">
+				#{onShelvesTime,jdbcType=DATE},
+			</if>
+			<if test="offShelvesTime != null">
+				#{offShelvesTime,jdbcType=DATE},
+			</if>
+			<if test="operatorIdentifier != null">
+				#{operatorIdentifier,jdbcType=VARCHAR},
+			</if>
+			<if test="operatorTime != null">
+				#{operatorTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 根据主键更新所选内容 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.jl.mis.model.GoodsSpecificationDetails">
+		update goods_specification_details
+		<set>
+			<if test="commoditySpecificationId != null">
+				commodity_specification_id = #{commoditySpecificationId,jdbcType=INTEGER},
+			</if>
+			<if test="oldPrice != null">
+				old_price = #{oldPrice,jdbcType=DOUBLE},
+			</if>
+			<if test="oldPrice == null">
+				old_price = null,
+			</if>
+			<if test="identifier != null">
+				identifier = #{identifier,jdbcType=VARCHAR},
+			</if>
+			<if test="specifications != null">
+				specifications = #{specifications,jdbcType=VARCHAR},
+			</if>
+			<if test="saleId != null">
+				sale_id = #{saleId,jdbcType=INTEGER},
+			</if>
+			<if test="price != null">
+				price = #{price,jdbcType=DOUBLE},
+			</if>
+			<if test="goodsId != null">
+				goods_id = #{goodsId,jdbcType=INTEGER},
+			</if>
+			<if test="salesCount != null">
+				sales_count = #{salesCount,jdbcType=INTEGER},
+			</if>
+			<if test="state != null">
+				state = #{state,jdbcType=INTEGER},
+			</if>
+			<if test="onShelvesTime != null">
+				on_shelves_time = #{onShelvesTime,jdbcType=DATE},
+			</if>
+			<if test="offShelvesTime != null">
+				off_shelves_time = #{offShelvesTime,jdbcType=DATE},
+			</if>
+			<if test="operatorIdentifier != null">
+				operator_identifier =
+				#{operatorIdentifier,jdbcType=VARCHAR},
+			</if>
+			<if test="operatorTime != null">
+				operator_time = #{operatorTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<!-- 根据主键更新全部内容 -->
+	<update id="updateByPrimaryKey" parameterType="com.jl.mis.model.GoodsSpecificationDetails">
+		update
+		goods_specification_details
+		set
+		commodity_specification_id =
+		#{commoditySpecificationId,jdbcType=INTEGER},
+		old_price = #{oldPrice,jdbcType=DOUBLE}, 
+		identifier =
+		#{identifier,jdbcType=VARCHAR},
+		specifications =
+		#{specifications,jdbcType=VARCHAR},
+		sale_id =
+		#{saleId,jdbcType=INTEGER},
+		price = #{price,jdbcType=DOUBLE},
+		goods_id =
+		#{goodsId,jdbcType=INTEGER},
+		sales_count =
+		#{salesCount,jdbcType=INTEGER},
+		state = #{state,jdbcType=INTEGER},
+		on_shelves_time = #{onShelvesTime,jdbcType=DATE},
+		off_shelves_time =
+		#{offShelvesTime,jdbcType=DATE},
+		operator_identifier =
+		#{operatorIdentifier,jdbcType=VARCHAR},
+		operator_time =
+		#{operatorTime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 根据购销存规格id修改商品为下架 购销存那边操作停用 -->
+	<update id="updateByCommoditySpecificationId" parameterType="com.jl.mis.model.GoodsSpecificationDetails">
+		update
+		goods_specification_details
+		set
+		state = #{state,jdbcType=INTEGER},
+		off_shelves_time =
+		#{offShelvesTime,jdbcType=DATE}
+		where commodity_specification_id = #{commoditySpecificationId,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 根据主键批量更新内容 （商品的上/架操作）-->
+	<update id="updateBatchByPrimaryKey">
+		update
+		goods_specification_details
+		set
+		<if test="onOrOff=='on'">
+		state = 0,
+		on_shelves_time = #{date}
+		</if>
+		<if test="onOrOff=='off'">
+		state = 1,
+		off_shelves_time = #{date}
+		</if>
+		where id in (
+		<foreach collection="list" item="item" separator=",">
+			#{item}
+		</foreach>
+		)
+		
+	</update>
+
+	<!-- 根据规格名称和商品详情id查询商品规格表 -->
+	<select id="selectGoodsSDMsgBySpecificationAndGoodsId"
+		resultType="java.lang.Integer">
+		SELECT
+			COUNT(1)
+		FROM
+			goods_specification_details
+		WHERE
+			commodity_specification_id =#{commoditySpecificationId}
+	</select>
+	
+	<!-- 根据规格名称和商品规格id查询商品规格表 -->
+	<!-- <select id="selectGoodsSDMsgBySpecificationAndGoodsSDId"
+		resultMap="BaseResultMap">
+		SELECT
+		*
+		FROM
+		goods_specification_details
+		WHERE
+		id!=#{id}
+		and goods_id =#{goodsId}
+		AND specifications =#{specifications}
+	</select> -->
+
+	<!-- 根据商品规格表的主键联合查询商品详情表、商品规格表以及分类表 -->
+	<select id="selectGSDAndGDAndClassificationMsgByGSDId" resultMap="BaseResultMap">
+		SELECT
+			gsd.*, gd.id gdId,
+			gd.classification_id,
+			gd.key_word,
+			gd.introdution,
+			gd.details,
+			c.id cid,
+			c. NAME cname,
+			c.parent_id,
+			gdp.id gdpId,
+			gdp.pic_url,
+			co.`name`,
+			cs.specification_identifier identifier,
+			cs.specification_name specifications,
+			un.commonly_price price,
+			inv.inventory - inv.occupied_inventory gxcGoodsStock,
+			co.is_presell gxcState,
+			co.zero_stock zeroStock
+		
+		FROM
+			goods_specification_details gsd
+		LEFT JOIN goods_details gd ON gsd.goods_id = gd.id
+		LEFT JOIN classification c ON gd.classification_id = c.id
+		LEFT JOIN goods_display_picture gdp ON gdp.goods_specification_detail_id = gsd.id
+		LEFT JOIN jlgxc.commodity_specification cs ON cs.id = gsd.commodity_specification_id
+		LEFT JOIN jlgxc.commodity co ON co.id = gd.commodity_id
+		LEFT JOIN jlgxc.unit un ON un.specification_id = cs.id
+		AND un.basic_unit = 1
+		LEFT JOIN jlgxc.inventory inv ON inv.specification_id = cs.id
+		WHERE
+		gsd.id=#{id}
+	</select>
+	
+	<!-- 根据联合查询商品详情表、商品规格表以及分类表 和购销存的商品表，用于获取需导出的数据-->
+	<select id="selectGSDAndGDAndClassificationMsgToExport" resultMap="BaseResultMap">
+		SELECT
+			gsd.*, gd.id gdId,
+			gd.classification_id,
+			gd.key_word,
+			gd.introdution,
+			gd.details,
+			c.id cid,
+			c. NAME cname,
+			c.parent_id,
+			gdp.id gdpId,
+			gdp.pic_url,
+			co.`name`,
+			cs.specification_identifier identifier,
+			cs.specification_name specifications,
+			un.commonly_price price,
+			inv.inventory - inv.occupied_inventory gxcGoodsStock,
+			co.is_presell gxcState,
+			co.zero_stock zeroStock,
+			u. NAME uname
+		FROM
+			goods_specification_details gsd
+		LEFT JOIN goods_details gd ON gsd.goods_id = gd.id
+		LEFT JOIN classification c ON gd.classification_id = c.id
+		LEFT JOIN goods_display_picture gdp ON gdp.goods_specification_detail_id = gsd.id
+		LEFT JOIN jlgxc.commodity_specification cs ON cs.id = gsd.commodity_specification_id
+		LEFT JOIN jlgxc.commodity co ON co.id = gd.commodity_id
+		LEFT JOIN jlgxc.unit un ON un.specification_id = cs.id
+		AND un.basic_unit = 1
+		LEFT JOIN jlgxc.inventory inv ON inv.specification_id = cs.id
+		LEFT JOIN user u on u.identifier=gsd.operator_identifier
+		WHERE 1=1
+		<include refid="query_where"></include>
+		ORDER BY gd.id 
+	</select>
+	
+	<!-- 根据id获取商品规格编号 -->
+	<select id="selectSpecIdentifierById" resultMap="BaseResultMap">
+	SELECT
+		gsd.id, 
+		cs.specification_identifier identifier
+	FROM
+		goods_specification_details gsd
+	LEFT JOIN jlgxc.commodity_specification cs ON cs.id = gsd.commodity_specification_id
+	WHERE
+		gsd.id=#{id}
+	</select>
+	
+	
+
+	<!-- datatable 分页 start -->
+	<!-- 查询记录总条数 -->
+	<select id="iTotalRecords" resultType="java.lang.Integer">
+		SELECT
+		count(1)
+		FROM
+			goods_specification_details gsd
+		LEFT JOIN goods_details gd ON gsd.goods_id = gd.id
+		LEFT JOIN classification c ON gd.classification_id = c.id
+		LEFT JOIN jlgxc.commodity_specification cs ON cs.id = gsd.commodity_specification_id
+		LEFT JOIN jlgxc.commodity co ON co.id = gd.commodity_id
+		LEFT JOIN jlgxc.unit un on un.specification_id=cs.id and un.basic_unit=1
+		LEFT JOIN jlgxc.inventory inv ON inv.specification_id = cs.id
+		LEFT JOIN user u ON u.identifier = gsd.operator_identifier
+	</select>
+	<!-- 查询所有信息 结果集 -->
+	<select id="selectForSearch" resultMap="BaseResultMap">
+		SELECT
+			gsd.id,
+			gsd.operator_identifier,
+			gsd.operator_time ,
+			gsd.off_shelves_time,
+			gsd.on_shelves_time,
+			gsd.state,
+			gd.id gdId,
+			gd.classification_id,
+			gd.key_word,
+			gd.introdution,
+			gd.details,
+			gd.recom,
+			gd.recom_time,
+			co.`name`,
+		 	cs.specification_identifier identifier,
+			cs.specification_name specifications,
+			un.commonly_price price,
+		  	inv.inventory-inv.occupied_inventory gxcGoodsStock,
+			co.is_presell gxcState,
+			co.zero_stock zeroStock,
+			c.id cid,
+			c. NAME cname,
+			c.parent_id,
+			u. NAME uname
+		FROM
+			goods_specification_details gsd
+		LEFT JOIN goods_details gd ON gsd.goods_id = gd.id
+		LEFT JOIN classification c ON gd.classification_id = c.id
+		LEFT JOIN jlgxc.commodity_specification cs ON cs.id = gsd.commodity_specification_id
+		LEFT JOIN jlgxc.commodity co ON co.id = gd.commodity_id
+		LEFT JOIN jlgxc.unit un on un.specification_id=cs.id and un.basic_unit=1
+		LEFT JOIN jlgxc.inventory inv ON inv.specification_id = cs.id
+		LEFT JOIN user u ON u.identifier = gsd.operator_identifier
+		where 1=1
+		<include refid="query_where"></include>
+		<if test="desc!=null and desc!='' ">
+			order by ${desc} desc
+		</if>
+		<if test="asc!=null and asc!='' ">
+			order by ${asc} asc
+		</if>
+		limit ${iDisplayStart},${pageDisplayLength}
+	</select>
+	<!-- 查询所有信息 结果集 不分页查询 供页面中根据促销进行搜索-->
+	<select id="selectForSearchNoLimit" resultMap="BaseResultMap">
+		SELECT
+			gsd.id,
+			gsd.operator_identifier,
+			gsd.operator_time ,
+			gsd.off_shelves_time,
+			gsd.on_shelves_time,
+			gsd.state,
+			gd.id gdId,
+			gd.classification_id,
+			gd.key_word,
+			gd.introdution,
+			gd.details,
+			gd.recom,
+			gd.recom_time,
+			co.`name`,
+		 	cs.specification_identifier identifier,
+			cs.specification_name specifications,
+			un.commonly_price price,
+		  	inv.inventory-inv.occupied_inventory gxcGoodsStock,
+			co.is_presell gxcState,
+			co.zero_stock zeroStock,
+			c.id cid,
+			c. NAME cname,
+			c.parent_id,
+			u. NAME uname
+		FROM
+			goods_specification_details gsd
+		LEFT JOIN goods_details gd ON gsd.goods_id = gd.id
+		LEFT JOIN classification c ON gd.classification_id = c.id
+		LEFT JOIN jlgxc.commodity_specification cs ON cs.id = gsd.commodity_specification_id
+		LEFT JOIN jlgxc.commodity co ON co.id = gd.commodity_id
+		LEFT JOIN jlgxc.unit un on un.specification_id=cs.id and un.basic_unit=1
+		LEFT JOIN jlgxc.inventory inv ON inv.specification_id = cs.id
+		LEFT JOIN user u ON u.identifier = gsd.operator_identifier
+		where 1=1
+		<include refid="query_where"></include>
+		<if test="desc!=null and desc!='' ">
+			order by ${desc} desc
+		</if>
+		<if test="asc!=null and asc!='' ">
+			order by ${asc} asc
+		</if>
+	</select>
+	<!-- 通过查询条件过滤后的总记录 -->
+	<select id="iTotalDisplayRecords" resultType="java.lang.Integer">
+		SELECT
+		count(1)
+		FROM
+			goods_specification_details gsd
+		LEFT JOIN goods_details gd ON gsd.goods_id = gd.id
+		LEFT JOIN classification c ON gd.classification_id = c.id
+		LEFT JOIN jlgxc.commodity_specification cs ON cs.id = gsd.commodity_specification_id
+		LEFT JOIN jlgxc.commodity co ON co.id = gd.commodity_id
+		LEFT JOIN jlgxc.unit un on un.specification_id=cs.id and un.basic_unit=1
+		LEFT JOIN jlgxc.inventory inv ON inv.specification_id = cs.id
+		LEFT JOIN user u ON u.identifier = gsd.operator_identifier
+		where 1=1
+		<include refid="query_where"></include>
+	</select>
+	<!-- datatable 分页 end -->
+	
+	
+	<!-- 获取购销存商品状态是否已停用    购销存上架是需判断该状态 -->
+	<select id="selectjlgxcCommoditySpecificationIsDeleteByPrimaryKey" parameterType="java.lang.Integer"
+		resultType="java.lang.Integer">
+		select
+		is_delete
+		from jlgxc.commodity_specification
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	
+	
+	
+	
+	<!--api 移动端使用 -->
+	
+	
+	<!-- 获取根据价格排序的商品详情信息 -->
+	<select id="getGoodsSpecificationDetail" resultMap="appGoodsSpecificationResultMap">
+	SELECT
+		gsd.*, c.brand brand,
+		cs.specification_name specifications,
+		cs.specification_identifier identifier,
+		un.commonly_price price
+	FROM
+		goods_specification_details gsd
+	LEFT JOIN jlgxc.commodity_specification cs ON cs.id = gsd.commodity_specification_id
+	LEFT JOIN jlgxc.unit un ON un.specification_id = cs.id
+	AND un.basic_unit = 1
+	LEFT JOIN jlgxc.commodity c ON c.id = cs.commodity_id
+	LEFT JOIN jlgxc.inventory inv on inv.specification_id=cs.id
+	where gsd.goods_id=#{goodsId}
+	<if test='isHasGoods == "true"'>
+		AND (inv.inventory-inv.occupied_inventory) - (
+				SELECT
+					IFNULL(SUM(sc.goods_num),0)
+				FROM
+					shopping_cart sc
+				LEFT JOIN goods_specification_details gsda on gsda.id=sc.goods_specification_details_id
+				LEFT JOIN `user` u ON u.id = sc.user_id
+				where u.is_VIP=1
+				and UNIX_TIMESTAMP(now())-UNIX_TIMESTAMP(sc.add_time) &lt;= 3600
+				and gsda.commodity_specification_id=gsd.commodity_specification_id
+		) &gt; 0
+	</if>
+	<if test='brandName[0] != "all"'>
+		AND c.brand in
+		<foreach item="item" index="index" collection="brandName" open="(" separator="," close=")">
+                 #{brandName[${index}]}
+		</foreach>
+	</if>
+	<if test="gsdState =='on'">
+		AND gsd.state=0
+	</if>
+	ORDER BY
+		un.commonly_price
+	</select>
+	
+	<!-- 根据商品id获取商品详情、商品详情对应的图片、购销存里的库存 状态 以及 品牌 -->
+	<select id="getGoodsDetailMsgByGoodsId" resultMap="appGoodsActivitysResultMap">
+	SELECT
+		gsd.*,
+		cs.specification_identifier identifier,
+		cs.specification_name specifications,
+		un.commonly_price price,
+		gdp.id gdpId,
+		gdp.pic_url,
+		gdp.goods_specification_detail_id,
+		(
+			(inv.inventory-inv.occupied_inventory) - (
+				SELECT
+					IFNULL(SUM(sc.goods_num), 0)
+				FROM
+					shopping_cart sc
+				LEFT JOIN goods_specification_details gsda ON gsda.id = sc.goods_specification_details_id
+				LEFT JOIN `user` u ON u.id = sc.user_id
+				WHERE
+					u.is_VIP = 1
+				AND UNIX_TIMESTAMP(now()) - UNIX_TIMESTAMP(sc.add_time) &lt;= 3600
+				AND gsda.commodity_specification_id = gsd.commodity_specification_id
+			)
+		) gxcGoodsStock,
+		c.brand,
+		c.zero_stock zeroStock,
+		c.is_presell gxcState,
+		un.mini_price gxcPurchase,
+		ga.*
+	FROM
+		goods_specification_details gsd
+	LEFT JOIN jlgxc.commodity_specification cs on cs.id=gsd.commodity_specification_id
+	LEFT JOIN jlgxc.commodity c on c.id=cs.commodity_id
+	LEFT JOIN jlgxc.unit un on un.specification_id=cs.id and un.basic_unit=1
+	LEFT JOIN jlgxc.inventory inv on inv.specification_id=cs.id
+	LEFT JOIN goods_display_picture gdp on gdp.goods_specification_detail_id=gsd.id
+	LEFT JOIN (
+		SELECT
+			g.id gaId,
+			g.goods_id gaGoodsId,
+			g.activity_information_id,
+			g.state gaState ,
+			ai.id aiId,
+			ai.identifier aiidentifier,
+			ai.`name` ainame,
+			ai.activity_type,
+			ai.price aiprice,
+			ai.discount,
+			ai.begin_validity_time,
+			ai.end_validity_time,
+			ai.max_num
+		FROM
+			goods_activity g
+		LEFT JOIN activity_information ai ON ai.id = g.activity_information_id
+		WHERE
+			g.state = 0
+		AND ai.state = 4
+	) ga ON ga.gaGoodsId = gsd.id
+	where gsd.goods_id=#{goodsId}
+	<if test="gsdState =='on'">
+		AND gsd.state=0
+	</if>
+	<if test="isHasGoods =='true'">
+		and gsd.state !=1
+		AND (
+			(inv.inventory-inv.occupied_inventory) - (
+				SELECT
+					IFNULL(SUM(sc.goods_num), 0)
+				FROM
+					shopping_cart sc
+				LEFT JOIN goods_specification_details gsda ON gsda.id = sc.goods_specification_details_id
+				LEFT JOIN `user` u ON u.id = sc.user_id
+				WHERE
+					u.is_VIP = 1
+				AND UNIX_TIMESTAMP(now()) - UNIX_TIMESTAMP(sc.add_time) &lt;= 3600
+				AND gsda.commodity_specification_id = gsd.commodity_specification_id
+			)
+		)&gt; 0
+	</if>
+	ORDER BY
+		un.commonly_price,gdp.id
+
+	</select>
+	
+	<!-- 根据商品规格id查库存 -->
+	<select id="selectGxcGoodsStockByspecificationId" resultMap="appGoodsSpecificationResultMap">
+	SELECT
+		gsd.*,
+		cs.specification_identifier identifier,
+		cs.specification_name specifications,
+		un.commonly_price price,
+		(
+			(inv.inventory-inv.occupied_inventory) - (
+				SELECT
+					IFNULL(SUM(sc.goods_num), 0)
+				FROM
+					shopping_cart sc
+				LEFT JOIN goods_specification_details gsda ON gsda.id = sc.goods_specification_details_id
+				LEFT JOIN `user` u ON u.id = sc.user_id
+				WHERE
+					u.is_VIP = 1
+				AND UNIX_TIMESTAMP(now()) - UNIX_TIMESTAMP(sc.add_time) &lt;= 3600
+				AND gsda.commodity_specification_id = gsd.commodity_specification_id
+			)
+		) gxcGoodsStock
+	FROM
+		goods_specification_details gsd
+	LEFT JOIN jlgxc.commodity_specification cs on cs.id=gsd.commodity_specification_id
+	LEFT JOIN jlgxc.unit un on un.specification_id=cs.id and un.basic_unit=1
+	LEFT JOIN jlgxc.inventory inv on inv.specification_id=cs.id
+	where gsd.id=#{id} and gsd.state=0
+	</select>
+	
+	<!-- 根据商品规格id查库存 -->
+	<select id="selectGxcGoodsStockAndZeroByspecificationId" resultMap="BaseResultMap">
+	SELECT
+		gsd.*,
+		cs.specification_identifier identifier,
+		cs.specification_name specifications,
+		un.commonly_price price,
+		(
+			(inv.inventory-inv.occupied_inventory) - (
+				SELECT
+					IFNULL(SUM(sc.goods_num), 0)
+				FROM
+					shopping_cart sc
+				LEFT JOIN goods_specification_details gsda ON gsda.id = sc.goods_specification_details_id
+				LEFT JOIN `user` u ON u.id = sc.user_id
+				WHERE
+					u.is_VIP = 1
+				AND UNIX_TIMESTAMP(now()) - UNIX_TIMESTAMP(sc.add_time) &lt;= 3600
+				AND gsda.commodity_specification_id = gsd.commodity_specification_id
+			)
+		) gxcGoodsStock,
+		c.zero_stock zeroStock,
+		c.is_presell gxcState,
+		c.`name`,
+		gd.id gdId
+	FROM
+		goods_specification_details gsd
+	LEFT JOIN goods_details gd ON gd.id = gsd.goods_id
+	LEFT JOIN jlgxc.commodity c ON c.id = gd.commodity_id
+	LEFT JOIN jlgxc.commodity_specification cs on cs.id=gsd.commodity_specification_id
+	LEFT JOIN jlgxc.unit un on un.specification_id=cs.id and un.basic_unit=1
+	LEFT JOIN jlgxc.inventory inv on inv.specification_id=cs.id
+	where gsd.id=#{id} and gsd.state=0
+	</select>
+	
+	<!-- 根据商品规格id以及商品id查库存 -->
+	<select id="selectGxcGoodsStockByspecificationIdAndGoodsId" resultMap="appGoodsSpecificationResultMap">
+	SELECT
+		gsd.*, cs.specification_identifier identifier,
+		cs.specification_name specifications,
+		un.commonly_price price,
+		(
+			(
+				inv.inventory - inv.occupied_inventory
+			) - (
+				SELECT
+					IFNULL(SUM(sca.goods_num), 0)
+				FROM
+					shopping_cart sca
+				LEFT JOIN goods_specification_details gsda ON gsda.id = sca.goods_specification_details_id
+				LEFT JOIN `user` u ON u.id = sca.user_id
+				WHERE
+					u.is_VIP = 1
+				AND UNIX_TIMESTAMP(now()) - UNIX_TIMESTAMP(sca.add_time) &lt;= 3600
+				AND gsda.commodity_specification_id = gsd.commodity_specification_id
+				AND u.id != #{userId,jdbcType=INTEGER}
+			)
+		) gxcGoodsStock,
+		c.is_presell gxcState
+	FROM
+		goods_specification_details gsd
+	LEFT JOIN goods_details gd ON gd.id = gsd.goods_id
+	LEFT JOIN jlgxc.commodity c ON c.id = gd.commodity_id
+	LEFT JOIN jlgxc.commodity_specification cs ON cs.id = gsd.commodity_specification_id
+	LEFT JOIN jlgxc.unit un ON un.specification_id = cs.id
+	AND un.basic_unit = 1
+	LEFT JOIN jlgxc.inventory inv ON inv.specification_id = cs.id
+	where gsd.id=#{id} and gsd.goods_id=#{goodsId} and gsd.state=0
+	</select>
+	
+	<!-- 根据主键和商品id查询商品详情 必须是上架的-->
+	<select id="selectGoodsSpecificationDetailsByIdAndGoodsId" resultMap="appGoodsSpecificationResultMap">
+	SELECT
+		gsd.*, cs.specification_name specifications,
+		cs.specification_identifier identifier,
+		un.commonly_price price
+	FROM
+		goods_specification_details gsd
+	LEFT JOIN jlgxc.commodity_specification cs ON cs.id = gsd.commodity_specification_id
+	LEFT JOIN jlgxc.unit un ON un.specification_id = cs.id
+	AND un.basic_unit = 1
+	WHERE
+		gsd.id=#{id} 
+	and gsd.goods_id=#{goodsId} 
+	and gsd.state=0
+	</select>
+	
+	<!-- 根据主键和商品id查询商品详情包括商品信息 必须是上架的-->
+	<select id="selectGoodsDetailsByIdAndGoodsId" resultMap="BaseResultMap">
+	SELECT
+		gsd.*, cs.specification_name specifications,
+		cs.specification_identifier identifier,
+		un.commonly_price price,
+		c.zero_stock zeroStock,
+		c.`name`,
+		gd.id gdId
+	FROM
+		goods_specification_details gsd
+	LEFT JOIN jlgxc.commodity_specification cs ON cs.id = gsd.commodity_specification_id
+	LEFT JOIN goods_details gd ON gd.id = gsd.goods_id
+	LEFT JOIN jlgxc.commodity c ON c.id = gd.commodity_id
+	LEFT JOIN jlgxc.unit un ON un.specification_id = cs.id
+	AND un.basic_unit = 1
+	WHERE
+		gsd.id=#{id} 
+	and gsd.goods_id=#{goodsId} 
+	and gsd.state=0
+	</select>
+	
+	<!-- 根据id 更新销量  -->
+	<update id="updateGoodsSpecificationDetailsSalesCount">
+	<!-- UPDATE goods_specification_details 
+		INNER JOIN{
+		SELECT id,sales_count FROM goods_specification_details 
+		WHERE id=#{detailsId}
+		) c
+	SET sales_count=c.sales_count+#{count}
+	where id=c.id -->
+	UPDATE goods_specification_details gs
+	SET gs.sales_count = gs.sales_count + #{count}
+	WHERE
+	gs.id=#{detailsId}
+	</update>
+	
+	
+	
+	
+	
+	<!-- 客服系统使用 -->
+	<!-- 查询所有信息 结果集 -->
+	<select id="selectGoodsMsgToCustomService" resultMap="BaseResultMap">
+		SELECT
+			gsd.id,
+			cs.specification_identifier identifier,
+			cs.specification_name specifications,
+			u.commonly_price price,
+			gd.id gdId,
+			c.is_presell gxcState,
+			c. NAME
+		FROM
+			goods_specification_details gsd
+		LEFT JOIN goods_details gd ON gsd.goods_id = gd.id
+		LEFT JOIN jlgxc.commodity c on c.id=gd.commodity_id
+		LEFT JOIN jlgxc.commodity_specification cs on cs.id=gsd.commodity_specification_id
+		LEFT JOIN jlgxc.unit u on u.specification_id=cs.id and u.basic_unit=1
+		WHERE
+			gsd.state = 0
+		<if test="goodsName!=null and goodsName!=''">
+			and (
+			cs.specification_identifier like
+			CONCAT(CONCAT("%",#{goodsName}),"%")
+			or c.name like
+			CONCAT(CONCAT("%",#{goodsName}),"%")
+			)
+		</if>
+	</select>
+</mapper>

@@ -1,0 +1,106 @@
+.mainthing{
+	margin-top: 50px;
+}
+.mainthing>img{
+	float: left;
+}
+.mainthing>form{
+	float: right;
+	width:472px;
+}
+*{
+	font-family: "微软雅黑";
+	margin:0px;
+	padding:0px;
+}
+a{
+	text-decoration: none;
+}
+.mainthing>form .title{
+	font-size: 18px;
+	padding-bottom: 10px;
+	border-bottom:1px solid #eee;
+	margin-bottom: 40px;
+}
+.mainthing>form .title span{
+	color: #ccc;
+}
+.mainthing>form .title img{
+	vertical-align: middle;
+	margin-right: 10px;
+}
+.mainthing>form p span{
+	font-size: 14px;
+	color: #333;
+}
+.mainthing>form p{
+	height: 39px;
+	line-height: 39px;
+	margin-bottom: 20px;
+}
+.mainthing>form .normal input,
+.mainthing>form .code input{
+	background: #eee;
+	border:1px solid #ccc;
+	width:250px;
+	padding:0px 10px;
+	height: 39px;
+}
+.mainthing>form .normal span,
+.mainthing>form .code span{
+	float: left;
+	width:100px;
+	text-align: right;
+}
+.mainthing>form .code input{
+	width: 90px;
+}
+.mainthing>form .code img{
+	vertical-align: middle;
+	margin-left: 15px;
+	width:146px;
+	height: 41px;
+}
+.mainthing>form .radios{
+	margin-bottom: 0px;
+}
+.mainthing>form .radios input{
+	width:15px;
+	height: 15px;
+	vertical-align: middle;
+	margin-right: 10px;
+	margin-left: 40px;
+}
+.mainthing>form .radios input:first-child{
+	margin-left: 100px;
+}
+.mainthing>form .warning{
+	margin-left: 100px;
+	font-size: 12px;
+	color: #ff0000;
+	margin-bottom: 0px;
+}
+.mainthing>form>input[type="submit"]{
+	width:270px;
+	height: 50px;
+	text-align: center;
+	line-height: 50px;
+	border:0px;
+	background: #1c59b5;
+	color: #fff;
+	font-size: 18px;
+	margin-left: 100px;
+	cursor: pointer;
+}
+.mainthing>form .register{
+	margin-left: 100px;
+}
+.mainthing>form .register a{
+	float: left;
+	color: #1c59b5;
+	font-size: 14px;
+	margin-left: 51px;
+}
+.mainthing>form .register a:first-child{
+	margin-left: 0px;
+}

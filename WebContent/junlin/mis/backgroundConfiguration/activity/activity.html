@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8" />
+		<title>活动</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../../../css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../../css/ace.min.css" />
+		<link rel="stylesheet" href="../../../css/style.css" />
+		<link rel="stylesheet" href="../../../css/style_i.css" />
+		<link rel="stylesheet" href="../../../font/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../../../js/layer/skin/layer.css" />
+		<!--[if IE 7]>
+		  <link rel="stylesheet" href="../../../font/css/font-awesome-ie7.min.css" />
+		  <link rel="stylesheet" href="../../../css/ace-ie.min.css" />
+		<![endif]-->
+
+		<link rel="stylesheet" href="../../../css/mine/all.css" />
+		<link rel="stylesheet" href="../../../css/mine/public.css" />
+
+		<script src="../../../js/jquery-1.10.2.min.js"></script>
+		<script src="../../../js/bootstrap.min.js"></script>
+		<script src="../../../js/typeahead-bs2.min.js"></script>
+		<script src="../../../js/jquery.dataTables.min.js"></script>
+		<script src="../../../js/jquery.dataTables.bootstrap.js"></script>
+		<script src="../../../js/layer/layer.js" type="text/javascript"></script>
+		<script src="../../../js/laydate/laydate.js" type="text/javascript"></script>
+		<script src="../../../script/public.js" type="text/javascript"></script>
+		
+		
+		<script src="../../../js/photoloads.js" type="text/javascript"></script>
+		
+		<style>
+			#editDiv {
+				padding-top: 50px;
+			}
+			
+			.rule-div,
+			.goods-list,
+			.coupon-list {
+				padding: 0;
+			}
+			
+			.fullcut {
+				line-height: 30px;
+			}
+			
+			.goods-list ul li,
+			.coupon-list ul li,
+			.li-inline li {
+				width: 20%;
+				display: inline-block;
+				cursor: default;
+				text-decoration: underline;
+			}
+			
+			.delli-div {
+				display: inline-block;
+				color: #ff7e7e;
+			}
+		</style>
+	</head>
+
+	<body class="content">
+		<div class="page-content clearfix">
+			<div id="Member_Ratings">
+				<div class="d_Confirm_Order_style" style="margin-top:10px;">
+					<h4 class="text-title">活动</h4>
+					<div class="search-div clearfix">
+						<div class="clearfix">
+							<span class="l_f"> 
+							编号： <input type="text" value="" />
+						</span>
+							<span class="l_f"> 
+							名称： <input type="text" value="" />
+						</span>
+							<span class="l_f"> 
+							操作人： <input type="text"  value="" />
+						</span>
+							<span class="l_f"> 
+							筛选： 
+							<select>
+								<option value="0" selected="selected">--请选择--</option>
+								<option value="1">折扣</option>
+								<option value="2">团购</option>
+								<option value="2">秒杀</option>
+								<option value="2">立减</option>
+								<option value="2">满减</option>
+							</select>
+						</span>
+							<span class="l_f"> 
+							有效： 
+							<select>
+								<option value="0" selected="selected">--请选择--</option>
+								<option value="1">有效</option>
+								<option value="2">无效</option>
+							</select>
+						</span>
+							<span class="r_f"> 
+							<input type="button"  class="btncss btn_search" value="搜索" />
+						</span>
+						</div>
+
+					</div>
+					<div class="opration-div clearfix">
+						<span class="r_f"> 
+							<button type="button" class="btncss jl-btn-defult" onclick="couponEduce()" style="margin-right: 0;"><i class="fa fa-download"></i> 导出</button>
+							
+						</span>
+						<span class="r_f"> 
+							<button type="button" class="btncss jl-btn-defult" onclick="couponDel()"><i class="fa fa-trash"></i> 删除</button>
+						</span>
+						<span class="r_f"> 
+							<button type="button" class="btncss jl-btn-defult" onclick="couponAdd()"><i class="fa fa-plus"></i> 新增</button>
+						</span>
+						<span class="jl_f_l">
+							<input type="checkbox" name="" checked="checked" id="checkAll" style="margin:0 5px 0 0;"/>
+						</span>
+						<span class="jl_f_l">
+							<label for="checkAll">全选</label>
+						</span>
+
+					</div>
+					<div class="table_menu_list">
+						<table class="table table-striped table-hover col-xs-12" id="datatable">
+							<thead class="table-header">
+								<tr>
+									<th>选择</th>
+									<th>编号</th>
+									<th>类型</th>
+									<th>名称</th>
+									<th>介绍</th>
+									<th>预算</th>
+									<th>活动时间</th>
+									<th>状态</th>
+									<th width="21%">操作</th>
+								</tr>
+
+							</thead>
+							<tbody>
+								<tr>
+									<td>
+										<input type="checkbox" name="id" checked="checked" />
+									</td>
+									<td>
+										00100101
+									</td>
+									<td>折扣</td>
+									<td>福临门</td>
+									<td>200</td>
+									<td>200</td>
+									<td>2017.10.02-2017.11.02</td>
+									<td>审核中</td>
+									<td>
+										<input type="button" class="btncss edit" onclick="couponLook()" value="详情" />
+										<input type="button" class="btncss edit" onclick="couponEdit()" value="编辑" />
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<input type="checkbox" name="id" checked="checked" />
+									</td>
+									<td>
+										00100101
+									</td>
+									<td>折扣</td>
+									<td>福临门</td>
+									<td>200</td>
+									<td>200</td>
+									<td>2017.10.02-2017.11.02</td>
+									<td>已通过</td>
+									<td>
+										<input type="button" class="btncss edit" onclick="couponLook()" value="详情" />
+										<input type="button" class="btncss edit" onclick="couponEdit()" value="编辑" />
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!--详情-->
+		<div id="lookDiv" style="display: none;">
+			<form class="container">
+				<div class="form-group">
+					<label class="col-xs-2 control-label">编号：</label>
+					<div class="col-xs-4">
+						12315
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-2 control-label">名称：</label>
+					<div class="col-xs-4">
+						周年庆大酬宾
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-2 control-label">活动时间：</label>
+					<div class="col-xs-4">
+						2017-11-16 00:00:00~2017-12-16 00:00:00
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-2 control-label">介绍：</label>
+					<div class="col-xs-8">
+						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facilis quia iusto laborum ad earum ducimus eligendi itaque enim eius necessitatibus est delectus porro fugit in consectetur adipisci voluptatum beatae quasi?
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-2 control-label">类型：</label>
+					<div class="col-xs-2">
+						折扣
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-2 control-label">商品列表：</label>
+					<div class="col-xs-8">
+						<ul class="col-xs-12 li-inline">
+							<li data-id="1" data-state="0">a</li>
+							<li data-id="2" data-state="1">b</li>
+							<li data-id="3" data-state="1">c</li>
+							<li data-id="4" data-state="1">d</li>
+						</ul>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="" class="col-xs-2 control-label">优惠券：</label>
+					<div class="col-xs-8">
+						<ul class="col-xs-12 li-inline">
+							<li data-id="1" data-state="0">a</li>
+							<li data-id="2" data-state="1">b</li>
+							<li data-id="3" data-state="1">c</li>
+							<li data-id="4" data-state="1">d</li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="" class="col-xs-2 control-label">消息图：</label>
+					<div class="col-xs-4">
+						<img border="0" src="../../../img/photo_icon.jpg" width="90" height="90">
+						
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="" class="col-xs-2 control-label">展示图：</label>
+					<div class="col-xs-4">
+						<img border="0" src="../../../img/photo_icon.jpg" width="90" height="90">
+						
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-2 control-label">创建人：</label>
+					<div class="col-xs-4">
+						123456
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-2 control-label">创建时间：</label>
+					<div class="col-xs-4">
+						2017-11-16 09:23
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-2 control-label">预警：</label>
+					<div class="col-xs-4">
+						有商品价格低于库存价格
+					</div>
+				</div>
+			</form>
+		</div>
+
+		<!--新增 编辑 -->
+		<div id="editDiv" style="display: none;">
+			<form class="container">
+				<div class="form-group editshow hidden">
+					<label class="col-xs-2 control-label">编号：</label>
+					<div class="col-xs-4">
+						12315
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="name" class="col-xs-2 control-label">名称：</label>
+					<div class="col-xs-4">
+						<input type="text" class="form-control" id="name" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="activitytime" class="col-xs-2 control-label">活动时间：</label>
+					<div class="col-xs-4">
+						<input type="text" class="form-control" id="activitytime" placeholder="请选择有效期时间" readonly="" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="introduction" class="col-xs-2 control-label">介绍：</label>
+					<div class="col-xs-8">
+						<textarea class="form-control" id="introduction" maxlength="200" rows="3">请输入200个字数以下。</textarea>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="rule" class="col-xs-2 control-label">类型：</label>
+					<div class="col-xs-2">
+						<select id="rule" class="form-control">
+							<option value="0" selected="selected">--请选择--</option>
+							<option value="1">折扣</option>
+							<option value="2">团购</option>
+							<option value="3">秒杀</option>
+							<option value="4">立减</option>
+							<option value="5">满减</option>
+						</select>
+					</div>
+					<div class="rule-div">
+						<label class="col-xs-2 control-label text-center">请先选择活动类型</label>
+						<!--<div class="col-xs-2 discount">
+							<input type="text" name="box1" class="form-control" placeholder="折扣" />
+						</div>
+						<div class="col-xs-2 discount">
+							<input type="text" name="box2" class="form-control" placeholder="单人最大购买数量" />
+						</div>
+						<label class="col-xs-1 control-label group-purchase">原价：200</label>
+						<div class="col-xs-2 group-purchase">
+							<input type="text" name="box1" class="form-control" placeholder="团购价格" />
+						</div>
+						<div class="col-xs-2 group-purchase">
+							<input type="text" name="box2" class="form-control" placeholder="单人最大购买数量" />
+						</div>
+						<label class="col-xs-1 control-label seckill">原价：200</label>
+						<div class="col-xs-2 seckill">
+							<input type="text" name="box1" class="form-control" placeholder="秒杀价格" />
+						</div>
+						<div class="col-xs-2 seckill">
+							<input type="text" name="box2" class="form-control" placeholder="单人最大购买数量" />
+						</div>
+						<div class="col-xs-2 minus">
+							<input type="text" name="box1" class="form-control" placeholder="立减价格" />
+						</div>
+						<div class="col-xs-2 minus">
+							<input type="text" name="box2" class="form-control" placeholder="单人最大购买数量" />
+						</div>
+						<div class="col-xs-4 fullcut">
+							<div class="form-group">
+								<div class="input-group">
+									<div class="input-group-addon">满</div>
+									<input type="text" class="form-control" name="box1">
+									<div class="input-group-addon">减</div>
+									<input type="text" class="form-control" name="box2">
+								</div>
+							</div>
+						</div>-->
+					</div>
+
+				</div>
+
+				<div class="form-group">
+					<label class="col-xs-2 control-label">商品列表：</label>
+					<div class="col-xs-8 goods-list">
+						<ul class="col-xs-12">
+							<!--<li data-id="1" data-state="0">a</li>
+							<li data-id="2" data-state="1">b</li>
+							<li data-id="3" data-state="1">c</li>
+							<li data-id="4" data-state="1">d</li>-->
+						</ul>
+						<div class="col-xs-2">
+							<select id="classificationOne" class="form-control" data-state="3">
+								<option value="0" selected="selected">一级分类</option>
+								<option data-id="1" value="第一大类">第一大类</option>
+								<option data-id="2" value="第二大类">第二大类</option>
+								<option data-id="3" value="第三大类">第三大类</option>
+								<option data-id="4" value="第四大类">第四大类</option>
+								<option data-id="5" value="第五大类">第五大类</option>
+							</select>
+						</div>
+						<div class="col-xs-2">
+							<select id="classificationTwo" class="form-control" data-state="2">
+								<option value="0" selected="selected">二级分类</option>
+								<option data-id="1" value="粮食">粮食</option>
+								<option data-id="2" value="好吃的">好吃的</option>
+								<option data-id="3" value="化妆品">化妆品</option>
+								<option data-id="4" value="电器">电器</option>
+							</select>
+						</div>
+						<div class="col-xs-2">
+							<select id="goods" class="form-control" data-state="1">
+								<option value="0" selected="selected">商品名称</option>
+								<option data-id="1" value="九多肉多">九多肉多</option>
+								<option data-id="2" value="棉花糖">棉花糖</option>
+								<option data-id="3" value="日历">日历</option>
+								<option data-id="4" value="笔记本">笔记本</option>
+							</select>
+						</div>
+						<div class="col-xs-2">
+							<select id="goodstype" class="form-control" data-state="0">
+								<option value="0" selected="selected">规格</option>
+								<option data-id="1" value="100">100</option>
+								<option data-id="2" value="10">10</option>
+							</select>
+						</div>
+						<div class="col-xs-2">
+							<button type="button" class="btncss jl-btn-importent" id="goodsAddBtn">新增</button>
+							<input type="text" id="goodsidStr" class="hidden" />
+							<input type="text" id="stateStr" class="hidden" />
+						</div>
+
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="" class="col-xs-2 control-label">优惠券：</label>
+					<div class="col-xs-8 coupon-list">
+						<ul class="col-xs-12">
+							<!--<li data-id="1" data-state="0">a</li>
+							<li data-id="2" data-state="1">b</li>
+							<li data-id="3" data-state="1">c</li>
+							<li data-id="4" data-state="1">d</li>-->
+						</ul>
+						<div class="col-xs-3">
+							<select id="couponSelect" class="form-control" data-state="4">
+								<option value="0" selected="selected">选择优惠券</option>
+								<option data-id="1" value="AAA">AAA</option>
+								<option data-id="2" value="BBB">BBB</option>
+								<option data-id="3" value="CCC">CCC</option>
+								<option data-id="4" value="DDD">DDD</option>
+								<option data-id="5" value="EEE">EEE</option>
+							</select>
+						</div>
+						<div class="col-xs-2">
+							<button type="button" class="btncss jl-btn-importent" id="couponAddBtn">新增</button>
+							<input type="text" id="couponidStr" class="hidden" />
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="" class="col-xs-2 control-label">消息图：</label>
+					<div class="col-xs-4">
+						<div class="big-photo">
+							<div id="preview0">
+								<img id="imghead0" border="0" src="../../../img/photo_icon.jpg" width="90" height="90" onclick="$('#previewImg0').click();">
+							</div>
+							<input type="file" onchange="previewImage(this,0)" style="display: none;" id="previewImg0" name="previewImg" accept="image/gif,image/jpeg,image/jpg,image/png,image/svg">
+							<!--<input id="uploaderInput" class="uploader__input" style="display: none;" type="file" accept="" multiple="">-->
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="" class="col-xs-2 control-label">展示图：</label>
+					<div class="col-xs-4">
+						<div class="big-photo">
+							<div id="preview1">
+								<img id="imghead1" border="0" src="../../../img/photo_icon.jpg" width="90" height="90" onclick="$('#previewImg1').click();">
+							</div>
+							<input type="file" onchange="previewImage(this,1)" style="display: none;" id="previewImg1" name="previewImg" accept="image/gif,image/jpeg,image/jpg,image/png,image/svg">
+							<!--<input id="uploaderInput" class="uploader__input" style="display: none;" type="file" accept="" multiple="">-->
+						</div>
+					</div>
+				</div>
+				<div class="form-group editshow hidden">
+					<label class="col-xs-2 control-label">创建人：</label>
+					<div class="col-xs-4">
+						123456
+					</div>
+				</div>
+				<div class="form-group editshow hidden">
+					<label class="col-xs-2 control-label">创建时间：</label>
+					<div class="col-xs-4">
+						2017-11-16 09:23
+					</div>
+				</div>
+				<div class="form-group editshow hidden">
+					<label class="col-xs-2 control-label">预警：</label>
+					<div class="col-xs-4">
+						有商品价格低于库存价格
+					</div>
+				</div>
+			</form>
+
+		</div>
+
+	</body>
+
+	<script>
+		/*商品列表 begin*/
+		var activityType = 0; //活动类型
+		var goodsIdstr = ""; //商品id字符串
+		var goodsStatestr = ""; //商品类型字符创
+		var checkGoods3 = []; //商品选中——一级分类
+		var checkGoods2 = []; //商品选中——二级分类
+		var checkGoods1 = []; //商品选中——商品
+		var checkGoods0 = []; //商品选中——规格
+		//用于记录下拉菜单选中值
+		var classificationOne = {
+			id: "",
+			state: "1",
+			goodsname: "0"
+		};
+		var classificationTwo = {
+			id: "",
+			state: "1",
+			goodsname: "0"
+		};
+		var goods = {
+			id: "",
+			state: "0",
+			goodsname: "0"
+		};
+		var goodstype = {
+			id: "",
+			state: "2",
+			goodsname: "0"
+		};
+		getgoods($("#classificationOne"), 1);
+		getgoods($("#classificationTwo"), 2);
+		getgoods($("#goods"), 3);
+		getgoods($("#goodstype"), 4);
+
+		$("#rule").change(function() {
+			//初始化
+			$(".goods-list ul").html("");
+			checkGoods3 = []; //商品选中——分类
+			checkGoods2 = []; //商品选中——分类
+			checkGoods1 = []; //商品选中——商品
+			checkGoods0 = []; //商品选中——规格
+
+			var amin = $(this).val() - 0;
+			activityType = amin;
+			switch(amin) {
+				case 1:
+					$(".rule-div").html('<div class="col-xs-2"><input type="text" name="box1" class="form-control" placeholder="折扣" /></div><div class="col-xs-2 discount"><input type="text" name="box2" class="form-control" placeholder="单人最大购买数量" /></div>');
+					break;
+				case 2:
+					$(".rule-div").html('<label class="col-xs-2 control-label text-center">请先选择商品</label><div class="col-xs-2"><input type="text" name="box1" class="form-control" placeholder="团购价格" /></div><div class="col-xs-2"><input type="text" name="box2" class="form-control" placeholder="单人最大购买数量" /></div>');
+					break;
+				case 3:
+					$(".rule-div").html('<label class="col-xs-2 control-label text-center">请先选择商品</label><div class="col-xs-2"><input type="text" name="box1" class="form-control" placeholder="秒杀价格" /></div><div class="col-xs-2"><input type="text" name="box2" class="form-control" placeholder="单人最大购买数量" /></div>');
+					break;
+				case 4:
+					$(".rule-div").html('<div class="col-xs-2"><input type="text" name="box1" class="form-control" placeholder="立减价格" /></div><div class="col-xs-2"><input type="text" name="box2" class="form-control" placeholder="单人最大购买数量" /></div>');
+					break;
+				case 5:
+					$(".rule-div").html('<div class="col-xs-4 fullcut"><div class="form-group"><div class="input-group"><div class="input-group-addon">满</div><input type="text" class="form-control" name="box1"><div class="input-group-addon" style="border-left: 0;border-right: 0;">减</div><input type="text" class="form-control" name="box2"></div></div></div>');
+					break;
+				default:
+					$(".rule-div").html('<label class="col-xs-2 control-label">请先选择活动类型</label>');
+
+			}
+
+		})
+		$("#goodsAddBtn").click(function() {
+			if(activityType == 0) {
+				laywarn("请先选择活动类型");
+			} else if(activityType == 2 || activityType == 3 || activityType == 4) { //单商品0
+				if($(".goods-list ul li").length < 1) {
+					appendgoods(0);
+				} else {
+					MessageLayer("该活动类型只能选择单商品，是否替换？", function() {
+						appendgoods(0);
+					})
+				}
+			} else if(activityType == 1 || activityType == 5) { //多商品1
+				appendgoods(1);
+
+			}
+
+		})
+
+		function appendgoods(num) {
+			var $goods;
+			if(num == 0) { //单商品
+				if(goodstype == undefined || goodstype["goodsname"] == 0 || goodstype["id"] == "") {
+					if(classificationOne == undefined || classificationOne["goodsname"] == 0 || classificationOne["id"] == ""){
+						laywarn("请先选择商品。");
+					}else{
+						laywarn("该活动类型只能选单商品，请选择单个商品。");
+					}
+					//					break;
+				} else {
+					$(".goods-list ul").html("");
+					$goods = '<li data-id="' + goodstype["id"] + '" data-state="' + goodstype["state"] + '">' + goods["goodsname"] + ' ' + goodstype["goodsname"] + '<div onclick="delli(this)" class="delli-div"><i class="fa fa-times"></i></div></li>';
+					$(".goods-list ul").append($goods);
+				}
+			} else if(num == 1) { //多商品
+				if(goodstype["goodsname"] != 0) {
+					if(checkgoodsA()) {
+						$goods = '<li data-id="' + goodstype["id"] + '" data-state="' + goodstype["state"] + '">' + goods["goodsname"] + ' ' + goodstype["goodsname"] + '<div onclick="delli(this)" class="delli-div"><i class="fa fa-times"></i></div></li>';
+						checkGoods0.push({
+							"goodstypeid": goodstype["id"],
+							"goodsid": goods["id"],
+							"classificationTwoid": classificationTwo["id"],
+							"classificationOneid": classificationOne["id"]
+						});
+					} else {
+						laywarn("请勿选择重复商品");
+					}
+
+				} else {
+					if(goods["goodsname"] != 0) {
+						if(checkgoodsB()) {
+							$goods = '<li data-id="' + goods["id"] + '" data-state="' + goods["state"] + '">' + goods["goodsname"] + '<div onclick="delli(this)" class="delli-div"><i class="fa fa-times"></i></div></li>';
+							checkGoods1.push({
+								"goodsid": goods["id"],
+								"classificationTwoid": classificationTwo["id"],
+								"classificationOneid": classificationOne["id"]
+							});
+						} else {
+							laywarn("请勿选择重复商品");
+						}
+
+					} else {
+						if(classificationTwo["goodsname"] != 0) {
+							if(checkgoodsC()) {
+								$goods = '<li data-id="' + classificationTwo["id"] + '" data-state="' + classificationTwo["state"] + '">' + classificationTwo["goodsname"] + '<div onclick="delli(this)" class="delli-div"><i class="fa fa-times"></i></div></li>';
+								checkGoods2.push({
+									"classificationTwoid": classificationTwo["id"],
+									"classificationOneid": classificationOne["id"]
+								});
+							} else {
+								laywarn("请勿选择重复商品");
+							}
+
+						} else {
+							if(classificationOne["goodsname"] != 0) {
+								if(checkgoodsD()) {
+									$goods = '<li data-id="' + classificationOne["id"] + '" data-state="' + classificationOne["state"] + '">' + classificationOne["goodsname"] + '<div onclick="delli(this)" class="delli-div"><i class="fa fa-times"></i></div></li>';
+									checkGoods3.push({
+										"classificationOneid": classificationOne["id"]
+									});
+								} else {
+									laywarn("请勿选择重复商品");
+								}
+
+							} else {
+								laywarn("请先选择商品。");
+							}
+						}
+					}
+				}
+				$(".goods-list ul").append($goods);
+				/*console.log(checkGoods0);
+				console.log(checkGoods1);
+				console.log(checkGoods2);
+				console.log(checkGoods3);*/
+			}
+
+		}
+
+		function checkgoodsA() { //最后一个分类有值（type）
+			var res = true;
+			var obj = {
+				"goodstypeid": goodstype["id"],
+				"goodsid": goods["id"],
+				"classificationTwoid": classificationTwo["id"],
+				"classificationOneid": classificationOne["id"]
+			};
+			$(checkGoods0).each(function(i, dom) {
+				if(dom["goodstypeid"] == goodstype["id"]) {
+					res = false;
+				}
+			});
+			$(checkGoods1).each(function(i, dom) {
+				if(dom["goodsid"] == goods["id"]) {
+					res = false;
+				}
+			});
+			$(checkGoods2).each(function(i, dom) {
+				if(dom["classificationTwoid"] == classificationTwo["id"]) {
+					res = false;
+				}
+			});
+			$(checkGoods3).each(function(i, dom) {
+				if(dom["classificationOneid"] == classificationOne["id"]) {
+					res = false;
+				}
+			});
+			return res;
+		}
+
+		function checkgoodsB() { //倒数第二个有值(goods)
+			var res = true;
+			var obj = {
+				"goodsid": goods["id"],
+				"classificationTwoid": classificationTwo["id"],
+				"classificationOneid": classificationOne["id"]
+			};
+			$(checkGoods0).each(function(i, dom) {
+				if(dom["goodsid"] == goods["id"]) {
+					res = false;
+				}
+			});
+			$(checkGoods1).each(function(i, dom) {
+				if(dom["goodsid"] == goods["id"]) {
+					res = false;
+				}
+			});
+			$(checkGoods2).each(function(i, dom) {
+				if(dom["classificationTwoid"] == classificationTwo["id"]) {
+					res = false;
+				}
+			});
+			$(checkGoods3).each(function(i, dom) {
+				if(dom["classificationOneid"] == classificationOne["id"]) {
+					res = false;
+				}
+			});
+			return res;
+		}
+
+		function checkgoodsC() { //倒数第三个有值(classificationTwo)
+			var res = true;
+			var obj = {
+				"classificationTwoid": classificationTwo["id"],
+				"classificationOneid": classificationOne["id"]
+			};
+			$(checkGoods0).each(function(i, dom) {
+				if(dom["classificationTwoid"] == classificationTwo["id"]) {
+					res = false;
+				}
+			});
+			$(checkGoods1).each(function(i, dom) {
+				if(dom["classificationTwoid"] == classificationTwo["id"]) {
+					res = false;
+				}
+			});
+			$(checkGoods2).each(function(i, dom) {
+				if(dom["classificationTwoid"] == classificationTwo["id"]) {
+					res = false;
+				}
+			});
+			$(checkGoods3).each(function(i, dom) {
+				if(dom["classificationOneid"] == classificationOne["id"]) {
+					res = false;
+				}
+			});
+			return res;
+		}
+
+		function checkgoodsD() { //倒数第四个有值(classificationOne)
+			var res = true;
+			var obj = {
+				"classificationOneid": classificationOne["id"]
+			};
+			$(checkGoods0).each(function(i, dom) {
+				if(dom["classificationOneid"] == classificationOne["id"]) {
+					res = false;
+				}
+			});
+			$(checkGoods1).each(function(i, dom) {
+				if(dom["classificationOneid"] == classificationOne["id"]) {
+					res = false;
+				}
+			});
+			$(checkGoods2).each(function(i, dom) {
+				if(dom["classificationOneid"] == classificationOne["id"]) {
+					res = false;
+				}
+			});
+			$(checkGoods3).each(function(i, dom) {
+				if(dom["classificationOneid"] == classificationOne["id"]) {
+					res = false;
+				}
+			});
+			return res;
+		}
+
+		function getgoods($select, type) {
+			$select.change(function() {
+				var goodsname = $(this).val();
+				var state = $(this).attr("data-state");
+				var id = $(this).find("option:selected").attr("data-id");
+				var mygoods = {
+					"id": id,
+					"state": state,
+					"goodsname": goodsname
+				};
+				switch(type) {
+					case 1:
+						classificationOne = mygoods;
+						break;
+					case 2:
+						classificationTwo = mygoods;
+						break;
+					case 3:
+						goods = mygoods;
+						break;
+					case 4:
+						goodstype = mygoods;
+						break;
+				}
+			})
+
+		}
+
+		function delli(thisdelli) {
+			$(thisdelli).parent().remove();
+			var num = $(thisdelli).parent().attr("data-state") - 0;
+			var obj = {
+				"goodstypeid": goodstype["id"],
+				"goodsid": goods["id"],
+				"classificationTwoid": classificationTwo["id"],
+				"classificationOneid": classificationOne["id"]
+			};
+			switch(num) {
+				case 0:
+					$(checkGoods0).each(function(i, dom) {
+						if(dom["goodstypeid"] == $(thisdelli).parent().attr("data-id")) {
+							checkGoods0.splice(i, 1);
+						}
+					});
+					break;
+				case 1:
+					$(checkGoods1).each(function(i, dom) {
+						if(dom["goodsid"] == $(thisdelli).parent().attr("data-id")) {
+							checkGoods1.splice(i, 1);
+						}
+					});
+					break;
+				case 2:
+					$(checkGoods2).each(function(i, dom) {
+						if(dom["classificationTwoid"] == $(thisdelli).parent().attr("data-id")) {
+							checkGoods2.splice(i, 1);
+						}
+					});
+					break;
+				case 3:
+					$(checkGoods3).each(function(i, dom) {
+						if(dom["classificationOneid"] == $(thisdelli).parent().attr("data-id")) {
+							checkGoods3.splice(i, 1);
+
+						}
+					});
+					break;
+				case 4:
+					$(couponObj).each(function(i, dom) {
+						if(dom["id"]== $(thisdelli).parent().attr("data-id")) {
+							couponObj.splice(i, 1);
+						}
+					});
+					break;
+			}
+
+		}
+
+		function countli() { //获取商品id.state
+			$(".goods-list ul li").each(function() {
+				goodsStatestr = goodsStatestr + $(this).attr("data-state") + ",";
+				goodsIdstr = goodsIdstr + $(this).attr("data-id") + ",";
+			});
+			$(".coupon-list ul li").each(function() {
+				couponIdStr = couponIdStr + $(this).attr("data-id") + ",";
+			});
+			goodsIdstr = goodsIdstr.substring(0, goodsIdstr.length - 1);
+			goodsStatestr = goodsStatestr.substring(0, goodsStatestr.length - 1).replace("3", "2");
+			couponIdStr=couponIdStr.substring(0, couponIdStr.length - 1);
+			$("#goodsidStr").val(goodsIdstr);
+			$("#stateStr").val(goodsStatestr);
+			$("#couponidStr").val(couponIdStr);
+			
+			console.log(goodsIdstr);
+			console.log(goodsStatestr);
+			console.log(couponIdStr);
+		}
+
+		/*商品列表 end*/
+
+		/*添加优惠券 begin*/
+		var couponObj = [];//优惠券
+		var couponIdStr="";//所有的优惠券
+		$("#couponAddBtn").click(function() {
+				var flag = true;
+				var couponname = $("#couponSelect").val();
+				var state = $("#couponSelect").attr("data-state");
+				var id = $("#couponSelect").find("option:selected").attr("data-id");
+				var $coupon = '<li data-id="' + id + '" data-state="' + state + '">' + couponname + '<div onclick="delli(this)" class="delli-div"><i class="fa fa-times"></i></div></li>';
+				
+				if(couponname=="0"){
+					laywarn("请先选择优惠券");
+				}else{
+					$(couponObj).each(function(i, dom) {
+					if(dom["id"]== id) {
+						flag = false;
+					}
+				});
+				if(flag) {
+					couponObj.push({
+						"id": id
+					});
+					$(".coupon-list ul").append($coupon);
+				} else {
+					laywarn("请勿选择重复优惠券");
+				}
+				}
+			})
+			/*添加优惠券 end*/
+
+		/*时间插件*/
+		laydateTwo('#activitytime', function() {
+
+			console.log(splitStr(time)[0]);
+			console.log(splitStr(time)[1]);
+		});
+
+		/*全选全不选*/
+		checkboxAll("#checkAll");
+
+		/*修改*/
+		function couponEdit() {
+			$(".editshow").removeClass("hidden");
+			layer.open({
+				type: 1,
+				title: "编辑活动",
+				closeBtn: 1,
+				area: ['100%', '100%'],
+				content: $("#editDiv"),
+				btn: ['提交', '取消'],
+				yes: function(index) {
+					countli();
+					layer.close(index);
+
+					laysuccess("编辑");
+					clearForm("editDiv", "请输入200个字数以下。");
+					$(".goods-list ul,.coupon-list ul").html("");
+				},
+				btn2:function(index){
+					layer.close(index);
+					clearForm("editDiv", "请输入200个字数以下。");
+					$(".goods-list ul,.coupon-list ul").html("");
+				}
+			});
+		}
+		/*新增*/
+		function couponAdd() {
+			$(".editshow").removeClass("hidden");
+			$(".editshow").addClass("hidden");
+			layer.open({
+				type: 1,
+				title: "新增活动",
+				closeBtn: 1,
+				area: ['100%', '100%'],
+				content: $("#editDiv"),
+				btn: ['提交', '取消'],
+				yes: function(index) {
+					countli();
+					layer.close(index);
+
+					laysuccess("新增");
+					clearForm("editDiv", "请输入200个字数以下。");
+					$(".goods-list ul,.coupon-list ul").html("");
+				},
+				btn2:function(index){
+					layer.close(index);
+					clearForm("editDiv", "请输入200个字数以下。");
+					$(".goods-list ul,.coupon-list ul").html("");
+				}
+			});
+		}
+
+		/*详情*/
+		function couponLook() {
+			layer.open({
+				type: 1,
+				title: "活动详情",
+				closeBtn: 1,
+				area: ['100%', '100%'],
+				content: $("#lookDiv"),
+				btn: ['关闭'],
+				yes: function(index) {
+					layer.close(index);
+				}
+			});
+		}
+
+		/*删除*/
+		function couponDel() {
+			publicMessageLayer("删除选中数据", function() {
+
+				laysuccess("删除");
+			})
+		}
+
+		/*导出*/
+		function couponEduce() {
+			publicMessageLayer("导出全部数据", function() {
+
+				laysuccess("导出");
+			})
+		}
+
+		/*立即失效*/
+		function couponInvalid() {
+			publicMessageLayer("将选中数据立即失效", function() {
+
+				laysuccess("立即失效");
+			})
+		}
+
+		/*撤回*/
+		function couponReturn() {
+			publicMessageLayer("将选中数据撤回", function() {
+
+				laysuccess("撤回");
+			})
+		}
+	</script>
+
+</html>

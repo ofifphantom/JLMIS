@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jl.mis.mapper.VersionMessageMapper">
+  <resultMap id="BaseResultMap" type="com.jl.mis.model.VersionMessage">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="version_code" jdbcType="INTEGER" property="versionCode" />
+    <result column="version_name" jdbcType="VARCHAR" property="versionName" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="is_must_update" jdbcType="INTEGER" property="isMustUpdate" />
+    <result column="isAndroidOriOS" jdbcType="INTEGER" property="isAndroidOriOS" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    id, version_code, version_name,description, is_must_update,isAndroidOriOS, update_time
+  </sql>
+  
+  <!-- 根据主键查询信息 -->
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from version_message
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 查询所有信息 -->
+  <select id="selectAllMessage" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from version_message
+  </select>
+  
+   <!-- 根据isAndroidOriOS查询所有信息 -->
+  <select id="selectAllMessageByIsAndroidOriOS" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from version_message
+    where isAndroidOriOS=#{isAndroidOriOS,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 根据版本名称查询版本信息 -->
+  <select id="selectByVersionName" resultMap="BaseResultMap">
+    SELECT
+		id,
+		version_code,
+		version_name,
+		description,
+		is_must_update,
+		isAndroidOriOS,
+		update_time
+	FROM
+		version_message
+	WHERE
+		version_code = #{versionCode}
+	AND version_name = #{versionName}
+  </select>
+  
+  <!-- 根据主键删除 信息 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from version_message
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <!-- 保存全部信息 -->
+  <insert id="insert" parameterType="com.jl.mis.model.VersionMessage">
+    insert into version_message (id, version_code, version_name,description,
+      is_must_update,isAndroidOriOS, update_time)
+    values (#{id,jdbcType=INTEGER}, #{versionCode,jdbcType=INTEGER}, #{versionName,jdbcType=VARCHAR}, 
+      #{description,jdbcType=VARCHAR},#{isMustUpdate,jdbcType=INTEGER},#{isAndroidOriOS,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  
+  <!-- 保存所选内容的信息 -->
+  <insert id="insertSelective" parameterType="com.jl.mis.model.VersionMessage">
+    insert into version_message
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="versionCode != null">
+        version_code,
+      </if>
+      <if test="versionName != null">
+        version_name,
+      </if>
+       <if test="description != null">
+        description,
+      </if>
+      <if test="isMustUpdate != null">
+        is_must_update,
+      </if>
+      <if test="isAndroidOriOS != null">
+        isAndroidOriOS,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="versionCode != null">
+        #{versionCode,jdbcType=INTEGER},
+      </if>
+      <if test="versionName != null">
+        #{versionName,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="isMustUpdate != null">
+        #{isMustUpdate,jdbcType=INTEGER},
+      </if>
+      <if test="isAndroidOriOS != null">
+        #{isAndroidOriOS,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 根据主键更新所选内容 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.jl.mis.model.VersionMessage">
+    update version_message
+    <set>
+      <if test="versionCode != null">
+        version_code = #{versionCode,jdbcType=INTEGER},
+      </if>
+      <if test="versionName != null">
+        version_name = #{versionName,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="isMustUpdate != null">
+        is_must_update = #{isMustUpdate,jdbcType=INTEGER},
+      </if>
+      <if test="isAndroidOriOS != null">
+        isAndroidOriOS = #{isAndroidOriOS,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 根据主键更新全部内容 -->
+  <update id="updateByPrimaryKey" parameterType="com.jl.mis.model.VersionMessage">
+    update version_message
+    set version_code = #{versionCode,jdbcType=INTEGER},
+      version_name = #{versionName,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      is_must_update = #{isMustUpdate,jdbcType=INTEGER},
+      isAndroidOriOS = #{isAndroidOriOS,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

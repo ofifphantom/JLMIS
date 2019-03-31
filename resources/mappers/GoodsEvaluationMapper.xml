@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jl.mis.mapper.GoodsEvaluationMapper">
+	<resultMap id="BaseResultMap" type="com.jl.mis.model.GoodsEvaluation">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="order_detail_id" jdbcType="INTEGER" property="orderDetailId" />
+		<result column="evaluation_content" jdbcType="VARCHAR"
+			property="evaluationContent" />
+		<result column="score" jdbcType="DOUBLE" property="score" />
+		<result column="evaluation_time" jdbcType="TIMESTAMP" property="evaluationTime" />
+		<result column="evaluation_content_word_num" jdbcType="INTEGER" property="evaluationContentWordNum" />
+		<association property="user" javaType="com.jl.mis.model.User"
+			resultMap="UserResultMap" />
+		<association property="orderDetail" javaType="com.jl.mis.model.OrderDetail"
+			resultMap="OrderDetailResultMap" />
+		<collection property="evaluationPics" ofType="com.jl.mis.model.EvaluationPic"
+			resultMap="EvaluationPicResultMap" />
+	</resultMap>
+
+	<!-- 评价图片 -->
+	<resultMap id="EvaluationPicResultMap" type="com.jl.mis.model.EvaluationPic">
+		<id column="epId" jdbcType="INTEGER" property="id" />
+		<result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
+		<result column="goods_evaluation_id" jdbcType="INTEGER"
+			property="goodsEvaluationId" />
+	</resultMap>
+
+	<!-- 订单详情 -->
+	<resultMap id="OrderDetailResultMap" type="com.jl.mis.model.OrderDetail">
+		<id column="odId" jdbcType="INTEGER" property="id" />
+		<result column="goods_details_id" jdbcType="INTEGER" property="goodsDetailsId" />
+		<result column="goods_quantity" jdbcType="INTEGER" property="goodsQuantity" />
+		<result column="goods_specification_details_id" jdbcType="INTEGER"
+			property="goodsSpecificationDetailsId" />
+		<result column="goods_purchasing_price" jdbcType="DOUBLE"
+			property="goodsPurchasingPrice" />
+		<result column="goods_original_price" jdbcType="DOUBLE"
+			property="goodsOriginalPrice" />
+		<result column="goods_payment_price" jdbcType="DOUBLE"
+			property="goodsPaymentPrice" />
+		<result column="goods_name" jdbcType="VARCHAR" property="goodsName" />
+		<result column="goods_cover_url" jdbcType="VARCHAR" property="goodsCoverUrl" />
+		<result column="goods_specification_name" jdbcType="VARCHAR"
+			property="goodsSpecificationName" />
+		<result column="order_id" jdbcType="INTEGER" property="orderId" />
+		<association property="orderTable" javaType="com.jl.mis.model.OrderTable"
+			resultMap="OrderTableResultMap" />
+	</resultMap>
+
+	<resultMap id="OrderTableResultMap" type="com.jl.mis.model.OrderTable">
+		<id column="otId" jdbcType="INTEGER" property="id" />
+		<result column="order_no" jdbcType="VARCHAR" property="orderNo" />
+		<result column="order_original_price" jdbcType="DOUBLE"
+			property="orderOriginalPrice" />
+		<result column="order_present_price" jdbcType="DOUBLE"
+			property="orderPresentPrice" />
+		<result column="user_id" jdbcType="INTEGER" property="userId" />
+		<result column="place_order_time" jdbcType="TIMESTAMP"
+			property="placeOrderTime" />
+		<result column="order_state" jdbcType="INTEGER" property="orderState" />
+		<result column="consignee_name" jdbcType="VARCHAR" property="consigneeName" />
+		<result column="consignee_tel" jdbcType="VARCHAR" property="consigneeTel" />
+		<result column="consignee_address" jdbcType="VARCHAR" property="consigneeAddress" />
+		<result column="pay_type" jdbcType="INTEGER" property="payType" />
+		<result column="pay_time" jdbcType="TIMESTAMP" property="payTime" />
+		<result column="postage" jdbcType="DOUBLE" property="postage" />
+		<result column="postage_pay_type" jdbcType="INTEGER" property="postagePayType" />
+		<result column="deliver_goods_time" jdbcType="DATE" property="deliverGoodsTime" />
+		<result column="pay_mode" jdbcType="INTEGER" property="payMode" />
+		<result column="preferential_type" jdbcType="VARCHAR" property="preferentialType" />
+		<result column="car_id_send" jdbcType="VARCHAR" property="carIdSend" />
+		<result column="car_id_change_return" jdbcType="VARCHAR"
+			property="carIdChangeReturn" />
+		<result column="car_id_change_send" jdbcType="VARCHAR"
+			property="carIdChangeSend" />
+	</resultMap>
+
+	<!-- 用户详情 -->
+	<resultMap id="UserResultMap" type="com.jl.mis.model.User">
+		<id column="uId" jdbcType="INTEGER" property="id" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="phone" jdbcType="VARCHAR" property="phone" />
+		<result column="is_VIP" jdbcType="INTEGER" property="isVip" />
+		<result column="upicUrl" jdbcType="VARCHAR" property="picUrl" />
+	</resultMap>
+
+
+	<sql id="Base_Column_List">
+		id, order_detail_id, evaluation_content, score,
+		evaluation_time,evaluation_content_word_num
+	</sql>
+
+	<!-- 根据主键查询信息 -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from goods_evaluation
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<!-- 根据主键删除 信息 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		goods_evaluation
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+
+	<!-- 保存全部信息 -->
+	<insert id="insert" parameterType="com.jl.mis.model.GoodsEvaluation">
+		insert into goods_evaluation
+		(id, order_detail_id, evaluation_content,
+		score, evaluation_time,evaluation_content_word_num)
+		values (#{id,jdbcType=INTEGER}, #{orderDetailId,jdbcType=INTEGER},
+		#{evaluationContent,jdbcType=VARCHAR},
+		#{score,jdbcType=DOUBLE},
+		#{evaluationTime,jdbcType=TIMESTAMP},
+		#{evaluationContentWordNum,jdbcType=INTEGER})
+	</insert>
+
+	<!-- 保存所选内容的信息 -->
+	<insert id="insertSelective" parameterType="com.jl.mis.model.GoodsEvaluation"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into goods_evaluation
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="orderDetailId != null">
+				order_detail_id,
+			</if>
+			<if test="evaluationContent != null">
+				evaluation_content,
+			</if>
+			<if test="score != null">
+				score,
+			</if>
+			<if test="evaluationTime != null">
+				evaluation_time,
+			</if>
+			<if test="evaluationContentWordNum != null">
+				evaluation_content_word_num,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="orderDetailId != null">
+				#{orderDetailId,jdbcType=INTEGER},
+			</if>
+			<if test="evaluationContent != null">
+				#{evaluationContent,jdbcType=VARCHAR},
+			</if>
+			<if test="score != null">
+				#{score,jdbcType=DOUBLE},
+			</if>
+			<if test="evaluationTime != null">
+				#{evaluationTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="evaluationContentWordNum != null">
+				#{evaluationContentWordNum,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 根据主键更新所选内容 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.jl.mis.model.GoodsEvaluation">
+		update goods_evaluation
+		<set>
+			<if test="orderDetailId != null">
+				order_detail_id = #{orderDetailId,jdbcType=INTEGER},
+			</if>
+			<if test="evaluationContent != null">
+				evaluation_content =
+				#{evaluationContent,jdbcType=VARCHAR},
+			</if>
+			<if test="score != null">
+				score = #{score,jdbcType=DOUBLE},
+			</if>
+			<if test="evaluationTime != null">
+				evaluation_time = #{evaluationTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="evaluationContentWordNum != null">
+				evaluation_content_word_num = #{evaluationContentWordNum,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<!-- 根据主键更新全部内容 -->
+	<update id="updateByPrimaryKey" parameterType="com.jl.mis.model.GoodsEvaluation">
+		update
+		goods_evaluation
+		set order_detail_id =
+		#{orderDetailId,jdbcType=INTEGER},
+		evaluation_content =
+		#{evaluationContent,jdbcType=VARCHAR},
+		score =
+		#{score,jdbcType=DOUBLE},
+		evaluation_time =
+		#{evaluationTime,jdbcType=TIMESTAMP},
+		evaluation_content_word_num =
+		#{evaluationContentWordNum,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+
+
+
+	<!-- 移动端使用 -->
+
+	<!-- 根据订单详情id查询评价 -->
+	<select id="selectByOrderDetailId" resultMap="BaseResultMap">
+		select
+		*
+		from
+		goods_evaluation
+		where order_detail_id =
+		#{orderDetailId,jdbcType=INTEGER}
+	</select>
+
+	<!-- 查询用户的评价列表 -->
+	<select id="selectEvaluationMsgByUserId" resultMap="BaseResultMap">
+		SELECT
+		ge.*,
+		ep.id epId,
+		ep.pic_url,
+		ep.goods_evaluation_id,
+		od.id odId,
+		od.goods_cover_url,
+		od.goods_details_id,
+		od.goods_name,
+		od.goods_original_price,
+		od.goods_payment_price,
+		od.goods_purchasing_price,
+		od.goods_quantity,
+		od.goods_specification_details_id,
+		od.goods_specification_name,
+		od.order_id,
+		ot.id otId,
+		ot.car_id_change_return,
+		ot.car_id_change_send,
+		ot.car_id_send,
+		ot.consignee_address,
+		ot.consignee_name,
+		ot.consignee_tel,
+		ot.deliver_goods_time,
+		ot.order_no,
+		ot.order_original_price,
+		ot.order_present_price,
+		ot.order_state,
+		ot.pay_mode,
+		ot.pay_time,
+		ot.pay_type,
+		ot.place_order_time,
+		ot.postage,
+		ot.postage_pay_type,
+		ot.preferential_type,
+		ot.user_id,
+		u.id uId,
+		u.`name`,
+		u.phone,
+		u.is_VIP,
+		u.pic_url upicUrl
+		FROM
+		goods_evaluation ge
+		LEFT JOIN
+		evaluation_pic ep ON ep.goods_evaluation_id = ge.id
+		LEFT JOIN
+		order_detail od ON ge.order_detail_id = od.id
+		LEFT JOIN order_table ot
+		ON od.order_id = ot.id
+		LEFT JOIN `user` u ON u.id = ot.user_id
+		where
+		u.id=#{userId}
+		<if test="isAll=='no'">
+		and ge.id=#{id}
+		</if>
+	</select>
+	
+	
+
+</mapper>

@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jl.mis.mapper.ActiveCouponMapper">
+	
+	<resultMap id="BaseResultMap" type="com.jl.mis.model.ActiveCoupon">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="coupon_id" jdbcType="INTEGER" property="couponId" />
+		<result column="activity_information_id" jdbcType="INTEGER"
+			property="activityInformationId" />
+		<association property="couponInformation" javaType="CouponInformation" resultMap="CouponInformationResultMap"/>
+	</resultMap>
+	<resultMap id="CouponInformationResultMap" type="com.jl.mis.model.CouponInformation">
+		<id column="ciId" jdbcType="INTEGER" property="id" />
+		<result column="identifier" jdbcType="VARCHAR" property="identifier" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="price" jdbcType="DOUBLE" property="price" />
+		<result column="total" jdbcType="INTEGER" property="total" />
+		<result column="use_limit" jdbcType="DOUBLE" property="useLimit" />
+		<result column="count" jdbcType="INTEGER" property="count" />
+		<result column="state" jdbcType="INTEGER" property="state" />
+		<result column="rules" jdbcType="INTEGER" property="rules" />
+		<result column="begin_validity_time" jdbcType="DATE"
+			property="beginValidityTime" />
+		<result column="end_validity_time" jdbcType="DATE" property="endValidityTime" />
+		<result column="begin_time" jdbcType="DATE" property="beginTime" />
+		<result column="end_time" jdbcType="DATE" property="endTime" />
+		<result column="operator_identifier" jdbcType="VARCHAR"
+			property="operatorIdentifier" />
+		<result column="operator_time" jdbcType="TIMESTAMP" property="operatorTime" />
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		id, coupon_id, activity_information_id
+	</sql>
+	
+	<!-- 根据主键查询信息 -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from active_coupon
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<!-- 根据活动id获取信息  （APP & PC通用） -->
+	<select id="getMsgByActivityInformationId" parameterType="java.lang.Integer" resultMap="CouponInformationResultMap">
+		select ci.id ciId, ci.identifier, ci.name, ci.price, ci.total, ci.use_limit, ci.count, ci.state, ci.rules,
+		ci.begin_validity_time,
+		ci.end_validity_time, ci.begin_time, ci.end_time, ci.operator_identifier, ci.operator_time
+		 	from active_coupon ac,coupon_information ci 
+		 WHERE ac.coupon_id = ci.id 
+		 	and activity_information_id = #{activityInformationId}
+	</select>
+	
+
+	<!-- 根据优惠券id获取优惠券名称 -->
+	<select id="selectCouponIdentifierByCouponId" parameterType="java.util.List" resultMap="CouponInformationResultMap">
+		select DISTINCT(c.identifier) from coupon_information c, active_coupon a where c.id = a.coupon_id and a.coupon_id in(
+			<foreach collection="list" item="item" separator=",">
+	          #{item}
+	      	</foreach>
+		)
+	</select>
+	
+	<!-- 根据主键删除 信息 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		active_coupon
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	
+	<!-- 根据活动id删除信息 -->
+	<delete id="deleteByActivityInformationId" parameterType="java.lang.Integer">
+		DELETE  from active_coupon where activity_information_id = #{activityInformationId}
+	</delete>
+	<!-- 根据活动id数组删除信息 -->
+	<delete id="deleteByActivityInformationIds" parameterType="java.util.List">
+		DELETE  from active_coupon where activity_information_id in (
+		<foreach collection="list" item="item" separator=",">
+          #{item}
+      	</foreach>
+      	) 
+	</delete>
+	
+	<!-- 保存全部信息  -->
+	<insert id="insert" parameterType="com.jl.mis.model.ActiveCoupon">
+		insert into active_coupon (
+		coupon_id, activity_information_id
+		)
+		values (
+		#{couponId,jdbcType=INTEGER},
+		#{activityInformationId,jdbcType=INTEGER}
+		)
+	</insert>
+	
+	<!-- 保存所选内容的信息 -->
+	<insert id="insertSelective" parameterType="com.jl.mis.model.ActiveCoupon">
+		insert into active_coupon
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="couponId != null">
+				coupon_id,
+			</if>
+			<if test="activityInformationId != null">
+				activity_information_id,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="couponId != null">
+				#{couponId,jdbcType=INTEGER},
+			</if>
+			<if test="activityInformationId != null">
+				#{activityInformationId,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 根据主键更新所选内容 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.jl.mis.model.ActiveCoupon">
+		update active_coupon
+		<set>
+			<if test="couponId != null">
+				coupon_id = #{couponId,jdbcType=INTEGER},
+			</if>
+			<if test="activityInformationId != null">
+				activity_information_id =
+				#{activityInformationId,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	 <!-- 根据主键更新全部内容 -->
+	<update id="updateByPrimaryKey" parameterType="com.jl.mis.model.ActiveCoupon">
+		update
+		active_coupon
+		set coupon_id = #{couponId,jdbcType=INTEGER},
+		activity_information_id = #{activityInformationId,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- APP 接口-->
+
+
+
+	<!--根据优惠券id查询信息-->
+	<select id="selectByCouponId" parameterType="java.lang.Integer"  resultMap="BaseResultMap">
+		select * from active_coupon where coupon_id = #{couponId}
+	</select>
+	
+	<select id="getShoppingBackCouponByActivityInformationId" parameterType="java.lang.Integer" resultMap="CouponInformationResultMap">
+		select ci.id ciId, ci.identifier, ci.name, ci.price, ci.total, ci.use_limit, ci.count, ci.state, ci.rules,
+		ci.begin_validity_time,
+		ci.end_validity_time, ci.begin_time, ci.end_time, ci.operator_identifier, ci.operator_time
+		 	from active_coupon ac,coupon_information ci 
+		 WHERE ac.coupon_id = ci.id 
+			and ci.rules = 2
+			and ci.state = 0
+			and DATE_FORMAT(NOW(),'%Y-%m-%d') between ci.begin_time and ci.end_time 
+		 	and activity_information_id = #{activityInformationId}
+	</select>
+	
+	
+	
+</mapper>

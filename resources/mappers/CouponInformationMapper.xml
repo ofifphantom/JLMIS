@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jl.mis.mapper.CouponInformationMapper">
+
+	<resultMap id="BaseResultMap" type="com.jl.mis.model.CouponInformation">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="identifier" jdbcType="VARCHAR" property="identifier" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="price" jdbcType="DOUBLE" property="price" />
+		<result column="total" jdbcType="INTEGER" property="total" />
+		<result column="use_limit" jdbcType="DOUBLE" property="useLimit" />
+		<result column="count" jdbcType="INTEGER" property="count" />
+		<result column="state" jdbcType="INTEGER" property="state" />
+		<result column="rules" jdbcType="INTEGER" property="rules" />
+		<result column="begin_validity_time" jdbcType="DATE"
+			property="beginValidityTime" />
+		<result column="end_validity_time" jdbcType="DATE" property="endValidityTime" />
+		<result column="begin_time" jdbcType="DATE" property="beginTime" />
+		<result column="end_time" jdbcType="DATE" property="endTime" />
+		<result column="operator_identifier" jdbcType="VARCHAR"
+			property="operatorIdentifier" />
+		<result column="operator_time" jdbcType="TIMESTAMP" property="operatorTime" />
+		<association property="user" javaType="com.jl.mis.model.User"
+			resultMap="UserResultMap" />
+	</resultMap>
+	
+	<resultMap id="UserResultMap" type="com.jl.mis.model.User">
+		<result column="userName" jdbcType="VARCHAR" property="name" />
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		id, identifier, name, price, total, use_limit, count, state, rules,
+		begin_validity_time,
+		end_validity_time, begin_time, end_time, operator_identifier, operator_time
+	</sql>
+
+	<!-- 根据主键查询信息  （APP & PC通用）-->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from coupon_information
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<!-- 查询所有状态为正常信息 -->
+	<select id="selectAllNormal" resultMap="BaseResultMap">
+		select
+		*
+		from coupon_information where state=0 and rules != 0
+	</select>
+	
+	<!--根据id列表获取优惠券信息-->
+	<select id="getCouponInformationByIds" parameterType="java.util.List" resultMap="BaseResultMap">
+		 select * from coupon_information where id  in (
+		<foreach collection="list" item="item" separator=",">
+          #{item}
+      	</foreach>
+      	) 
+
+	</select>
+
+	<!-- 根据主键删除 信息 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from coupon_information
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	
+	<!-- 根据id列表删除优惠券信息 -->
+	<delete id="deleteCouponInformationByIds" parameterType="java.util.List">
+ 		delete from coupon_information where id in (
+      	<foreach collection="list" item="item" separator=",">
+          #{item}
+      	</foreach>
+      )
+
+	</delete>
+
+	<!-- 保存全部信息 -->
+	<insert id="insert" parameterType="com.jl.mis.model.CouponInformation">
+
+		insert into coupon_information (identifier, name,
+		price, total, use_limit,
+
+		count, state, rules,
+		begin_validity_time, end_validity_time, begin_time,
+		end_time, operator_identifier, operator_time
+		)
+
+		values (#{identifier,jdbcType=VARCHAR},
+
+		#{name,jdbcType=VARCHAR},
+		#{price,jdbcType=DOUBLE}, #{total,jdbcType=INTEGER}, #{useLimit,jdbcType=DOUBLE},
+		#{count,jdbcType=INTEGER}, #{state,jdbcType=INTEGER},
+		#{rules,jdbcType=INTEGER},
+		#{beginValidityTime,jdbcType=DATE}, #{endValidityTime,jdbcType=DATE}, #{beginTime,jdbcType=DATE},
+		#{endTime,jdbcType=DATE}, #{operatorIdentifier,jdbcType=VARCHAR},
+		#{operatorTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+
+	<!-- 保存所选内容的信息 -->
+	<insert id="insertSelective" parameterType="com.jl.mis.model.CouponInformation">
+		insert into coupon_information
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="identifier != null">
+				identifier,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="price != null">
+				price,
+			</if>
+			<if test="total != null">
+				total,
+			</if>
+			<if test="useLimit != null">
+				use_limit,
+			</if>
+			<if test="count != null">
+				count,
+			</if>
+			<if test="state != null">
+				state,
+			</if>
+			<if test="rules != null">
+				rules,
+			</if>
+			<if test="beginValidityTime != null">
+				begin_validity_time,
+			</if>
+			<if test="endValidityTime != null">
+				end_validity_time,
+			</if>
+			<if test="beginTime != null">
+				begin_time,
+			</if>
+			<if test="endTime != null">
+				end_time,
+			</if>
+			<if test="operatorIdentifier != null">
+				operator_identifier,
+			</if>
+			<if test="operatorTime != null">
+				operator_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="identifier != null">
+				#{identifier,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="price != null">
+				#{price,jdbcType=DOUBLE},
+			</if>
+			<if test="total != null">
+				#{total,jdbcType=INTEGER},
+			</if>
+			<if test="useLimit != null">
+				#{useLimit,jdbcType=DOUBLE},
+			</if>
+			<if test="count != null">
+				#{count,jdbcType=INTEGER},
+			</if>
+			<if test="state != null">
+				#{state,jdbcType=INTEGER},
+			</if>
+			<if test="rules != null">
+				#{rules,jdbcType=INTEGER},
+			</if>
+			<if test="beginValidityTime != null">
+				#{beginValidityTime,jdbcType=DATE},
+			</if>
+			<if test="endValidityTime != null">
+				#{endValidityTime,jdbcType=DATE},
+			</if>
+			<if test="beginTime != null">
+				#{beginTime,jdbcType=DATE},
+			</if>
+			<if test="endTime != null">
+				#{endTime,jdbcType=DATE},
+			</if>
+			<if test="operatorIdentifier != null">
+				#{operatorIdentifier,jdbcType=VARCHAR},
+			</if>
+			<if test="operatorTime != null">
+				#{operatorTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 根据主键更新所选内容 （APP & PC通用） -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.jl.mis.model.CouponInformation">
+		update coupon_information
+		<set>
+			<if test="identifier != null">
+				identifier = #{identifier,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="price != null">
+				price = #{price,jdbcType=DOUBLE},
+			</if>
+			<if test="total != null">
+				total = #{total,jdbcType=INTEGER},
+			</if>
+			<if test="useLimit != null">
+				use_limit = #{useLimit,jdbcType=DOUBLE},
+			</if>
+			<if test="count != null">
+				count = #{count,jdbcType=INTEGER},
+			</if>
+			<if test="state != null">
+				state = #{state,jdbcType=INTEGER},
+			</if>
+			<if test="rules != null">
+				rules = #{rules,jdbcType=INTEGER},
+			</if>
+			<if test="beginValidityTime != null">
+				begin_validity_time = #{beginValidityTime,jdbcType=DATE},
+			</if>
+			<if test="endValidityTime != null">
+				end_validity_time = #{endValidityTime,jdbcType=DATE},
+			</if>
+			<if test="beginTime != null">
+				begin_time = #{beginTime,jdbcType=DATE},
+			</if>
+			<if test="endTime != null">
+				end_time = #{endTime,jdbcType=DATE},
+			</if>
+			<if test="operatorIdentifier != null">
+				operator_identifier = #{operatorIdentifier,jdbcType=VARCHAR},
+			</if>
+			<if test="operatorTime != null">
+				operator_time = #{operatorTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 根据主键更新全部内容 -->
+	<update id="updateByPrimaryKey" parameterType="com.jl.mis.model.CouponInformation">
+		update coupon_information
+		set identifier = #{identifier,jdbcType=VARCHAR},
+		name = #{name,jdbcType=VARCHAR},
+		price = #{price,jdbcType=DOUBLE},
+		total = #{total,jdbcType=INTEGER},
+		use_limit = #{useLimit,jdbcType=DOUBLE},
+		count = #{count,jdbcType=INTEGER},
+		state = #{state,jdbcType=INTEGER},
+		rules = #{rules,jdbcType=INTEGER},
+		begin_validity_time = #{beginValidityTime,jdbcType=DATE},
+		end_validity_time = #{endValidityTime,jdbcType=DATE},
+		begin_time = #{beginTime,jdbcType=DATE},
+		end_time = #{endTime,jdbcType=DATE},
+		operator_identifier = #{operatorIdentifier,jdbcType=VARCHAR},
+		operator_time = #{operatorTime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	
+	
+	<!-- 根据id列表更改优惠券状态 -->
+	<update id="updateCouponInformationStateByIds" parameterType="java.util.Map" >
+ 		update coupon_information set state = #{state} where id  in (
+      	<foreach collection="ids"  item="item"  index="index" separator=",">
+					  #{item}
+	    </foreach>
+      )
+
+	</update>
+	
+	
+	<!--定义一个sql片段-->
+	<sql id="query_where">
+		<if test="identifier!=null and identifier!=''">
+			AND c.identifier like '%${identifier}%'
+		</if>
+		<if test="name!=null and name!=''">
+			AND c.name like '%${name}%'
+		</if>
+		<if test="operatorIdentifier!=null and operatorIdentifier!=''">
+			AND u.name like '%${operatorIdentifier}%'
+		</if>
+		<if test="operatorTime!=null and operatorTime!=''">
+			AND DATE_FORMAT(c.operator_time,'%Y-%m-%d') = '${operatorTime}'
+		</if>
+	</sql>
+	
+	
+	<select id="selectMsgOrderBySearchMsg" resultMap="BaseResultMap">
+		 select c.*,u.name userName 
+		from coupon_information c LEFT JOIN user u on u.identifier=c.operator_identifier
+		where 1=1
+		<include refid="query_where"></include>
+	</select>
+	
+	
+	
+	
+	<!-- datatable 分页 start -->
+    <!-- 查询记录总条数 -->
+	<select id="iTotalRecords" resultType="java.lang.Integer">
+		select count(1)
+		from coupon_information c LEFT JOIN user u on u.identifier=c.operator_identifier
+		<if test="flag == 2">
+			where state =4
+		</if>
+	</select>
+	<!-- 查询所有信息 结果集 -->
+	<select id="selectForSearch" resultMap="BaseResultMap">
+		
+	    select c.*,u.name userName 
+		from coupon_information c LEFT JOIN user u on u.identifier=c.operator_identifier
+		where 1=1
+		<include refid="query_where"></include>
+		<if test="flag == 2">
+			and c.state =4
+		</if>
+		<if test="desc!=null and desc!='' ">
+			order by ${desc} desc
+		</if>
+		<if test="asc!=null and asc!=''">
+			order by ${asc} asc
+		</if>
+		limit ${iDisplayStart},${pageDisplayLength}
+	</select>
+	<!-- 通过搜索条件过滤后的总记录 -->
+	<select id="iTotalDisplayRecords" resultType="java.lang.Integer">
+		select count(1)
+		from coupon_information c LEFT JOIN user u on u.identifier=c.operator_identifier
+		where 1=1
+		<include refid="query_where"></include>
+		<if test="flag == 2">
+			and c.state =4
+		</if>
+			
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- APP 接口-->
+
+
+
+	<!--查询所有可以领取的优惠券信息（即：状态正常 && 当前时间在领取时间内  && 剩余数量>0 && 规则=领券）-->
+	<select id="selectAllAvailableCoupon"  resultMap="BaseResultMap">
+		SELECT * FROM coupon_information c where  DATE_FORMAT(NOW(),'%Y-%m-%d') BETWEEN c.begin_time and c.end_time and c.count>0 and c.rules = 1 and c.state = 0
+	</select>
+	
+	<!--查询所有当前可以领取的注册返券优惠券信息（即：状态正常 && 当前时间在领取时间内  && 剩余数量>0 && 规则=注册返券）-->
+	<select id="selectAllAvailableCouponForRegist"  resultType="java.lang.Integer">
+		select c.id from coupon_information c where c.state = 0 and c.rules = 0 and c.count>0 and DATE_FORMAT(NOW(),'%Y-%m-%d') between c.begin_time and c.end_time 
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+</mapper>

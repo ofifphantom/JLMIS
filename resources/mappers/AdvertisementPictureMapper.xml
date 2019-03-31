@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jl.mis.mapper.AdvertisementPictureMapper">
+	
+	<resultMap id="BaseResultMap" type="com.jl.mis.model.AdvertisementPicture">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
+		<result column="url_type" jdbcType="INTEGER" property="urlType" />
+		<result column="url_parameter_id" jdbcType="INTEGER" property="urlParameterId" />
+		<result column="advertisement_information_id" jdbcType="INTEGER"
+			property="advertisementInformationId" />
+		<result column="effect_time" jdbcType="DATE" property="effectTime" />
+		<result column="effect" jdbcType="INTEGER" property="effect" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id, pic_url, url_type, url_parameter_id, advertisement_information_id,
+		effect_time,
+		effect
+	</sql>
+
+	<!-- 根据主键查询信息 -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from advertisement_picture
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<!-- 根据主键删除 信息 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		advertisement_picture
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+
+	<!-- 保存全部信息 -->
+	<insert id="insert" parameterType="com.jl.mis.model.AdvertisementPicture">
+		insert into
+		advertisement_picture (id, pic_url, url_type,
+		url_parameter_id,
+		advertisement_information_id, effect_time,
+		effect)
+		values
+		(#{id,jdbcType=INTEGER}, #{picUrl,jdbcType=VARCHAR},
+		#{urlType,jdbcType=INTEGER},
+		#{urlParameterId,jdbcType=INTEGER},
+		#{advertisementInformationId,jdbcType=INTEGER},
+		#{effectTime,jdbcType=DATE},
+		#{effect,jdbcType=INTEGER})
+	</insert>
+
+	<!-- 保存所选内容的信息 -->
+	<insert id="insertSelective" parameterType="com.jl.mis.model.AdvertisementPicture">
+		insert into advertisement_picture
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="picUrl != null">
+				pic_url,
+			</if>
+			<if test="urlType != null">
+				url_type,
+			</if>
+			<if test="urlParameterId != null">
+				url_parameter_id,
+			</if>
+			<if test="advertisementInformationId != null">
+				advertisement_information_id,
+			</if>
+			<if test="effectTime != null">
+				effect_time,
+			</if>
+			<if test="effect != null">
+				effect,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="picUrl != null">
+				#{picUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="urlType != null">
+				#{urlType,jdbcType=INTEGER},
+			</if>
+			<if test="urlParameterId != null">
+				#{urlParameterId,jdbcType=INTEGER},
+			</if>
+			<if test="advertisementInformationId != null">
+				#{advertisementInformationId,jdbcType=INTEGER},
+			</if>
+			<if test="effectTime != null">
+				#{effectTime,jdbcType=DATE},
+			</if>
+			<if test="effect != null">
+				#{effect,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 根据主键更新所选内容 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.jl.mis.model.AdvertisementPicture">
+		update advertisement_picture
+		<set>
+			<if test="picUrl != null">
+				pic_url = #{picUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="urlType != null">
+				url_type = #{urlType,jdbcType=INTEGER},
+			</if>
+			<if test="urlParameterId != null">
+				url_parameter_id = #{urlParameterId,jdbcType=INTEGER},
+			</if>
+			<if test="advertisementInformationId != null">
+				advertisement_information_id =
+				#{advertisementInformationId,jdbcType=INTEGER},
+			</if>
+			<if test="effectTime != null">
+				effect_time = #{effectTime,jdbcType=DATE},
+			</if>
+			<if test="effect != null">
+				effect = #{effect,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<!-- 根据主键更新全部内容 -->
+	<update id="updateByPrimaryKey" parameterType="com.jl.mis.model.AdvertisementPicture">
+		update
+		advertisement_picture
+		set pic_url = #{picUrl,jdbcType=VARCHAR},
+		url_type =
+		#{urlType,jdbcType=INTEGER},
+		url_parameter_id = #{urlParameterId,jdbcType=INTEGER},
+		advertisement_information_id =
+		#{advertisementInformationId,jdbcType=INTEGER},
+		effect_time =
+		#{effectTime,jdbcType=DATE},
+		effect = #{effect,jdbcType=INTEGER}
+		where
+		id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

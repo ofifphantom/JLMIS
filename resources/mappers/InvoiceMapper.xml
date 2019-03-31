@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jl.mis.mapper.InvoiceMapper">
+  <resultMap id="BaseResultMap" type="com.jl.mis.model.Invoice">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="order_id" jdbcType="INTEGER" property="orderId" />
+    <result column="invoice_type" jdbcType="INTEGER" property="invoiceType" />
+    <result column="invoice_content" jdbcType="INTEGER" property="invoiceContent" />
+    <result column="invoice_looked_up_type" jdbcType="INTEGER" property="invoiceLookedUpType" />
+    <result column="unit_name" jdbcType="VARCHAR" property="unitName" />
+    <result column="taxpayer_identification_number" jdbcType="VARCHAR" property="taxpayerIdentificationNumber" />
+    <result column="registered_address" jdbcType="VARCHAR" property="registeredAddress" />
+    <result column="registered_tel" jdbcType="VARCHAR" property="registeredTel" />
+    <result column="deposit_bank" jdbcType="VARCHAR" property="depositBank" />
+    <result column="bank_account" jdbcType="VARCHAR" property="bankAccount" />
+    <result column="business_license_url" jdbcType="VARCHAR" property="businessLicenseUrl" />
+  </resultMap>
+  
+  
+  <sql id="Base_Column_List">
+    id, order_id, invoice_type, invoice_content, invoice_looked_up_type, unit_name, taxpayer_identification_number, 
+    registered_address, registered_tel, deposit_bank, bank_account, business_license_url
+  </sql>
+  
+  <!-- 根据主键查询信息 -->
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from invoice
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+   <!-- 根据主键删除 信息 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from invoice
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <!-- 保存全部信息  -->
+  <insert id="insert" parameterType="com.jl.mis.model.Invoice">
+    insert into invoice (id, order_id, invoice_type, 
+      invoice_content, invoice_looked_up_type, unit_name, 
+      taxpayer_identification_number, registered_address, 
+      registered_tel, deposit_bank, bank_account, 
+      business_license_url)
+    values (#{id,jdbcType=INTEGER}, #{orderId,jdbcType=INTEGER}, #{invoiceType,jdbcType=INTEGER}, 
+      #{invoiceContent,jdbcType=INTEGER}, #{invoiceLookedUpType,jdbcType=INTEGER}, #{unitName,jdbcType=VARCHAR}, 
+      #{taxpayerIdentificationNumber,jdbcType=VARCHAR}, #{registeredAddress,jdbcType=VARCHAR}, 
+      #{registeredTel,jdbcType=VARCHAR}, #{depositBank,jdbcType=VARCHAR}, #{bankAccount,jdbcType=VARCHAR}, 
+      #{businessLicenseUrl,jdbcType=VARCHAR})
+  </insert>
+  
+  <!-- 保存所选内容的信息 -->
+  <insert id="insertSelective" parameterType="com.jl.mis.model.Invoice" useGeneratedKeys="true" keyProperty="id">
+    insert into invoice
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="orderId != null">
+        order_id,
+      </if>
+      <if test="invoiceType != null">
+        invoice_type,
+      </if>
+      <if test="invoiceContent != null">
+        invoice_content,
+      </if>
+      <if test="invoiceLookedUpType != null">
+        invoice_looked_up_type,
+      </if>
+      <if test="unitName != null">
+        unit_name,
+      </if>
+      <if test="taxpayerIdentificationNumber != null">
+        taxpayer_identification_number,
+      </if>
+      <if test="registeredAddress != null">
+        registered_address,
+      </if>
+      <if test="registeredTel != null">
+        registered_tel,
+      </if>
+      <if test="depositBank != null">
+        deposit_bank,
+      </if>
+      <if test="bankAccount != null">
+        bank_account,
+      </if>
+      <if test="businessLicenseUrl != null">
+        business_license_url,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null">
+        #{orderId,jdbcType=INTEGER},
+      </if>
+      <if test="invoiceType != null">
+        #{invoiceType,jdbcType=INTEGER},
+      </if>
+      <if test="invoiceContent != null">
+        #{invoiceContent,jdbcType=INTEGER},
+      </if>
+      <if test="invoiceLookedUpType != null">
+        #{invoiceLookedUpType,jdbcType=INTEGER},
+      </if>
+      <if test="unitName != null">
+        #{unitName,jdbcType=VARCHAR},
+      </if>
+      <if test="taxpayerIdentificationNumber != null">
+        #{taxpayerIdentificationNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="registeredAddress != null">
+        #{registeredAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="registeredTel != null">
+        #{registeredTel,jdbcType=VARCHAR},
+      </if>
+      <if test="depositBank != null">
+        #{depositBank,jdbcType=VARCHAR},
+      </if>
+      <if test="bankAccount != null">
+        #{bankAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="businessLicenseUrl != null">
+        #{businessLicenseUrl,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 根据主键更新所选内容 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.jl.mis.model.Invoice">
+    update invoice
+    <set>
+      <if test="orderId != null">
+        order_id = #{orderId,jdbcType=INTEGER},
+      </if>
+      <if test="invoiceType != null">
+        invoice_type = #{invoiceType,jdbcType=INTEGER},
+      </if>
+      <if test="invoiceContent != null">
+        invoice_content = #{invoiceContent,jdbcType=INTEGER},
+      </if>
+      <if test="invoiceLookedUpType != null">
+        invoice_looked_up_type = #{invoiceLookedUpType,jdbcType=INTEGER},
+      </if>
+      <if test="unitName != null">
+        unit_name = #{unitName,jdbcType=VARCHAR},
+      </if>
+      <if test="taxpayerIdentificationNumber != null">
+        taxpayer_identification_number = #{taxpayerIdentificationNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="registeredAddress != null">
+        registered_address = #{registeredAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="registeredTel != null">
+        registered_tel = #{registeredTel,jdbcType=VARCHAR},
+      </if>
+      <if test="depositBank != null">
+        deposit_bank = #{depositBank,jdbcType=VARCHAR},
+      </if>
+      <if test="bankAccount != null">
+        bank_account = #{bankAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="businessLicenseUrl != null">
+        business_license_url = #{businessLicenseUrl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 根据主键更新全部内容 -->
+  <update id="updateByPrimaryKey" parameterType="com.jl.mis.model.Invoice">
+    update invoice
+    set order_id = #{orderId,jdbcType=INTEGER},
+      invoice_type = #{invoiceType,jdbcType=INTEGER},
+      invoice_content = #{invoiceContent,jdbcType=INTEGER},
+      invoice_looked_up_type = #{invoiceLookedUpType,jdbcType=INTEGER},
+      unit_name = #{unitName,jdbcType=VARCHAR},
+      taxpayer_identification_number = #{taxpayerIdentificationNumber,jdbcType=VARCHAR},
+      registered_address = #{registeredAddress,jdbcType=VARCHAR},
+      registered_tel = #{registeredTel,jdbcType=VARCHAR},
+      deposit_bank = #{depositBank,jdbcType=VARCHAR},
+      bank_account = #{bankAccount,jdbcType=VARCHAR},
+      business_license_url = #{businessLicenseUrl,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 根据订单id删除发票详情表 -->
+	<delete id="deleteByOrderId">
+		delete from
+		invoice
+		where order_id = #{orderId,jdbcType=INTEGER}
+	</delete>
+</mapper>

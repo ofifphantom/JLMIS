@@ -1,0 +1,141 @@
+.dataTables_wrapper .row:first-child {
+	padding-top: 0;
+	padding-bottom: 0;
+}
+
+.table thead th,
+.table tbody td {
+	height: 35px;
+	text-align: center;
+}
+
+table {
+	background: #fff;
+	table-layout:fixed;
+}
+#datatable{
+	width: 100%;
+    margin-bottom: 20px;
+}
+.table-header {
+	background: #fff;
+}
+
+.table thead>tr>th {
+	height: 40px;
+	line-height: 40px;
+}
+.table tbody>tr>td {
+	word-break:break-all
+}
+.text-title {
+	font-size: 18px;
+	font-weight: bold;
+	color: #333;
+	margin-bottom: 30px;
+}
+.table .btncss{
+	margin: 5px;
+}
+.search-div {
+	background: #fff;
+	padding: 10px 30px;
+	line-height: 40px;
+}
+.search-div span{
+	display: list-item;
+}
+.search-div .btn_search{
+	margin-right: 27px;
+}
+select {
+	width: 163px;
+}
+input:disabled, button:disabled, select:disabled, option:disabled, select[disabled] > option {
+	background: #f5f5f5;
+}
+.jl_f_l{
+	float: left;
+}
+
+/*button*/
+.btn_search,.jl-btn-importent {
+	background: #61b747;
+	border-radius: 4px;
+	color: white;
+	border: 1px solid #fff;
+	letter-spacing: 1px;
+}
+.jl-btn-importent{
+	height: 25px;
+	line-height: 25px;
+}
+.btn_search{
+	line-height: 28px;
+}
+.btn_search:hover,.jl-btn-importent:hover {
+	background: #86c872;
+}
+
+.opration-div {
+	margin-top: 20px;
+	margin-bottom: 7px;
+}
+
+
+td>.btncss ,.jl-btn-defult{
+	background: #fff;
+	border-radius: 4px;
+	color: #555;
+	border: 1px solid #ccc;
+	height: 25px;
+	line-height: 25px;
+	letter-spacing: 1px;
+}
+
+td .btncss:hover,.jl-btn-defult:hover {
+	color: #61b747;
+	background: #fff;
+}
+
+.look-span{
+	cursor: pointer;
+	color: #61b747;
+}
+.look-span:hover{
+	color: #86c872;
+}
+#editDiv,#lookDiv{
+	padding-top: 20px;
+	line-height: 34px;
+	
+}
+
+/* 提示框 */
+.alert-box{
+				    display: inline-block;
+				    height: 40px;
+				    line-height: 40px;
+				    border: 1px solid #e5e5e5;
+				    background: #e7e7e7;
+				    padding: 0 20px;
+				    margin-top: 10px;
+				    border-radius: 2px;
+				    color: #d15b47;
+				    margin-left: 10px;
+}
+/*预览图片  */
+.lookPic-div{
+	text-align: center;
+    padding: 20px;
+}
+.lookPic-div>img{
+    max-width: 500px;
+    max-height: 500px;}
+ .text-red{
+ color:#9e2020;
+ } 
+ .searchable-select-dropdown{
+     max-height: 350px;
+    overflow-y: scroll;
+ }  

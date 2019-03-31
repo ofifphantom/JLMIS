@@ -1,0 +1,526 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jl.mis.mapper.GoodsDetailsMapper">
+
+	<resultMap id="BaseResultMap" type="com.jl.mis.model.GoodsDetails">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="classification_id" jdbcType="INTEGER" property="classificationId" />
+		<result column="commodity_id" jdbcType="INTEGER" property="commodityId" />
+		<result column="key_word" jdbcType="VARCHAR" property="keyWord" />
+		<result column="introdution" jdbcType="VARCHAR" property="introdution" />
+		<result column="recom" jdbcType="INTEGER" property="recom" />
+		<result column="recom_time" jdbcType="TIMESTAMP" property="recomTime" />
+		<result column="saleCount" jdbcType="INTEGER" property="saleCount" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="zeroStock" jdbcType="INTEGER" property="zeroStock" />
+		<association property="classification" javaType="com.jl.mis.model.Classification"
+			resultMap="classificationResultMap" />
+		<collection property="goodsSpecificationDetails" ofType="com.jl.mis.model.GoodsSpecificationDetails" resultMap="GoodsSpecificationDetailsResultMap"/>
+		<collection property="goodsEvaluations" ofType="com.jl.mis.model.GoodsSpecificationDetails" resultMap="GoodsEvaluationResultMap"/>
+	</resultMap>
+
+	<resultMap extends="BaseResultMap" id="ResultMapWithBLOBs"
+		type="com.jl.mis.model.GoodsDetails">
+		<result column="details" jdbcType="LONGVARCHAR" property="details" />
+	</resultMap>
+	
+	<!-- 商品详情 -->
+	<resultMap id="GoodsSpecificationDetailsResultMap" type="com.jl.mis.model.GoodsSpecificationDetails">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="commodity_specification_id" jdbcType="INTEGER" property="commoditySpecificationId" />
+		<result column="old_price" jdbcType="DOUBLE" property="oldPrice" />
+		<result column="identifier" jdbcType="VARCHAR" property="identifier" />
+		<result column="specifications" jdbcType="VARCHAR" property="specifications" />
+		<result column="sale_id" jdbcType="INTEGER" property="saleId" />
+		<result column="price" jdbcType="DOUBLE" property="price" />
+		<result column="goods_id" jdbcType="INTEGER" property="goodsId" />
+		<result column="sales_count" jdbcType="INTEGER" property="salesCount" />
+		<result column="state" jdbcType="INTEGER" property="state" />
+		<result column="on_shelves_time" jdbcType="DATE" property="onShelvesTime" />
+		<result column="off_shelves_time" jdbcType="DATE" property="offShelvesTime" />
+		<result column="operator_identifier" jdbcType="VARCHAR"
+			property="operatorIdentifier" />
+		<result column="operator_time" jdbcType="TIMESTAMP" property="operatorTime" />
+		<result column="gxcState" jdbcType="INTEGER" property="gxcGoodsState" />
+		<result column="gxcGoodsStock" jdbcType="INTEGER" property="gxcGoodsStock" />
+		<collection property="goodsDisplayPictures" ofType="com.jl.mis.model.GoodsDisplayPicture" resultMap="goodsDisplayPictureResultMap"/>
+	</resultMap>
+	
+	<!-- 商品展示图 -->
+	<resultMap id="goodsDisplayPictureResultMap" type="com.jl.mis.model.GoodsDisplayPicture">
+		<id column="gdpId" jdbcType="INTEGER" property="id" />
+		<result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
+		<result column="goods_specification_detail_id" jdbcType="INTEGER" property="goodsSpecificationDetailId" />
+	</resultMap>
+
+	<!-- 分类信息 -->
+	<resultMap id="classificationResultMap" type="com.jl.mis.model.Classification">
+		<id column="cid" jdbcType="INTEGER" property="id" />
+		<result column="identifier" jdbcType="VARCHAR" property="identifier" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="key_word" jdbcType="VARCHAR" property="keyWord" />
+		<result column="parent_id" jdbcType="INTEGER" property="parentId" />
+		<result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
+		<result column="sort" jdbcType="INTEGER" property="sort" />
+		<result column="operator_identifier" jdbcType="VARCHAR"
+			property="operatorIdentifier" />
+		<result column="operator_time" jdbcType="TIMESTAMP" property="operatorTime" />
+	</resultMap>
+	
+	<!-- 商品评价 -->
+	<resultMap id="GoodsEvaluationResultMap" type="com.jl.mis.model.GoodsEvaluation">
+    <id column="geId" jdbcType="INTEGER" property="id" />
+    <result column="order_detail_id" jdbcType="INTEGER" property="orderDetailId" />
+    <result column="evaluation_content" jdbcType="VARCHAR" property="evaluationContent" />
+    <result column="score" jdbcType="DOUBLE" property="score" />
+    <result column="evaluation_time" jdbcType="TIMESTAMP" property="evaluationTime" />
+    <association property="user" javaType="com.jl.mis.model.User" resultMap="UserResultMap" />
+    <collection property="evaluationPics" ofType="com.jl.mis.model.EvaluationPic" resultMap="EvaluationPicResultMap"/>
+  	</resultMap>
+	
+	<!-- 评价图片 -->
+	<resultMap id="EvaluationPicResultMap" type="com.jl.mis.model.EvaluationPic">
+    <id column="epId" jdbcType="INTEGER" property="id" />
+    <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
+    <result column="goods_evaluation_id" jdbcType="INTEGER" property="goodsEvaluationId" />
+  	</resultMap>
+	
+	<!-- 用户信息 -->
+	<resultMap id="UserResultMap" type="com.jl.mis.model.User">
+		<id column="uId" jdbcType="INTEGER" property="id" />
+		<result column="uname" jdbcType="VARCHAR" property="name" />
+		<result column="phone" jdbcType="VARCHAR" property="phone" />
+		<result column="is_VIP" jdbcType="INTEGER" property="isVip" />
+		<result column="upicUrl" jdbcType="VARCHAR" property="picUrl" />
+	</resultMap>
+	
+	<!-- 移动端显示的结果集 -->
+	<!-- 只返回商品信息 -->
+	<resultMap id="appGoodsDetailResultMap" type="com.jl.mis.model.GoodsDetails">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="classification_id" jdbcType="INTEGER" property="classificationId" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="key_word" jdbcType="VARCHAR" property="keyWord" />
+		<result column="introdution" jdbcType="VARCHAR" property="introdution" />
+		<result column="recom" jdbcType="INTEGER" property="recom" />
+		<result column="recom_time" jdbcType="TIMESTAMP" property="recomTime" />
+		<result column="saleCount" jdbcType="INTEGER" property="saleCount" />
+		<result column="zeroStock" jdbcType="INTEGER" property="zeroStock" />
+	</resultMap>
+	<resultMap extends="appGoodsDetailResultMap" id="appGoodsDetailResultMapWithBLOBs"
+		type="com.jl.mis.model.GoodsDetails">
+		<result column="details" jdbcType="LONGVARCHAR" property="details" />
+	</resultMap>
+	
+	<!-- 返回商品信息以及商品的评价信息 -->
+	<resultMap id="appGoodsEvaluationsResultMap" type="com.jl.mis.model.GoodsDetails">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="classification_id" jdbcType="INTEGER" property="classificationId" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="key_word" jdbcType="VARCHAR" property="keyWord" />
+		<result column="introdution" jdbcType="VARCHAR" property="introdution" />
+		<result column="recom" jdbcType="INTEGER" property="recom" />
+		<result column="recom_time" jdbcType="TIMESTAMP" property="recomTime" />
+		<result column="saleCount" jdbcType="INTEGER" property="saleCount" />
+		<result column="zeroStock" jdbcType="INTEGER" property="zeroStock" />
+		<collection property="goodsEvaluations" ofType="com.jl.mis.model.GoodsEvaluation" resultMap="GoodsEvaluationResultMap"/>
+	</resultMap>
+	<resultMap extends="appGoodsEvaluationsResultMap" id="appGoodsEvaluationsResultMapWithBLOBs"
+		type="com.jl.mis.model.GoodsDetails">
+		<result column="details" jdbcType="LONGVARCHAR" property="details" />
+	</resultMap>
+	
+	
+	<sql id="Base_Column_List">
+		id, classification_id,commodity_id, name, key_word, introdution, recom,
+		recom_time
+	</sql>
+	<sql id="Blob_Column_List">
+		details
+	</sql>
+
+	<!-- 根据主键查询信息 -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="ResultMapWithBLOBs">
+		select
+		gd.id, gd.classification_id,gd.commodity_id, co.name, gd.key_word, gd.introdution, gd.recom,
+		gd.recom_time,gd.details,co.zero_stock zeroStock
+		from goods_details gd
+		LEFT JOIN jlgxc.commodity co ON co.id = gd.commodity_id
+		where gd.id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<!-- 根据主键删除 信息 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		goods_details
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+
+	<!-- 保存全部信息 -->
+	<insert id="insert" parameterType="com.jl.mis.model.GoodsDetails">
+		insert into goods_details (id,
+		classification_id,commodity_id, name,
+		key_word, introdution, recom,
+		recom_time,
+		details)
+		values (#{id,jdbcType=INTEGER},
+		#{classificationId,jdbcType=INTEGER},
+		#{commodityId,jdbcType=INTEGER},
+		#{name,jdbcType=VARCHAR},
+		#{keyWord,jdbcType=VARCHAR}, #{introdution,jdbcType=VARCHAR},
+		#{recom,jdbcType=INTEGER},
+		#{recomTime,jdbcType=TIMESTAMP},
+		#{details,jdbcType=LONGVARCHAR})
+	</insert>
+
+	<!-- 保存所选内容的信息 -->
+	<insert id="insertSelective" parameterType="com.jl.mis.model.GoodsDetails" useGeneratedKeys="true" keyProperty="id">
+		insert into goods_details
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="classificationId != null">
+				classification_id,
+			</if>
+			<if test="commodityId != null">
+				commodity_id,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="keyWord != null">
+				key_word,
+			</if>
+			<if test="introdution != null">
+				introdution,
+			</if>
+			<if test="recom != null">
+				recom,
+			</if>
+			<if test="recomTime != null">
+				recom_time,
+			</if>
+			<if test="details != null">
+				details,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="classificationId != null">
+				#{classificationId,jdbcType=INTEGER},
+			</if>
+			<if test="commodityId != null">
+				#{commodityId,jdbcType=INTEGER},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="keyWord != null">
+				#{keyWord,jdbcType=VARCHAR},
+			</if>
+			<if test="introdution != null">
+				#{introdution,jdbcType=VARCHAR},
+			</if>
+			<if test="recom != null">
+				#{recom,jdbcType=INTEGER},
+			</if>
+			<if test="recomTime != null">
+				#{recomTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="details != null">
+				#{details,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 根据主键更新所选内容 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.jl.mis.model.GoodsDetails">
+		update goods_details
+		<set>
+			<if test="classificationId != null">
+				classification_id = #{classificationId,jdbcType=INTEGER},
+			</if>
+			<if test="commodityId != null">
+				commodity_id = #{commodityId,jdbcType=INTEGER},
+			</if>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="keyWord != null">
+				key_word = #{keyWord,jdbcType=VARCHAR},
+			</if>
+			<if test="introdution != null">
+				introdution = #{introdution,jdbcType=VARCHAR},
+			</if>
+			<if test="recom != null">
+				recom = #{recom,jdbcType=INTEGER},
+			</if>
+			<if test="recomTime != null">
+				recom_time = #{recomTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="details != null">
+				details = #{details,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<!-- 根据主键更新全部内容 -->
+	<update id="updateByPrimaryKey" parameterType="com.jl.mis.model.GoodsDetails">
+		update
+		goods_details
+		set classification_id =
+		#{classificationId,jdbcType=INTEGER},
+		commodity_id =
+		#{commodityId,jdbcType=INTEGER},
+		name = #{name,jdbcType=VARCHAR},
+		key_word = #{keyWord,jdbcType=VARCHAR},
+		introdution =
+		#{introdution,jdbcType=VARCHAR},
+		recom = #{recom,jdbcType=INTEGER},
+		recom_time = #{recomTime,jdbcType=TIMESTAMP},
+		details =
+		#{details,jdbcType=LONGVARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 根据主键批量更新内容（商品的推荐操作） -->
+	<update id="updateBatchByPrimaryKey">
+		update
+		goods_details
+		set 
+		recom = 1,
+		recom_time = #{recomTime}
+		where id in (
+		<foreach collection="list" item="item" separator=",">
+			#{item}
+		</foreach>
+		)
+	</update>
+
+	<!-- 根据主键更新全部（除details的）内容 -->
+	<update id="updateByPrimaryKeyNotBLOBs" parameterType="com.jl.mis.model.GoodsDetails">
+		update
+		goods_details
+		set classification_id =
+		#{classificationId,jdbcType=INTEGER},
+		commodity_id =
+		#{commodityId,jdbcType=INTEGER},
+		name = #{name,jdbcType=VARCHAR},
+		key_word = #{keyWord,jdbcType=VARCHAR},
+		introdution =
+		#{introdution,jdbcType=VARCHAR},
+		recom = #{recom,jdbcType=INTEGER},
+		recom_time = #{recomTime,jdbcType=TIMESTAMP}
+		where id =
+		#{id,jdbcType=INTEGER}
+	</update>
+
+	<!--勿改 根据分类id查询商品信息 -->
+	<select id="selectGoodsByClassificationId" resultMap="ResultMapWithBLOBs">
+		select gd.*,co.name
+		from goods_details gd
+		LEFT JOIN jlgxc.commodity co ON co.id = gd.commodity_id
+		where gd.classification_id =
+		#{classificationId,jdbcType=INTEGER}
+	</select>
+	
+	<!-- 根据分类id查询预售的商品信息 -->
+	<select id="selectPresellGoodsByClassificationId" resultMap="ResultMapWithBLOBs">
+	SELECT
+		gd.*,c.`name`
+	FROM
+		goods_details gd
+	LEFT JOIN jlgxc.commodity c ON c.id = gd.commodity_id
+	where c.is_presell=1
+	and gd.classification_id =
+			#{classificationId,jdbcType=INTEGER}
+	</select>
+	
+	<!-- 根据分类id查询正常（不是预售）的商品信息 -->
+	<select id="selectNotPresellGoodsByClassificationId" resultMap="ResultMapWithBLOBs">
+	SELECT
+		gd.*,c.`name`
+	FROM
+		goods_details gd
+	LEFT JOIN jlgxc.commodity c ON c.id = gd.commodity_id
+	where c.is_presell=2
+	and gd.classification_id =
+			#{classificationId,jdbcType=INTEGER}
+	</select>
+
+	<!--根据名称查询商品详情 -->
+	<!-- <select id="selectGoodsAndClassificationByName" resultMap="ResultMapWithBLOBs">
+		SELECT
+		gd.*, c.id cid, 
+		c.name,
+		c.parent_id
+		FROM
+		goods_details gd
+		LEFT JOIN classification c ON gd.classification_id = c.id
+		where gd.name=#{name}
+	</select> -->
+	
+	<!--勿改 查询所有商品信息 -->
+	<!-- <select id="selectAllGoodsDetails" resultMap="ResultMapWithBLOBs">
+		SELECT * FROM goods_details  where classification_id =#{classificationId} 
+	</select> -->
+	
+	<!-- 根据购销存商品id获取mis商品id -->
+	<select id="selectIdByCommodityId" resultMap="ResultMapWithBLOBs">
+	SELECT
+		gd.id,
+		gd.classification_id,
+		gd.details,
+		gd.introdution,
+		gd.key_word,
+		c.id,
+		c.parent_id,
+		c.`name`
+	FROM
+		goods_details gd
+	LEFT JOIN classification c ON c.id = gd.classification_id
+	WHERE
+		gd.commodity_id = #{commodityId}
+	</select>
+	
+	
+	
+	
+	<!--接口 移动端使用   -->
+	
+	
+	<!-- 查询app中的商品list 正常的商品(不是预售的) -->
+	<select id="getHomeHotGoods" resultMap="appGoodsDetailResultMapWithBLOBs">
+	SELECT
+		gd.id,c.`name`,c.zero_stock zeroStock,gd.classification_id,gd.key_word,gd.introdution,gd.details,gd.recom,gd.recom_time,saleCountNum.countNum saleCount
+	FROM
+		goods_details gd
+	LEFT JOIN jlgxc.commodity c on c.id=gd.commodity_id
+	LEFT JOIN (select sum(sales_count) countNum,goods_id from goods_specification_details GROUP BY goods_id) saleCountNum on saleCountNum.goods_id=gd.id
+	where c.is_presell=2
+	<if test="classificationId !=0">
+		and gd.classification_id = #{classificationId}
+	</if>
+	<if test="searchName!=null and searchName!='all'">
+		and (
+			c.name like
+			CONCAT(CONCAT("%",#{searchName}),"%")
+			or gd.key_word like
+			CONCAT(CONCAT("%",#{searchName}),"%")
+		)
+		</if>
+	<if test="sortType ==2">
+		ORDER BY saleCount desc
+	</if>
+	<if test="sortType ==4">
+		ORDER BY
+		gd.recom_time DESC
+	</if>
+	
+	</select>
+	
+	<!-- 查询app中的新品上架商品list 正常的商品(不是预售的)-->
+	<select id="getGoodsList_Ameliorate" resultMap="appGoodsDetailResultMapWithBLOBs">
+	SELECT
+		gd.id,c.`name`,c.zero_stock zeroStock,gd.classification_id,gd.key_word,gd.introdution,gd.details,gd.recom,gd.recom_time,saleCountNum.countNum saleCount
+	FROM
+		goods_details gd
+	LEFT JOIN jlgxc.commodity c on c.id=gd.commodity_id
+	LEFT JOIN (select sum(sales_count) countNum,goods_id from goods_specification_details GROUP BY goods_id) saleCountNum on saleCountNum.goods_id=gd.id
+	where c.is_presell=2
+	and gd.classification_id IN (SELECT classification.id FROM classification WHERE classification.parent_id = #{classificationId})
+	<if test="searchName!=null and searchName!='all'">
+		and (
+			c.name like
+			CONCAT(CONCAT("%",#{searchName}),"%")
+			or gd.key_word like
+			CONCAT(CONCAT("%",#{searchName}),"%")
+		)
+		</if>
+	<if test="sortType ==2">
+		ORDER BY saleCount desc
+	</if>
+	<if test="sortType ==4">
+		ORDER BY
+		gd.recom_time DESC
+	</if>
+	
+	</select>
+	
+	
+	<!-- 根据商品id获取商品的信息以及有关商品的评价信息 -->
+	<select id="getGoodsDetailAndEvaluationByGoodsId" resultMap="appGoodsEvaluationsResultMapWithBLOBs">
+	SELECT
+		gd.id,c.`name`,c.zero_stock zeroStock,gd.classification_id,gd.key_word,gd.introdution,gd.details,gd.recom,gd.recom_time, evaluation.*,saleCountNum.countNum saleCount
+	FROM
+		goods_details gd
+	LEFT JOIN jlgxc.commodity c on c.id=gd.commodity_id
+	LEFT JOIN (select sum(sales_count) countNum,goods_id from goods_specification_details GROUP BY goods_id) saleCountNum on saleCountNum.goods_id=gd.id
+	LEFT JOIN (
+		SELECT
+			ge.id geId,
+			ge.evaluation_content,
+			ge.evaluation_time,
+			ge.order_detail_id,
+			ge.score,
+			ge.evaluation_content_word_num,
+			ep.id epId,
+			ep.goods_evaluation_id,
+			ep.pic_url,
+			od.goods_details_id,
+			u.id uId,
+			u.is_VIP,
+			u.`name` uname,
+			u.phone,
+			u.pic_url upicUrl
+		FROM
+			goods_evaluation ge
+		LEFT JOIN evaluation_pic ep ON ep.goods_evaluation_id = ge.id
+		LEFT JOIN order_detail od ON od.id = ge.order_detail_id
+		LEFT JOIN order_table ot ON ot.id = od.order_id
+		LEFT JOIN user u ON u.id = ot.user_id
+		ORDER BY
+			ge.evaluation_time DESC
+	) evaluation ON evaluation.goods_details_id = gd.id
+	WHERE
+	gd.id = #{id}
+	ORDER BY
+			evaluation.evaluation_content_word_num desc
+	</select>
+	
+	<!-- 热门搜索词 销量前十的商品关键词-->
+	<select id="selectHotSearchWord" resultMap="appGoodsDetailResultMapWithBLOBs">
+	SELECT
+		gd.id,gd.key_word,saleCountNum.countNum saleCount
+	FROM
+		goods_details gd
+	LEFT JOIN (
+		SELECT
+			sum(sales_count) countNum,
+			goods_id
+		FROM
+			goods_specification_details
+		GROUP BY
+			goods_id
+	) saleCountNum ON saleCountNum.goods_id = gd.id
+	GROUP BY key_word,gd.id,saleCountNum.countNum
+	ORDER BY saleCount desc
+	LIMIT 0,10
+	</select>
+	
+	<!-- 获取品牌信息 -->
+	<select id="selectBrand" resultType="java.lang.String">
+	SELECT
+		brand
+	FROM
+		goods_details gd
+	LEFT JOIN jlgxc.commodity c ON c.id = gd.commodity_id
+	GROUP BY brand
+	</select>
+	
+</mapper>

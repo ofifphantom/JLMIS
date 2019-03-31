@@ -1,0 +1,81 @@
+*{
+    padding: 0px;
+    margin: 0px;
+}
+.l_logo{
+   width: 250px;
+    height: 70px;
+}
+.head{
+    width: 100%;
+    height: 130px;
+    padding-top: 40px;
+    padding-left: 23%;
+}
+.l_logotext{
+    padding-left: 15px;
+    padding-top: 35px;
+}
+.main{
+    height: 640px;
+    background: url("../img/login_back.jpg")no-repeat;
+
+    -webkit-background-size: 100%;
+    -moz-background-size: 100%;
+    -o-background-size: 100%;
+    background-size: 100%;
+}
+.l_loginbox{
+    float: right;
+    padding-top: 7%;
+    padding-right: 20%;
+}
+
+.textbox{
+    margin-top: -83%;
+    margin-left: 10%;
+}
+.title{
+     color: #9d9d9d;
+ }
+
+.shurukuang{
+    width: 250px;
+    height: 35px;
+    margin-left: 20px;
+    margin-top: 25px;
+    border: 1px solid #9d9d9d;
+    padding-left: 10px;
+}
+
+.codetext{
+    width: 130px;
+    height: 35px;
+    margin-left: 20px;
+    margin-top: 25px;
+    margin-right: 15px;
+    border:1px solid #9d9d9d;
+    padding-left: 10px;
+}
+.l_btn{
+    width: 200px;
+    height: 40px;
+    margin-left: 65px;
+    margin-top:18px;
+    border-radius: 5px;
+}
+.footer{
+    width: 100%;
+    text-align: center;
+    padding-top: 30px;
+    font-size: 12px;
+    font-family: "����";
+    color: #9d9d9d;
+}
+
+#remenberComCodeAndLoginName{
+	margin-top: 3%;
+}
+#remenberComCodeAndLoginNameText{
+	color: #ababab;
+}

@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jl.mis.mapper.UserCouponsMapper">
+  <resultMap id="BaseResultMap" type="com.jl.mis.model.UserCoupons">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="coupon_information_id" jdbcType="INTEGER" property="couponInformationId" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="use_time" jdbcType="TIMESTAMP" property="useTime" />
+    <result column="get_time" jdbcType="TIMESTAMP" property="getTime" />
+    <association property="couponInformation" javaType="com.jl.mis.model.CouponInformation"
+			resultMap="CouponInformationResultMap" />
+  </resultMap>
+  	<resultMap id="CouponInformationResultMap" type="com.jl.mis.model.CouponInformation">
+		<id column="ci_id" jdbcType="INTEGER" property="id" />
+		<result column="identifier" jdbcType="VARCHAR" property="identifier" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="price" jdbcType="DOUBLE" property="price" />
+		<result column="total" jdbcType="INTEGER" property="total" />
+		<result column="use_limit" jdbcType="DOUBLE" property="useLimit" />
+		<result column="count" jdbcType="INTEGER" property="count" />
+		<result column="state" jdbcType="INTEGER" property="state" />
+		<result column="rules" jdbcType="INTEGER" property="rules" />
+		<result column="begin_validity_time" jdbcType="DATE"
+			property="beginValidityTime" />
+		<result column="end_validity_time" jdbcType="DATE" property="endValidityTime" />
+		<result column="begin_time" jdbcType="DATE" property="beginTime" />
+		<result column="end_time" jdbcType="DATE" property="endTime" />
+		<result column="operator_identifier" jdbcType="VARCHAR"
+			property="operatorIdentifier" />
+		<result column="operator_time" jdbcType="TIMESTAMP" property="operatorTime" />
+	</resultMap>
+  
+  <sql id="Base_Column_List">
+    id, user_id, coupon_information_id, status, use_time, get_time
+  </sql>
+  
+  <!-- 根据主键查询信息 -->
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user_coupons
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 根据优惠券id获取优惠券名称 -->
+	<select id="selectCouponIdentifierByCouponId" parameterType="java.util.List" resultMap="CouponInformationResultMap">
+		select DISTINCT(c.identifier) from coupon_information c, user_coupons u where c.id = u.coupon_information_id and u.coupon_information_id in(
+			<foreach collection="list" item="item" separator=",">
+	          #{item}
+	      	</foreach>
+		)
+	</select>
+  
+   <!-- 根据主键删除 信息 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from user_coupons
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <!-- 保存全部信息  -->
+  <insert id="insert" parameterType="com.jl.mis.model.UserCoupons">
+    insert into user_coupons (id, user_id, coupon_information_id, 
+      status, use_time, get_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{couponInformationId,jdbcType=INTEGER}, 
+      #{status,jdbcType=INTEGER}, #{useTime,jdbcType=TIMESTAMP}, #{getTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  
+  <!-- 保存所选内容的信息  （APP & PC通用）-->
+  <insert id="insertSelective" parameterType="com.jl.mis.model.UserCoupons">
+    insert into user_coupons
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="couponInformationId != null">
+        coupon_information_id,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="useTime != null">
+        use_time,
+      </if>
+      <if test="getTime != null">
+        get_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="couponInformationId != null">
+        #{couponInformationId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="useTime != null">
+        #{useTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="getTime != null">
+        #{getTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 根据主键更新所选内容 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.jl.mis.model.UserCoupons">
+    update user_coupons
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="couponInformationId != null">
+        coupon_information_id = #{couponInformationId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="useTime != null">
+        use_time = #{useTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="getTime != null">
+        get_time = #{getTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 根据主键更新全部内容 -->
+  <update id="updateByPrimaryKey" parameterType="com.jl.mis.model.UserCoupons">
+    update user_coupons
+    set user_id = #{userId,jdbcType=INTEGER},
+      coupon_information_id = #{couponInformationId,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      use_time = #{useTime,jdbcType=TIMESTAMP},
+      get_time = #{getTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+   <!-- 根据优惠券id更新所有优惠券状态 -->
+  <update id="updateStatusByCouponInformationId" parameterType="java.util.List">
+    update user_coupons
+    set status = 3
+    where status = 0 and coupon_information_id in(
+    	<foreach collection="list" item="item" separator=",">
+         	 #{item}
+      	</foreach>
+    )
+  </update>
+  
+  
+  
+  	<!--用户优惠券自动失效 （status==0 && 当前时间>优惠券有效期结束时间） -->
+	<update id="updateUserCouponsToInvalid"  >
+ 		update user_coupons uc,coupon_information c set uc.status = 2
+ 		  where uc.coupon_information_id = c.id and uc.status = 0 and  DATE_FORMAT(NOW(),'%Y-%m-%d') > c.end_validity_time
+
+	</update>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <!-- APP 接口-->
+
+
+
+	<!--根据用户id和优惠券id查询记录数量-->
+	<select id="selectByUserIdAndcouponId" parameterType="com.jl.mis.model.UserCoupons"  resultType="java.lang.Integer">
+		select count(1) from user_coupons where user_id = #{userId} and coupon_information_id = #{couponInformationId}
+	</select>
+	
+	<!--根据用户id查询该用户可以使用的优惠券信息-->
+	<select id="selectUsableCouponByUserId" parameterType="java.lang.Integer"  resultMap="BaseResultMap">
+		select c.id ci_id, c.identifier, c.name, c.price, c.total, c.use_limit, c.count, c.state,c.rules,
+		c.begin_validity_time,
+		c.end_validity_time, c.begin_time, c.end_time, c.operator_identifier, c.operator_time,
+		uc.* from coupon_information c, user_coupons uc where user_id = #{userId} and uc.coupon_information_id = c.id and c.state = 0 and uc.status = 0 
+			and  DATE_FORMAT(NOW(),'%Y-%m-%d') BETWEEN c.begin_validity_time and c.end_validity_time ORDER BY uc.get_time DESC
+	</select>
+  
+    <!--根据用户id查询该用户不可使用的优惠券信息-->
+	<select id="selectDisabledCouponByUserId" parameterType="java.lang.Integer"  resultMap="BaseResultMap">
+		SELECT
+			c.id ci_id,
+			c.identifier,
+			c. NAME,
+			c.price,
+			c.total,
+			c.use_limit,
+			c.count,
+			c.state,
+			c.rules,
+			c.begin_validity_time,
+			c.end_validity_time,
+			c.begin_time,
+			c.end_time,
+			c.operator_identifier,
+			c.operator_time,
+			uc.*
+		FROM
+			coupon_information c,
+			user_coupons uc
+		WHERE
+			user_id = #{userId}
+		AND uc.coupon_information_id = c.id
+		AND (DATE_FORMAT(NOW(), '%Y-%m-%d') not BETWEEN c.begin_validity_time AND c.end_validity_time or uc.status != 0)
+		ORDER BY
+			c.end_validity_time DESC
+	
+	</select>
+  
+  	<!--根据id和用户id修改状态为已使用和使用时间-->
+	<update id="updateByUserIdAndId" parameterType="com.jl.mis.model.UserCoupons"  >
+		 update user_coupons
+		    set status = 1,
+		      use_time = #{useTime}
+		    where id = #{id}
+		    and user_id = #{userId}
+		    
+	</update>
+  	<!--获取未读订单信息的个数-->
+  	<select id="getNotReadOrderNUM" parameterType="java.lang.Integer"  resultType="java.lang.Integer">
+  			SELECT
+			Count(*) AS a
+			FROM
+			order_state_detail ,
+			order_table
+			WHERE
+			order_state_detail.`status` = 0 AND
+			order_state_detail.order_id = order_table.id AND
+			order_table.user_id = #{userId}
+			AND isdelete=0
+  	</select>
+  	<!--获取未读活动信息的个数-->
+  	<select id="getNotReadActivityNUM" parameterType="java.lang.Integer"  resultType="java.lang.Integer">
+  			SELECT
+				COUNT(*) a
+			FROM
+				activity_message
+			WHERE
+				status = 0
+				and user_id = #{userId}
+  	</select>
+  		<!--获取未读客服信息的个数-->
+  	<select id="getNotReadUserMessageNUM" parameterType="java.lang.Integer"  resultType="java.lang.Integer">
+  			SELECT
+				COUNT(*) UserMessageNum
+			FROM
+				user_message
+			WHERE
+				isread = 0
+			and receiveuser = #{userId}			
+			
+  	</select>
+  	
+  	
+  	 <select id="getNewReadUserMessageTime" parameterType="java.lang.Integer"  resultType="Map">
+  			SELECT
+				MAX(createdate) UserMessageTime
+			FROM
+				user_message
+			WHERE
+			 receiveuser = #{userId} or senduser= #{userId}			
+  	</select>
+  	
+  	
+  	<!--删除该用户所有信息-->
+  	<delete id="deldectActivityMessage" parameterType="java.lang.Integer"  >
+  		DELETE FROM activity_message where user_id=#{userId};
+  	</delete>
+  	<!--删除该用户所有信息-->
+  	<delete id="deldectUserMessage" parameterType="java.lang.Integer"  >
+  		DELETE FROM user_message where receiveuser=#{userId};
+  	</delete>
+  	<!--删除该用户所有信息-->
+  	<update id="deldectOrderMessage" parameterType="java.lang.Integer"  >
+ 		UPDATE
+		order_state_detail AS ordersd,
+		order_table AS `order` 
+		SET
+		ordersd.isdelete=1
+		WHERE
+		`order`.id = ordersd.order_id AND
+		`order`.user_id = #{userId}
+  	</update>
+</mapper>

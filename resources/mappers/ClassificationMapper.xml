@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jl.mis.mapper.ClassificationMapper">
+
+	<resultMap id="BaseResultMap" type="com.jl.mis.model.Classification">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="identifier" jdbcType="VARCHAR" property="identifier" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="key_word" jdbcType="VARCHAR" property="keyWord" />
+		<result column="parent_id" jdbcType="INTEGER" property="parentId" />
+		<result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
+		<result column="sort" jdbcType="INTEGER" property="sort" />
+		<result column="operator_identifier" jdbcType="VARCHAR"
+			property="operatorIdentifier" />
+		<result column="operator_time" jdbcType="TIMESTAMP" property="operatorTime" />
+		<result column="parentName" jdbcType="VARCHAR" property="parentName" />
+		<association property="user" javaType="com.jl.mis.model.User"
+			resultMap="UserResultMap" />
+	</resultMap>
+	
+	<resultMap id="UserResultMap" type="com.jl.mis.model.User">
+		<result column="uname" jdbcType="VARCHAR" property="name" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id, identifier, name, key_word, parent_id, pic_url, sort,
+		operator_identifier, operator_time
+	</sql>
+	
+
+	<!--定义一个sql片段 -->
+	<sql id="query_where">
+		<if test="identifier!=null and identifier!=''">
+			AND c.identifier like '%${identifier}%'
+		</if>
+		<if test="name!=null and name!=''">
+			AND c.name like '%${name}%'
+		</if>
+		<if test="operatorName!=null and operatorName!=''">
+			AND u.name like '%${operatorName}%'
+		</if>
+		<if test="operatorTime!=null and operatorTime!=''">
+			AND DATE_FORMAT(c.operator_time,'%Y-%m-%d') = '${operatorTime}'
+		</if>
+	</sql>
+
+	<!-- 根据主键查询信息  （APP & PC通用）-->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from classification
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<!-- 根据主键批量查询信息 -->
+	<select id="selectBatchByPrimaryKey" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from classification
+		where id in (
+		<foreach collection="list" item="item" separator=",">
+			#{item}
+		</foreach>
+		)
+	</select>
+	
+	<!-- 根据主键批量查询分类是否与广告或活动有关联 -->
+	<select id="getClassificationIsContactToADOrACTByIds" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from classification
+		where id in (
+		<foreach collection="list" item="item" separator=",">
+			#{item}
+		</foreach>
+		)and (id in (SELECT goods_id from hot_categories_good where state = 2)
+			or id in(SELECT goods_id from goods_activity where state = 2))
+	</select>
+
+	<!-- 根据主键删除 信息 -->
+	<delete id="deleteByPrimaryKey">
+		delete from
+		classification
+		where id
+		=#{id,jdbcType=INTEGER}
+
+	</delete>
+
+	<!-- 根据主键批量删除 信息 -->
+	<delete id="deleteBatchByPrimaryKey">
+		delete from
+		classification
+		where id in (
+		<foreach collection="list" item="item" separator=",">
+			#{item}
+		</foreach>
+		)
+	</delete>
+
+	<!-- 保存全部信息 -->
+	<insert id="insert" parameterType="com.jl.mis.model.Classification">
+		insert into classification
+		(identifier, name,
+		key_word, parent_id, pic_url,
+		sort,
+		operator_identifier, operator_time
+		)
+		values (
+		#{identifier,jdbcType=VARCHAR},
+		#{name,jdbcType=VARCHAR},
+		#{keyWord,jdbcType=VARCHAR}, #{parentId,jdbcType=INTEGER},
+		#{picUrl,jdbcType=VARCHAR},
+		#{sort,jdbcType=INTEGER},
+		#{operatorIdentifier,jdbcType=VARCHAR},
+		#{operatorTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+
+	<!-- 保存所选内容的信息 -->
+	<insert id="insertSelective" parameterType="com.jl.mis.model.Classification">
+		insert into classification
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="identifier != null">
+				identifier,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="keyWord != null">
+				key_word,
+			</if>
+			<if test="parentId != null">
+				parent_id,
+			</if>
+			<if test="picUrl != null">
+				pic_url,
+			</if>
+			<if test="sort != null">
+				sort,
+			</if>
+			<if test="operatorIdentifier != null">
+				operator_identifier,
+			</if>
+			<if test="operatorTime != null">
+				operator_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="identifier != null">
+				#{identifier,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="keyWord != null">
+				#{keyWord,jdbcType=VARCHAR},
+			</if>
+			<if test="parentId != null">
+				#{parentId,jdbcType=INTEGER},
+			</if>
+			<if test="picUrl != null">
+				#{picUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="sort != null">
+				#{sort,jdbcType=INTEGER},
+			</if>
+			<if test="operatorIdentifier != null">
+				#{operatorIdentifier,jdbcType=VARCHAR},
+			</if>
+			<if test="operatorTime != null">
+				#{operatorTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 根据主键更新所选内容 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.jl.mis.model.Classification">
+		update classification
+		<set>
+			<if test="identifier != null">
+				identifier = #{identifier,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="keyWord != null">
+				key_word = #{keyWord,jdbcType=VARCHAR},
+			</if>
+			<if test="parentId != null">
+				parent_id = #{parentId,jdbcType=INTEGER},
+			</if>
+			<if test="picUrl != null">
+				pic_url = #{picUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="sort != null">
+				sort = #{sort,jdbcType=INTEGER},
+			</if>
+			<if test="operatorIdentifier != null">
+				operator_identifier =
+				#{operatorIdentifier,jdbcType=VARCHAR},
+			</if>
+			<if test="operatorTime != null">
+				operator_time = #{operatorTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<!-- 根据主键更新全部内容 -->
+	<update id="updateByPrimaryKey" parameterType="com.jl.mis.model.Classification">
+		update
+		classification
+		set identifier = #{identifier,jdbcType=VARCHAR},
+		name =
+		#{name,jdbcType=VARCHAR},
+		key_word = #{keyWord,jdbcType=VARCHAR},
+		parent_id = #{parentId,jdbcType=INTEGER},
+		pic_url =
+		#{picUrl,jdbcType=VARCHAR},
+		sort = #{sort,jdbcType=INTEGER},
+		operator_identifier = #{operatorIdentifier,jdbcType=VARCHAR},
+		operator_time = #{operatorTime,jdbcType=TIMESTAMP}
+		where id =
+		#{id,jdbcType=INTEGER}
+	</update>
+
+	<!-- 根据分类名称以及父级id查询内容 -->
+	<select id="selectByNameAndParentId" resultMap="BaseResultMap">
+		select *
+		from classification
+		where name=#{name}
+		<!-- 判断是一级分类页面还是二级分类页面 -->
+		<if test="parentId!=0">
+		and parent_id=#{parentId}
+		</if>
+		<if test="parentId==0">
+		and parent_id=0
+		</if>
+		
+	</select>
+
+	<!-- 根据分类名称、Id以及父级id查询内容 -->
+	<select id="selectByNameAndIdAndParentId" resultMap="BaseResultMap">
+		select *
+		from classification
+		where name=#{name}
+		and id!=#{id}
+		<!-- 判断是一级分类页面还是二级分类页面 -->
+		<if test="parentId!=0">
+		and parent_id=#{parentId}
+		</if>
+		<if test="parentId==0">
+		and parent_id=0
+		</if>
+	</select>
+	
+		
+	<!-- 根据一二级分类标识符查询最大的sort值 -->
+	<select id="selectMaxSort" resultType="java.lang.Integer">
+		select MAX(sort) 
+		FROM classification
+		where 1=1
+		<!-- 判断是一级分类还是二级分类 -->
+		<if test="oneOrTwo=='one' ">
+			and parent_id=0
+		</if>
+		<if test="oneOrTwo=='two' ">
+			and parent_id!=0
+		</if>
+	</select>
+	
+	<!-- 根据一二级分类标识符查询所属的所有分类，并根据sort排序 -->
+	<select id="selectMsgOrderBySort" resultMap="BaseResultMap">
+		select c.*,u.name uname
+		FROM classification c
+		LEFT JOIN user u on u.identifier=c.operator_identifier
+		where 1=1
+		<!-- 判断是一级分类还是二级分类 -->
+		<if test="oneOrTwo=='one' ">
+			and parent_id=0
+		</if>
+		<if test="oneOrTwo=='two' ">
+			and parent_id!=0
+		</if>
+		<include refid="query_where"></include>
+		ORDER BY sort
+	</select>
+	
+	<!-- 查询一级分类信息 -->
+	<select id="selectOneMsg" resultMap="BaseResultMap">
+		select * from classification where parent_id=0 ORDER BY sort
+	</select>
+	
+	<!--勿改 根据一级分类id查询二级分类 -->
+	<select id="selectTwoByOneId" resultMap="BaseResultMap">
+		select * from classification where parent_id=#{parentId} ORDER BY sort
+	</select>
+
+
+	<!-- datatable 分页 start -->
+	<!-- 查询记录总条数 -->
+	<select id="iTotalRecords" resultType="java.lang.Integer">
+		select count(1)
+		from classification
+		where 1=1
+		<!-- 判断是显示一级分类还是二级分类 -->
+		<if test="oneOrTwo=='one' ">
+			and parent_id=0
+		</if>
+		<if test="oneOrTwo=='two' ">
+			and parent_id!=0
+		</if>
+		
+	</select>
+	<!-- 查询所有信息 结果集 -->
+	<select id="selectForSearch" resultMap="BaseResultMap">
+		select c.*,u.name uname,c1.name parentName
+		from classification c
+		LEFT JOIN user u on u.identifier=c.operator_identifier
+		LEFT JOIN classification c1 on c1.id=c.parent_id
+		where 1=1
+		<include refid="query_where"></include>
+		<!-- 判断是显示一级分类还是二级分类 -->
+		<if test="oneOrTwo=='one' ">
+			and c.parent_id=0
+		</if>
+		<if test="oneOrTwo=='two' ">
+			and c.parent_id!=0
+		</if>
+		<if test="desc!=null and desc!='' ">
+			order by ${desc} desc
+		</if>
+		<if test="asc!=null and asc!='' ">
+			order by ${asc} asc
+		</if>
+		limit ${iDisplayStart},${pageDisplayLength}
+	</select>
+	<!-- 通过查询条件过滤后的总记录 -->
+	<select id="iTotalDisplayRecords" resultType="java.lang.Integer">
+		select count(1)
+		from classification c
+		LEFT JOIN user u on u.identifier=c.operator_identifier
+		where 1=1
+		<include refid="query_where"></include>
+		<!-- 判断是显示一级分类还是二级分类 -->
+		<if test="oneOrTwo=='one' ">
+			and parent_id=0
+		</if>
+		<if test="oneOrTwo=='two' ">
+			and parent_id!=0
+		</if>
+	</select>
+	<!-- datatable 分页 end -->
+</mapper>

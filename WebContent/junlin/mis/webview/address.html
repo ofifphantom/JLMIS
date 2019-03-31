@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+	<head>
+		<meta charset="UTF-8">
+		<meta name ="viewport" content ="initial-scale=1, maximum-scale=3, minimum-scale=1, user-scalable=no">
+		<title></title>
+		<style>
+			* {
+				margin: 0;
+				border: 0;
+				list-style: none;
+				text-decoration: none;
+				box-sizing: border-box;
+				font-family: "微软雅黑";
+			}
+			body,
+			.container,
+			.container>div,
+			#address_div>ul{
+				width: 100%;
+				margin: 0;
+				padding: 0;
+				background: #f1f2f6;
+				font-size: 13.5px;
+				color: #555;
+			}
+			/*下面浮动的btn begin*/
+			#add_div{
+				text-align: center;
+				position: fixed;
+				bottom: 0;
+				line-height: 50px;
+			}
+			.btn{
+				display: inline-block;
+				width:60%;
+				height: 30px;
+				background: #60b746;
+				color: white;
+				font-size: 13.5px;
+				letter-spacing: 1px;
+			}
+			/*下面浮动的btn end*/
+			
+			/*上面的地址内容  begin*/
+			#address_div{
+				margin-bottom: 50px;
+			}
+			#address_div li{
+				width: 100%;
+				line-height: 30px;
+				background: #fff;
+				padding:5px 10px 0px 10px;
+				margin-bottom: 10px;
+			}
+			#address_div .per_name{
+				margin-right: 5px;
+			}
+			.per_address{
+				border-bottom: 1px solid #f1f2f6;
+			}
+			.per_dosomething>div{
+				float: left;
+				width: 50%;
+			}
+			.per_dosomething>.div_left{
+				text-align: left;
+			}
+			.per_dosomething>.div_right{
+				text-align: right;
+			}
+			.div_right>span{
+				display: inline-block;
+				padding-left: 10px;
+				vertical-align: middle;
+				
+			}
+			.icon{
+				height: 15px;
+				margin-right: 3px;
+			}
+			.no_address{
+				width: 100%;
+				margin-top: 35%;
+				color: #555;
+				text-align: center;
+				letter-spacing: 1px;
+			}
+			/*上面的地址内容  end*/
+			.clearfix{
+				clear: both;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<div id="address_div">
+				<ul>
+					<!-- <li>
+						<article>
+							<span class="per_name">
+							范小雨
+							</span>
+							<span class="per_tel">
+							1547896542
+							</span>
+						</article>
+						<article class="per_address">北京市海淀区三环到四环之间</article>
+						<div class="per_dosomething">
+							<div class="div_left">
+								<label onclick="check_address(this)" class="check_address">
+								<input type="radio" name="default_address" checked="checked"/>&nbsp;默认地址
+								</label>
+							</div>
+							<div class="div_right">
+								<span onclick="edit_address()"><img class="icon" src="pic/icon_edit1.png"/>编辑</span>
+								<span onclick="delete_address()"><img class="icon" src="pic/icon_delete.png"/>删除</span>
+							</div>
+						</div>
+						<div class="clearfix"></div>
+					</li>
+					<li>
+						<article>
+							<span class="per_name">
+							范小雨
+							</span>
+							<span class="per_tel">
+							1547896542
+							</span>
+						</article>
+						<article class="per_address">北京市海淀区三环到四环之间</article>
+						<div class="per_dosomething">
+							<div class="div_left">
+								<label onclick="check_address(this)" class="check_address">
+								<input type="radio" name="default_address"/>&nbsp;设为默认
+								</label>
+							</div>
+							<div class="div_right">
+								<span onclick="edit_address()"><img class="icon" src="pic/icon_edit1.png"/>编辑</span>
+								<span onclick="delete_address()"><img class="icon" src="pic/icon_delete.png"/>删除</span>
+							</div>
+						</div>
+						<div class="clearfix"></div>
+					</li>
+					<li>
+						<article>
+							<span class="per_name">
+							范小雨
+							</span>
+							<span class="per_tel">
+							1547896542
+							</span>
+						</article>
+						<article class="per_address">北京市海淀区三环到四环之间</article>
+						<div class="per_dosomething">
+							<div class="div_left">
+								<label onclick="check_address(this)" class="check_address">
+								<input type="radio" name="default_address"/>&nbsp;设为默认
+								</label>
+							</div>
+							<div class="div_right">
+								<span onclick="edit_address()"><img class="icon" src="pic/icon_edit1.png"/>编辑</span>
+								<span onclick="delete_address()"><img class="icon" src="pic/icon_delete.png"/>删除</span>
+							</div>
+						</div>
+						<div class="clearfix"></div>
+					</li> -->
+					<div class="no_address">您没有收货地址，请添加。</div>
+				</ul>
+				
+			</div>
+			<div id="add_div">
+				<button type="button" class="btn" onclick="add_address()">新增地址</button>
+			</div>
+		</div>
+	</body>
+	<script src="../../js/jquery-1.10.2.min.js"></script>
+	<script type="text/javascript">
+		
+	
+		var res = parseURL(window.location.href);
+		$(document).ready(function(){
+		});
+		/*修改默认地址*/
+		function check_address(thislabel){
+			$(".check_address").html('<input type="radio" name="default_address"/>&nbsp;设为默认');
+			$(thislabel).html('<input type="radio" name="default_address" checked="checked"/>&nbsp;默认地址');
+			
+			/*请在此处添加修改默认地址代码*/
+			
+		}
+		
+		/*编辑地址*/
+		function edit_address(){
+			window.location.href="addressModify.html?id=1";
+		}
+		/*删除地址*/
+		function delete_address(){
+			
+		}
+		
+		/*添加地址*/
+		function add_address(){
+			//跳转页面
+			window.location.href="addressModify.html";
+		}
+		
+		/*获取所有的收货地址，跟俊userid*/
+		function inint(){
+			console.log(res);
+			$.ajax({
+				url: basePath+'shippingAddress/getShippingAddressByUserId',
+				type: "GET",
+				dataType: "json",
+				async: false,
+				data: {
+					"userId": res.userId
+				},
+				success: function(data) {
+					if(date.code=200){
+						alert(date.msg);
+					}else{
+						alert(11)
+					}
+				}
+			});
+		}
+		/*判断是否传参*/
+		function parseURL(url) {
+			var url = url.split("?")[1];
+			if(url != undefined) {
+				var val = url.split("&");
+				var len = val.length;
+				var res = {};
+				var arr = [];
+				for(var i = 0; i < len; i++) {
+					arr = val[i].split("=");
+					res[arr[0]] = arr[1];
+				}
+				return res;
+			} else {
+				return false;
+			}
+
+		}
+	</script>
+</html>

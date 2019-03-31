@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jl.mis.mapper.FreeDeliveryMapper">
+	<resultMap id="BaseResultMap" type="com.jl.mis.model.FreeDelivery">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="free_delivery_money" jdbcType="DOUBLE"
+			property="freeDeliveryMoney" />
+		<result column="base_postage" jdbcType="DOUBLE" property="basePostage" />
+		<!-- 一对多 -->
+		<collection property="freeDeliveryAddresses" ofType="com.jl.mis.model.FreeDeliveryAddress" resultMap="FreeDeliveryAddressResultMap"/>
+	</resultMap>
+	
+	<resultMap id="FreeDeliveryAddressResultMap" type="com.jl.mis.model.FreeDeliveryAddress">
+		<id column="fdaId" jdbcType="INTEGER" property="id" />
+		<result column="province" jdbcType="VARCHAR" property="province" />
+		<result column="city" jdbcType="VARCHAR" property="city" />
+		<result column="county" jdbcType="VARCHAR" property="county" />
+		<result column="ring" jdbcType="VARCHAR" property="ring" />
+		<result column="free_delivery_id" jdbcType="INTEGER" property="freeDeliveryId" />
+		<result column="operator_identifier" jdbcType="VARCHAR"
+			property="operatorIdentifier" />
+		<result column="operator_time" jdbcType="TIMESTAMP" property="operatorTime" />
+	</resultMap>
+	
+	
+	<sql id="Base_Column_List">
+		id, free_delivery_money, base_postage
+	</sql>
+
+	<!-- 根据主键查询信息 -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from free_delivery
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<!-- 根据主键删除 信息 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		free_delivery
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+
+	<!-- 保存全部信息 -->
+	<insert id="insert" parameterType="com.jl.mis.model.FreeDelivery" useGeneratedKeys="true" keyProperty="id">
+		insert into free_delivery (free_delivery_money, base_postage
+		)
+		values (#{freeDeliveryMoney,jdbcType=DOUBLE},
+		#{basePostage,jdbcType=DOUBLE}
+		)
+	</insert>
+
+	<!-- 保存所选内容的信息 -->
+	<insert id="insertSelective" parameterType="com.jl.mis.model.FreeDelivery">
+		insert into free_delivery
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="freeDeliveryMoney != null">
+				free_delivery_money,
+			</if>
+			<if test="basePostage != null">
+				base_postage,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="freeDeliveryMoney != null">
+				#{freeDeliveryMoney,jdbcType=DOUBLE},
+			</if>
+			<if test="basePostage != null">
+				#{basePostage,jdbcType=DOUBLE},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 根据主键更新所选内容 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.jl.mis.model.FreeDelivery">
+		update free_delivery
+		<set>
+			<if test="freeDeliveryMoney != null">
+				free_delivery_money =
+				#{freeDeliveryMoney,jdbcType=DOUBLE},
+			</if>
+			<if test="basePostage != null">
+				base_postage = #{basePostage,jdbcType=DOUBLE},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<!-- 根据主键更新全部内容 -->
+	<update id="updateByPrimaryKey" parameterType="com.jl.mis.model.FreeDelivery">
+		update
+		free_delivery
+		set free_delivery_money =
+		#{freeDeliveryMoney,jdbcType=DOUBLE},
+		base_postage =
+		#{basePostage,jdbcType=DOUBLE}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 查询包邮设置信息以及包邮设置的地址信息 -->
+	<select id="selectFreeDeliveryAndAddressMsg" resultMap="BaseResultMap">
+		SELECT
+			fd.*, 
+			fda.id fdaId,
+			fda.province,
+			fda.city,
+			fda.county,
+			fda.ring,
+			fda.free_delivery_id,
+			fda.operator_identifier,
+			fda.operator_time
+		FROM
+			free_delivery fd
+		LEFT JOIN free_delivery_address fda ON fda.free_delivery_id = fd.id
+	</select>
+	
+	
+	
+	
+	
+	
+	<!-- 移动端使用 -->
+	
+	
+	<!-- 根据省编码/市编码/区编码查询包邮设置信息以及包邮设置的地址信息 -->
+	<select id="selectFreeDeliveryAndAddressMsgByCode" resultMap="BaseResultMap">
+		SELECT
+			fd.*, 
+			fda.id fdaId,
+			fda.province,
+			fda.city,
+			fda.county,
+			fda.ring,
+			fda.free_delivery_id,
+			fda.operator_identifier,
+			fda.operator_time
+		FROM
+			free_delivery fd
+		LEFT JOIN free_delivery_address fda ON fda.free_delivery_id = fd.id
+		WHERE
+			fda.province = #{province}
+			AND fda.county = #{county}
+			<if test="city!=null and city!=''">
+				AND fda.city = #{city}
+			</if>
+	</select>
+</mapper>

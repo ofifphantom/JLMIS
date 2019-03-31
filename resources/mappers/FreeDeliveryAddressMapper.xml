@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jl.mis.mapper.FreeDeliveryAddressMapper">
+	<resultMap id="BaseResultMap" type="com.jl.mis.model.FreeDeliveryAddress">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="province" jdbcType="VARCHAR" property="province" />
+		<result column="city" jdbcType="VARCHAR" property="city" />
+		<result column="county" jdbcType="VARCHAR" property="county" />
+		<result column="ring" jdbcType="VARCHAR" property="ring" />
+		<result column="free_delivery_id" jdbcType="INTEGER" property="freeDeliveryId" />
+		<result column="operator_identifier" jdbcType="VARCHAR"
+			property="operatorIdentifier" />
+		<result column="operator_time" jdbcType="TIMESTAMP" property="operatorTime" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, province, city, county, ring, free_delivery_id,
+		operator_identifier,
+		operator_time
+	</sql>
+
+	<!-- 根据主键查询信息 -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from free_delivery_address
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<!-- 根据主键删除 信息 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		free_delivery_address
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	
+	<!-- 根据主键批量删除 信息 -->
+	<delete id="deleteBatchByPrimaryKey" parameterType="list">
+		delete from
+		free_delivery_address
+		where id in (
+		<foreach collection="list" item="item" separator=",">
+			#{item}
+		</foreach>
+		)
+	</delete>
+
+	<!-- 保存全部信息 -->
+	<insert id="insert" parameterType="com.jl.mis.model.FreeDeliveryAddress">
+		insert into
+		free_delivery_address (province, city,
+		county, ring,
+		free_delivery_id,
+		operator_identifier, operator_time)
+		values
+		(#{province,jdbcType=VARCHAR},
+		#{city,jdbcType=VARCHAR},
+		#{county,jdbcType=VARCHAR},
+		#{ring,jdbcType=VARCHAR}, #{freeDeliveryId,jdbcType=INTEGER},
+		#{operatorIdentifier,jdbcType=VARCHAR},
+		#{operatorTime,jdbcType=TIMESTAMP})
+	</insert>
+
+	<!-- 保存所选内容的信息 -->
+	<insert id="insertSelective" parameterType="com.jl.mis.model.FreeDeliveryAddress">
+		insert into free_delivery_address
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="province != null">
+				province,
+			</if>
+			<if test="city != null">
+				city,
+			</if>
+			<if test="county != null">
+				county,
+			</if>
+			<if test="ring != null">
+				ring,
+			</if>
+			<if test="freeDeliveryId != null">
+				free_delivery_id,
+			</if>
+			<if test="operatorIdentifier != null">
+				operator_identifier,
+			</if>
+			<if test="operatorTime != null">
+				operator_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="province != null">
+				#{province,jdbcType=VARCHAR},
+			</if>
+			<if test="city != null">
+				#{city,jdbcType=VARCHAR},
+			</if>
+			<if test="county != null">
+				#{county,jdbcType=VARCHAR},
+			</if>
+			<if test="ring != null">
+				#{ring,jdbcType=VARCHAR},
+			</if>
+			<if test="freeDeliveryId != null">
+				#{freeDeliveryId,jdbcType=INTEGER},
+			</if>
+			<if test="operatorIdentifier != null">
+				#{operatorIdentifier,jdbcType=VARCHAR},
+			</if>
+			<if test="operatorTime != null">
+				#{operatorTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 根据主键更新所选内容 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.jl.mis.model.FreeDeliveryAddress">
+		update free_delivery_address
+		<set>
+			<if test="province != null">
+				province = #{province,jdbcType=VARCHAR},
+			</if>
+			<if test="city != null">
+				city = #{city,jdbcType=VARCHAR},
+			</if>
+			<if test="county != null">
+				county = #{county,jdbcType=VARCHAR},
+			</if>
+			<if test="ring != null">
+				ring = #{ring,jdbcType=VARCHAR},
+			</if>
+			<if test="freeDeliveryId != null">
+				free_delivery_id = #{freeDeliveryId,jdbcType=INTEGER},
+			</if>
+			<if test="operatorIdentifier != null">
+				operator_identifier =
+				#{operatorIdentifier,jdbcType=VARCHAR},
+			</if>
+			<if test="operatorTime != null">
+				operator_time = #{operatorTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<!-- 根据主键更新全部内容 -->
+	<update id="updateByPrimaryKey" parameterType="com.jl.mis.model.FreeDeliveryAddress">
+		update
+		free_delivery_address
+		set province = #{province,jdbcType=VARCHAR},
+		city
+		= #{city,jdbcType=VARCHAR},
+		county = #{county,jdbcType=VARCHAR},
+		ring =
+		#{ring,jdbcType=VARCHAR},
+		free_delivery_id =
+		#{freeDeliveryId,jdbcType=INTEGER},
+		operator_identifier =
+		#{operatorIdentifier,jdbcType=VARCHAR},
+		operator_time =
+		#{operatorTime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 批量保存信息 -->
+	<insert id="insertBatch" parameterType="list">
+		insert into
+		free_delivery_address (province,city,county,ring,free_delivery_id,operator_identifier, operator_time)
+		values
+		 <foreach collection="list" item="freeDelivery" index="index" separator="," > 
+		    (#{freeDelivery.province},#{freeDelivery.city},#{freeDelivery.county},#{freeDelivery.ring},#{freeDelivery.freeDeliveryId},#{freeDelivery.operatorIdentifier},#{freeDelivery.operatorTime}) 
+ 		</foreach> 
+	</insert>
+</mapper>

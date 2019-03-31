@@ -1,0 +1,142 @@
+* {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+a, img {
+  border: 0;
+  text-decoration: none;
+}
+body {
+  font: 12px/180% Arial, Helvetica, sans-serif, "新宋体";
+}
+.choiceForm {
+  margin: 20px;
+}
+.subNavBox {
+  width: 150px;
+  border: solid 1px #e5e3da;
+  float: left;
+}
+.subNav {
+  border-bottom: solid 1px #e5e3da;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+  color: #999;
+  line-height: 28px;
+  padding-left: 10px;
+  background: url(../images/jiantou1.jpg) no-repeat;
+  background-position: 95% 50%
+}
+.subNav:hover {
+  color: #0087ff;
+}
+.currentDd {
+  color: #0087ff;
+}
+.currentDt {
+  background-image: url(../images/jiantou.jpg);
+}
+.navContent {
+  display: none;
+  border-bottom: solid 1px #e5e3da;
+}
+.navContent li {
+  display: block;
+  heighr: 28px;
+  text-align: center;
+  font-size: 14px;
+  line-height: 28px;
+  color: #333;
+  cursor: pointer;
+}
+.navContent li button {
+  background: #0087ff;
+  width: 40px;
+  height: 21px;
+  color: #fff;
+  border: none;
+  float: right;
+  margin-right: 5px;
+  margin-top: 1px;
+  padding: 1px;
+  cursor: pointer;
+}
+.navContent li:hover {
+  color: #fff;
+  background-color: #0087ff;
+}
+.navContent li:hover button {
+  background: #fff;
+  color: #000;
+}
+.choice {
+  width: 200px;
+  height: 40px;
+  float: right;
+  background: red;
+}
+.choice span {
+  display: inline-block;
+  width: 100px;
+  height: 40px;
+  background: #eaeaea;
+  color: #000;
+  line-height: 40px;
+  font-size: 18px;
+  text-align: center;
+  cursor: pointer;
+}
+.choice span:hover {
+  background: #0087ff color: #fff;
+}
+.choiceActive {
+  background: #0087ff!important;
+  color: #fff!important;
+}
+.choicePeoples {
+  width: 50%;
+  height: auto;
+  background: #0087ff;
+  color: #fff;
+  margin: 0 auto;
+  font-size: 20px;
+  padding: 20px;
+  overflow: scroll;
+}
+.cl {
+  clear: both;
+}
+.choicePeoples h3 {
+  margin-bottom: 10px;
+}
+.buttonBox {
+  width: 150px;
+  height: 40px;
+  float: right;
+  margin-right: 20px;
+}
+.buttonBox .mybutton {
+  border: none;
+  width: 70px;
+  height: 40px;
+  color: #fff;
+  text-align: center;
+  line-height: 40px;
+  font-size: 14px;
+  float: left;
+  cursor: pointer;
+}
+.buttonBox .submit {
+  margin-right: 10px;
+  background: #0087ff;
+}
+.buttonBox .reset {
+  background: #bf3f3f;
+}
+@media screen and (max-width:963px) {
+  .choicePeoples {
+    width: 200px;
+  }
+}

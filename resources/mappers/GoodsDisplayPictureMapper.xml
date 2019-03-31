@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jl.mis.mapper.GoodsDisplayPictureMapper">
+	
+	<resultMap id="BaseResultMap" type="com.jl.mis.model.GoodsDisplayPicture">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
+		<result column="goods_specification_detail_id" jdbcType="INTEGER" property="goodsSpecificationDetailId" />
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		id, pic_url, goods_specification_detail_id
+	</sql>
+	
+	<!-- 根据主键查询信息 -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from goods_display_picture
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<!-- 根据规格id批量查询信息 -->
+	<select id="selectBatchByGoodsSpecificationDetailId" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from goods_display_picture
+		where goods_specification_detail_id in (
+		<foreach collection="list" item="item" separator=",">
+			#{item}
+		</foreach>
+		)
+	</select>
+	
+	<!-- 根据主键删除 信息 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from goods_display_picture
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	
+	<!-- 根据规格id批量删除 信息 -->
+	<delete id="deleteBatchByGoodsSpecificationDetailId">
+		delete from
+		goods_display_picture
+		where goods_specification_detail_id in (
+		<foreach collection="list" item="item" separator=",">
+			#{item}
+		</foreach>
+		)
+	</delete>
+	
+	<!-- 保存全部信息  -->
+	<insert id="insert" parameterType="com.jl.mis.model.GoodsDisplayPicture">
+		insert into goods_display_picture (id, pic_url, goods_specification_detail_id
+		)
+		values (#{id,jdbcType=INTEGER}, #{picUrl,jdbcType=VARCHAR},
+		#{goodsSpecificationDetailId,jdbcType=INTEGER}
+		)
+	</insert>
+	
+	<!-- 保存所选内容的信息 -->
+	<insert id="insertSelective" parameterType="com.jl.mis.model.GoodsDisplayPicture">
+		insert into goods_display_picture
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="picUrl != null">
+				pic_url,
+			</if>
+			<if test="goodsSpecificationDetailId != null">
+				goods_specification_detail_id,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="picUrl != null">
+				#{picUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="goodsSpecificationDetailId != null">
+				#{goodsSpecificationDetailId,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 根据主键更新所选内容 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.jl.mis.model.GoodsDisplayPicture">
+		update goods_display_picture
+		<set>
+			<if test="picUrl != null">
+				pic_url = #{picUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="goodsSpecificationDetailId != null">
+				goods_specification_detail_id = #{goodsSpecificationDetailId,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 根据主键更新全部内容 -->
+	<update id="updateByPrimaryKey" parameterType="com.jl.mis.model.GoodsDisplayPicture">
+		update goods_display_picture
+		set pic_url = #{picUrl,jdbcType=VARCHAR},
+		goods_specification_detail_id = #{goodsSpecificationDetailId,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<!--api 移动端 使用 -->
+	
+	<!-- 根据商品详情获取商品详情对应的图片-->
+	<select id="getGoodsDisplayPicture" resultMap="BaseResultMap">
+	SELECT
+		*
+	FROM
+		goods_display_picture gdp
+	where goods_specification_detail_id=#{goodsSpecificationDetailId}
+	</select>
+</mapper>

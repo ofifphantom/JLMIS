@@ -1,0 +1,531 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jl.mis.mapper.ActivityInformationMapper">
+	
+	<resultMap id="BaseResultMap" type="com.jl.mis.model.ActivityInformation">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="identifier" jdbcType="VARCHAR" property="identifier" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="activity_type" jdbcType="INTEGER" property="activityType" />
+		<result column="price" jdbcType="DOUBLE" property="price" />
+		<result column="discount" jdbcType="DOUBLE" property="discount" />
+		<result column="max_num" jdbcType="INTEGER" property="maxNum" />
+		<result column="introduction" jdbcType="VARCHAR" property="introduction" />
+		<result column="message_pic_url" jdbcType="VARCHAR" property="messagePicUrl" />
+		<result column="show_pic_url" jdbcType="VARCHAR" property="showPicUrl" />
+		<result column="budget" jdbcType="DOUBLE" property="budget" />
+		<result column="begin_validity_time" jdbcType="DATE"
+			property="beginValidityTime" />
+		<result column="end_validity_time" jdbcType="DATE" property="endValidityTime" />
+		<result column="state" jdbcType="INTEGER" property="state" />
+		<result column="operator_identifier" jdbcType="VARCHAR"
+			property="operatorIdentifier" />
+		<result column="operator_time" jdbcType="TIMESTAMP" property="operatorTime" />
+		<result column="submitter_identifier" jdbcType="VARCHAR"
+			property="submitterIdentifier" />
+		<result column="submit_time" jdbcType="TIMESTAMP" property="submitTime" />
+		
+		<result column="submitterName" jdbcType="VARCHAR"
+			property="submitterName" />
+		<association property="user" javaType="com.jl.mis.model.User"
+			resultMap="UserResultMap" />
+	</resultMap>
+	
+	<resultMap id="UserResultMap" type="com.jl.mis.model.User">
+		<result column="userName" jdbcType="VARCHAR" property="name" />
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		id, identifier, name, activity_type, price, discount,max_num,
+		introduction,
+		message_pic_url,
+		show_pic_url, budget,
+		begin_validity_time, end_validity_time, state,
+		operator_identifier,
+		operator_time,
+		submitter_identifier,
+		submit_time
+	</sql>
+
+	<!-- 根据主键查询信息 （APP & PC通用） -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from activity_information
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<!--根据id列表获取活动信息-->
+	<select id="getActivityInformationByIds" parameterType="java.util.List" resultMap="BaseResultMap">
+		 select * from activity_information where id  in (
+		<foreach collection="list" item="item" separator=",">
+          #{item}
+      	</foreach>
+      	) 
+
+	</select>
+	<!--根据id列表获取活动列表中是否有与进行活动关联的-->
+	<select id="getActivityInformationIsContactToADByIds" parameterType="java.util.List" resultMap="BaseResultMap">
+		 select * from activity_information where id  in (
+		<foreach collection="list" item="item" separator=",">
+          #{item}
+      	</foreach>
+      	)  and id in (SELECT url_parameter_id from advertisement_information where url_type = 1)
+
+	</select>
+	
+	<!-- 根据编号获取活动id -->
+	<select id="getIdByIdentifier" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select id from activity_information where identifier = #{identifier}
+	</select>
+	
+	<!-- 获取所有的正在上线的活动信息 -->
+	<select id="getAllPassActivityInformation"  resultMap="BaseResultMap">
+		select * from activity_information where state=4
+	</select>
+	
+	<!-- 获取所有即将上线的活动信息 -->
+	<select id="getAllReadyToOnlineActivityInformation"  resultMap="BaseResultMap">
+		select * from activity_information where state=2 and  DATE_FORMAT(NOW(),'%Y-%m-%d') >= begin_validity_time
+	</select>
+
+	<!-- 获取所有的正在上线的秒杀活动信息 -->
+	<select id="getAllPassActivityInformationByType2"  resultMap="BaseResultMap">
+		select * from activity_information where state=4 and activity_type=2
+	</select>
+
+	<!-- 根据主键删除 信息 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		activity_information
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+
+	<!-- 根据id列表删除活动信息 -->
+	<delete id="deleteActivityInformationByIds" parameterType="java.util.List">
+ 		delete from activity_information where id in (
+      	<foreach collection="list" item="item" separator=",">
+          #{item}
+      	</foreach>
+      )
+
+	</delete>
+
+	<!-- 保存全部信息 -->
+	<insert id="insert" parameterType="com.jl.mis.model.ActivityInformation">
+		insert into
+		activity_information (id, identifier, name,
+		activity_type, price,
+		discount,
+		max_num,
+		introduction, message_pic_url, show_pic_url,
+		budget,
+		begin_validity_time, end_validity_time,
+		state, operator_identifier,
+		operator_time,
+		submitter_identifier,
+		submit_time
+		)
+		values (#{id,jdbcType=INTEGER},
+		#{identifier,jdbcType=VARCHAR},
+		#{name,jdbcType=VARCHAR},
+		#{activityType,jdbcType=INTEGER}, #{price,jdbcType=DOUBLE},
+		#{discount,jdbcType=DOUBLE},
+		#{maxNum,jdbcType=INTEGER},
+		#{introduction,jdbcType=VARCHAR},
+		#{messagePicUrl,jdbcType=VARCHAR},
+		#{showPicUrl,jdbcType=VARCHAR},
+		#{budget,jdbcType=DOUBLE}, #{beginValidityTime,jdbcType=DATE},
+		#{endValidityTime,jdbcType=DATE},
+		#{state,jdbcType=INTEGER},
+		#{operatorIdentifier,jdbcType=VARCHAR},
+		#{operatorTime,jdbcType=TIMESTAMP},
+		#{submitterIdentifier,jdbcType=VARCHAR},
+		#{submitTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+
+	<!-- 保存所选内容的信息 -->
+	<insert id="insertSelective" parameterType="com.jl.mis.model.ActivityInformation">
+		insert into activity_information
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="identifier != null">
+				identifier,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="activityType != null">
+				activity_type,
+			</if>
+			<if test="price != null">
+				price,
+			</if>
+			<if test="discount != null">
+				discount,
+			</if>
+			<if test="maxNum != null">
+				max_num,
+			</if>
+			<if test="introduction != null">
+				introduction,
+			</if>
+			<if test="messagePicUrl != null">
+				message_pic_url,
+			</if>
+			<if test="showPicUrl != null">
+				show_pic_url,
+			</if>
+			<if test="budget != null">
+				budget,
+			</if>
+			<if test="beginValidityTime != null">
+				begin_validity_time,
+			</if>
+			<if test="endValidityTime != null">
+				end_validity_time,
+			</if>
+			<if test="state != null">
+				state,
+			</if>
+			<if test="operatorIdentifier != null">
+				operator_identifier,
+			</if>
+			<if test="operatorTime != null">
+				operator_time,
+			</if>
+			<if test="submitterIdentifier != null">
+				submitter_identifier,
+			</if>
+			<if test="submitTime != null">
+				submit_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="identifier != null">
+				#{identifier,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="activityType != null">
+				#{activityType,jdbcType=INTEGER},
+			</if>
+			<if test="price != null">
+				#{price,jdbcType=DOUBLE},
+			</if>
+			<if test="discount != null">
+				#{discount,jdbcType=DOUBLE},
+			</if>
+			<if test="maxNum != null">
+				#{maxNum,jdbcType=INTEGER},
+			</if>
+			<if test="introduction != null">
+				#{introduction,jdbcType=VARCHAR},
+			</if>
+			<if test="messagePicUrl != null">
+				#{messagePicUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="showPicUrl != null">
+				#{showPicUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="budget != null">
+				#{budget,jdbcType=DOUBLE},
+			</if>
+			<if test="beginValidityTime != null">
+				#{beginValidityTime,jdbcType=DATE},
+			</if>
+			<if test="endValidityTime != null">
+				#{endValidityTime,jdbcType=DATE},
+			</if>
+			<if test="state != null">
+				#{state,jdbcType=INTEGER},
+			</if>
+			<if test="operatorIdentifier != null">
+				#{operatorIdentifier,jdbcType=VARCHAR},
+			</if>
+			<if test="operatorTime != null">
+				#{operatorTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="submitterIdentifier != null">
+				#{submitterIdentifier,jdbcType=VARCHAR},
+			</if>
+			<if test="submitTime != null">
+				#{submitTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 根据主键更新所选内容 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.jl.mis.model.ActivityInformation">
+		update activity_information
+		<set>
+			<if test="identifier != null">
+				identifier = #{identifier,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="activityType != null">
+				activity_type = #{activityType,jdbcType=INTEGER},
+			</if>
+			<if test="price != null">
+				price = #{price,jdbcType=DOUBLE},
+			</if>
+			<if test="discount != null">
+				discount = #{discount,jdbcType=DOUBLE},
+			</if>
+			<if test="maxNum != null">
+				max_num = #{maxNum,jdbcType=INTEGER},
+			</if>
+			<if test="introduction != null">
+				introduction = #{introduction,jdbcType=VARCHAR},
+			</if>
+			<if test="messagePicUrl != null">
+				message_pic_url = #{messagePicUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="showPicUrl != null">
+				show_pic_url = #{showPicUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="budget != null">
+				budget = #{budget,jdbcType=DOUBLE},
+			</if>
+			<if test="beginValidityTime != null">
+				begin_validity_time = #{beginValidityTime,jdbcType=DATE},
+			</if>
+			<if test="endValidityTime != null">
+				end_validity_time = #{endValidityTime,jdbcType=DATE},
+			</if>
+			<if test="state != null">
+				state = #{state,jdbcType=INTEGER},
+			</if>
+			<if test="operatorIdentifier != null">
+				operator_identifier =
+				#{operatorIdentifier,jdbcType=VARCHAR},
+			</if>
+			<if test="operatorTime != null">
+				operator_time = #{operatorTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="submitterIdentifier != null">
+				submitter_identifier =
+				#{submitterIdentifier,jdbcType=VARCHAR},
+			</if>
+			<if test="submitTime != null">
+				submit_time = #{submitTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<!-- 根据主键更新全部内容 -->
+	<update id="updateByPrimaryKey" parameterType="com.jl.mis.model.ActivityInformation">
+		update
+		activity_information
+		set identifier = #{identifier,jdbcType=VARCHAR},
+		name = #{name,jdbcType=VARCHAR},
+		activity_type =
+		#{activityType,jdbcType=INTEGER},
+		price = #{price,jdbcType=DOUBLE},
+		discount = #{discount,jdbcType=DOUBLE},
+		max_num =#{maxNum,jdbcType=INTEGER},
+		introduction =
+		#{introduction,jdbcType=VARCHAR},
+		message_pic_url =
+		#{messagePicUrl,jdbcType=VARCHAR},
+		show_pic_url =
+		#{showPicUrl,jdbcType=VARCHAR},
+		budget = #{budget,jdbcType=DOUBLE},
+		begin_validity_time = #{beginValidityTime,jdbcType=DATE},
+		end_validity_time = #{endValidityTime,jdbcType=DATE},
+		state =
+		#{state,jdbcType=INTEGER},
+		operator_identifier =
+		#{operatorIdentifier,jdbcType=VARCHAR},
+		operator_time =
+		#{operatorTime,jdbcType=TIMESTAMP},
+		submitter_identifier =
+		#{submitterIdentifier,jdbcType=VARCHAR},
+		submit_time =
+		#{submitTime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 根据id列表更改活动状态 -->
+	<update id="updateActivityInformationStateByIds" parameterType="java.util.Map" >
+ 		update activity_information set state = #{state} where id  in (
+      	<foreach collection="ids"  item="item"  index="index" separator=",">
+					  #{item}
+	    </foreach>
+      )
+
+	</update>
+	
+	<!-- 根据id列表更改活动提交人&提交时间状态 -->
+	<update id="updateSubmitInfoByIds" parameterType="java.util.Map" >
+ 		update activity_information set 
+ 		submitter_identifier = #{submitterIdentifier,jdbcType=VARCHAR},
+		submit_time = #{submitTime,jdbcType=TIMESTAMP} where id  in (
+      	<foreach collection="ids"  item="item"  index="index" separator=",">
+					  #{item}
+	    </foreach>
+      )
+
+	</update>
+	
+	<!-- 活动自动上线 （state==2 && 当前时间>=有效期开始时间） -->
+<!--	<update id="updateActivityInformationToOnline"  >
+ 		update activity_information set state = 4 
+ 		 where state = 2 and  DATE_FORMAT(NOW(),'%Y-%m-%d') >= begin_validity_time
+
+	</update>  -->
+	
+	
+	<!-- 活动自动下线 （state==4 && 当前时间>有效期结束时间） -->
+	<update id="updateActivityInformationToOffline"  >
+ 		update activity_information set state = 5 
+ 		 where state = 4 and  DATE_FORMAT(NOW(),'%Y-%m-%d') > end_validity_time
+
+	</update>
+	
+	<!-- 活动自动失效 （state==1||7 && 当前时间>有效期结束时间） -->
+	<update id="updateActivityInformationToInvalid"  >
+ 		update activity_information set state = 6 
+ 		 where state in(1,7) and  DATE_FORMAT(NOW(),'%Y-%m-%d') > end_validity_time
+
+	</update>
+	
+	
+	<!--定义一个sql片段-->
+	<sql id="query_where">
+		<if test="identifier!=null and identifier!=''">
+			AND a.identifier like '%${identifier}%'
+		</if>
+		<if test="name!=null and name!=''">
+			AND a.name like '%${name}%'
+		</if>
+		<if test="operatorIdentifier!=null and operatorIdentifier!=''">
+			AND u.name like '%${operatorIdentifier}%'
+		</if>
+		<if test="activityType!=-1">
+			AND a.activity_type =#{activityType}
+		</if>
+		<if test="state!=-1">
+			AND a.state =#{state}
+		</if>
+		<if test="operatorTime!=null and operatorTime!=''">
+			AND DATE_FORMAT(a.operator_time,'%Y-%m-%d') = '${operatorTime}'
+		</if>
+	</sql>
+	
+	
+	
+	<select id="selectMsgOrderBySearchMsg" resultMap="BaseResultMap">
+		 select a.*,u.name userName  from activity_information a LEFT JOIN user u on u.identifier=a.operator_identifier 
+		where 1=1
+		<if test="flag==2">
+			and state = 1
+		</if>
+		<if test="flag==3">
+			and state  = 7
+		</if>
+		<include refid="query_where"></include>
+	</select>
+	
+	<!-- 获取所有正在生效的预售活动信息 -->
+	<select id="getAllEffectPreSellActivityInformation"  resultMap="BaseResultMap">
+		select * from activity_information where activity_type=5 and state = 4
+	</select>
+	
+	<!-- 根据商品id和优惠券id获取该优惠券关联的&正在上线的预售活动信息 并根据结束时间正序排序-->
+	<select id="getAllEffectPreSellActivityInformationByGoodsDetailsIdAndCouponId" parameterType="java.util.Map" resultMap="BaseResultMap">
+			SELECT
+				*
+			FROM
+				activity_information ai
+			LEFT JOIN
+				goods_activity ga on ga.activity_information_id = ai.id and ga.state = 1
+			LEFT JOIN
+				active_coupon ac on ac.activity_information_id = ai.id
+			WHERE
+				ai.activity_type = 5
+			AND ai.state = 4
+			AND ga.goods_id = #{goodsDetailsId}
+			AND ac.coupon_id = #{couponId}
+			ORDER BY
+				ai.end_validity_time ASC
+	</select>
+	<!-- 根据商品id该活动参与的正在上线的预售活动信息 并根据结束时间正序排序-->
+	<select id="getAllEffectPreSellActivityInformationByGoodsDetailsId"  resultMap="BaseResultMap">
+			SELECT
+				ai.*
+			FROM
+				activity_information ai
+			LEFT JOIN goods_activity ga ON ga.activity_information_id = ai.id
+			AND ga.state = 1
+			WHERE
+				ai.activity_type = 5
+			AND ai.state = 4
+			AND ga.goods_id = #{goodsDetailsId}
+			ORDER BY
+				ai.end_validity_time ASC
+	</select>
+	<!-- datatable 分页 start -->
+    <!-- 查询记录总条数 -->
+	<select id="iTotalRecords" resultType="java.lang.Integer">
+		select count(1) from activity_information a LEFT JOIN user u on u.identifier=a.operator_identifier
+		<if test="flag==2">
+			where state = 1
+		</if>
+		<if test="flag==3">
+			where state  = 7
+		</if>
+	</select>
+	<!-- 查询所有信息 结果集 -->
+	<select id="selectForSearch" resultMap="BaseResultMap">
+		
+	   	SELECT
+			a.*, u1.name submitterName, u. NAME userName
+		FROM
+			activity_information a
+		LEFT JOIN user u ON u.identifier = a.operator_identifier
+		LEFT JOIN user u1 ON u1.identifier = a.submitter_identifier 
+		where 1=1
+		<if test="flag==2">
+			and state = 1
+		</if>
+		<if test="flag==3">
+			and state  = 7
+		</if>
+		<include refid="query_where"></include>
+		
+		<if test="desc!=null and desc!='' ">
+			order by ${desc} desc
+		</if>
+		<if test="asc!=null and asc!=''">
+			order by ${asc} asc
+		</if>
+		limit ${iDisplayStart},${pageDisplayLength}
+	</select>
+	<!-- 通过搜索条件过滤后的总记录 -->
+	<select id="iTotalDisplayRecords" resultType="java.lang.Integer">
+		select count(1) from activity_information a LEFT JOIN user u on u.identifier=a.operator_identifier
+		where 1=1
+		<if test="flag==2">
+			and state  = 1
+		</if>
+		<if test="flag==3">
+			and state  = 7
+		</if>
+		<include refid="query_where"></include>
+			
+	</select>
+	
+	
+</mapper>

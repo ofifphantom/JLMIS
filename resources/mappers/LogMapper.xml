@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jl.mis.mapper.LogMapper">
+	<resultMap id="BaseResultMap" type="com.jl.mis.model.Log">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="operate_type" jdbcType="INTEGER" property="operateType" />
+		<result column="operator_identifier" jdbcType="VARCHAR"
+			property="operatorIdentifier" />
+		<result column="operate_time" jdbcType="TIMESTAMP" property="operateTime" />
+		<association property="user" javaType="com.jl.mis.model.User"
+			resultMap="UserResultMap" />
+	</resultMap>
+	<resultMap extends="BaseResultMap" id="ResultMapWithBLOBs"
+		type="com.jl.mis.model.Log">
+		<result column="operate_object" jdbcType="LONGVARCHAR"
+			property="operateObject" />
+	</resultMap>
+	
+	<resultMap id="UserResultMap" type="com.jl.mis.model.User">
+		<result column="name" jdbcType="VARCHAR" property="name" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, operate_type, operator_identifier, operate_time
+	</sql>
+	<sql id="Blob_Column_List">
+		operate_object
+	</sql>
+
+	<!--定义一个sql片段 -->
+	<sql id="query_where">
+		<if test="operatorType!=null and operatorType!=-1">
+			AND l.operate_type =#{operatorType}
+		</if>
+		<if test="operatorIdentifier!=null and operatorIdentifier!=''">
+			AND u.name like '%${operatorIdentifier}%'
+		</if>
+		<if test="operatorTime!=null and operatorTime!=''">
+			AND DATE_FORMAT(l.operate_time,'%Y-%m-%d') = '${operatorTime}'
+		</if>
+	</sql>
+
+	<!-- 根据主键查询信息 -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="ResultMapWithBLOBs">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from log
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<!-- 根据主键删除 信息 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from log
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+
+	<!-- 保存全部信息 -->
+	<insert id="insert" parameterType="com.jl.mis.model.Log">
+		insert into log (
+		operate_type, operator_identifier,
+		operate_time, operate_object)
+		values
+		( #{operateType,jdbcType=INTEGER},
+		#{operatorIdentifier,jdbcType=VARCHAR},
+		#{operateTime,jdbcType=TIMESTAMP},
+		#{operateObject,jdbcType=LONGVARCHAR})
+	</insert>
+
+	<!-- 保存所选内容的信息 -->
+	<insert id="insertSelective" parameterType="com.jl.mis.model.Log">
+		insert into log
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="operateType != null">
+				operate_type,
+			</if>
+			<if test="operatorIdentifier != null">
+				operator_identifier,
+			</if>
+			<if test="operateTime != null">
+				operate_time,
+			</if>
+			<if test="operateObject != null">
+				operate_object,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="operateType != null">
+				#{operateType,jdbcType=INTEGER},
+			</if>
+			<if test="operatorIdentifier != null">
+				#{operatorIdentifier,jdbcType=VARCHAR},
+			</if>
+			<if test="operateTime != null">
+				#{operateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="operateObject != null">
+				#{operateObject,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 根据主键更新所选内容 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.jl.mis.model.Log">
+		update log
+		<set>
+			<if test="operateType != null">
+				operate_type = #{operateType,jdbcType=INTEGER},
+			</if>
+			<if test="operatorIdentifier != null">
+				operator_identifier =
+				#{operatorIdentifier,jdbcType=VARCHAR},
+			</if>
+			<if test="operateTime != null">
+				operate_time = #{operateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="operateObject != null">
+				operate_object = #{operateObject,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<!-- 根据主键更新全部内容 -->
+	<update id="updateByPrimaryKey" parameterType="com.jl.mis.model.Log">
+		update log
+		set
+		operate_type = #{operateType,jdbcType=INTEGER},
+		operator_identifier =
+		#{operatorIdentifier,jdbcType=VARCHAR},
+		operate_time =
+		#{operateTime,jdbcType=TIMESTAMP},
+		operate_object =
+		#{operateObject,jdbcType=LONGVARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<!-- 根据主键更新全部内容(不包含operate_object) -->
+	<update id="updateByPrimaryKeyNotBLOBs" parameterType="com.jl.mis.model.Log">
+		update log
+		set operate_type = #{operateType,jdbcType=INTEGER},
+		operator_identifier = #{operatorIdentifier,jdbcType=VARCHAR},
+		operate_time = #{operateTime,jdbcType=TIMESTAMP}
+		where id =
+		#{id,jdbcType=INTEGER}
+	</update>
+
+	<!-- datatable 分页 start -->
+	<!-- 查询记录总条数 -->
+	<select id="iTotalRecords" resultType="java.lang.Integer">
+		select count(1)
+		from log
+
+	</select>
+	<!-- 查询所有信息 结果集 -->
+	<select id="selectForSearch" resultMap="ResultMapWithBLOBs">
+		select
+		l.id,
+		l.operate_type,
+		l.operator_identifier,
+		l.operate_time,
+		l.operate_object,
+		u.name
+		from log l
+		LEFT JOIN user u on u.identifier=l.operator_identifier
+		where
+		1=1
+		<include refid="query_where"></include>
+		<if test="desc!=null and desc!='' ">
+			order by ${desc} desc
+		</if>
+		<if test="asc!=null and asc!='' ">
+			order by ${asc} asc
+		</if>
+		limit ${iDisplayStart},${pageDisplayLength}
+	</select>
+	<!-- 通过查询条件过滤后的总记录 -->
+	<select id="iTotalDisplayRecords" resultType="java.lang.Integer">
+		select count(1)
+		from log l
+		LEFT JOIN user u on u.identifier=l.operator_identifier
+		where 1=1
+		<include refid="query_where"></include>
+	</select>
+	<!-- datatable 分页 end -->
+</mapper>

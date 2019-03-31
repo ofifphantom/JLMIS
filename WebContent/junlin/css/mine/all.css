@@ -1,0 +1,44 @@
+/*娓呴櫎鏍煎紡 begin*/
+
+* {
+	padding: 0;
+	margin: 0;
+	list-style: none;
+	box-sizing: border-box;
+	font-family: 寰蒋闆呴粦;
+	font-size: 14px;
+}
+
+html {
+	box-sizing: border-box;
+	font-size: 100%;
+}
+
+*,
+*:before,
+*:after {
+	box-sizing: inherit;
+}
+
+.clearfix {
+	clear: both;
+}
+/*娓呴櫎鏍煎紡 end*/
+/*璁剧疆绐楀彛鏈�皬鍊�begin*/
+body{
+	min-width:1000px;
+	expression(document.body.clientWidth < 760? "760px": "100%");
+	width: 100%;
+}
+/*璁剧疆绐楀彛鏈�皬鍊�end*/
+body.content {
+	width: 100%;
+	height: 100%;
+    background:#f7f6f6; 
+    color: #333;
+}
+.tip{
+	font-size: 12px;
+    color: #f15929;
+    line-height: 20px;
+}

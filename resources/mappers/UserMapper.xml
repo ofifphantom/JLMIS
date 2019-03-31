@@ -1,0 +1,794 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jl.mis.mapper.UserMapper">
+	<resultMap id="BaseResultMap" type="com.jl.mis.model.User">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="identifier" jdbcType="VARCHAR" property="identifier" />
+		<result column="login_name" jdbcType="VARCHAR" property="loginName" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="password" jdbcType="VARCHAR" property="password" />
+		<result column="phone" jdbcType="VARCHAR" property="phone" />
+		<result column="user_group" jdbcType="INTEGER" property="userGroup" />
+		<result column="administrator_or_user" jdbcType="INTEGER"
+			property="administratorOrUser" />
+		<result column="is_VIP_time" jdbcType="TIMESTAMP" property="isVipTime" />
+		<result column="is_VIP" jdbcType="INTEGER" property="isVip" />
+		<result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
+		<result column="is_effective" jdbcType="INTEGER" property="isEffective" />
+		<result column="operator_identifier" jdbcType="VARCHAR"
+			property="operatorIdentifier" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="weixin" jdbcType="VARCHAR" property="weixin" />
+		<result column="zhifubao" jdbcType="VARCHAR" property="zhifubao" />
+		<result column="QQ" jdbcType="VARCHAR" property="qq" />
+		<result column="operatorName" jdbcType="VARCHAR" property="operatorName" />
+		<result column="payPrice" jdbcType="VARCHAR" property="historyPayMoney" />
+		<result column="monthPayPrice" jdbcType="VARCHAR" property="monthHistoryPayMoney" />
+		<result column="odrderNum" jdbcType="VARCHAR" property="historyPayNum" />
+		<result column="monthOdrderNum" jdbcType="VARCHAR" property="monthHistoryPayNum" />
+
+		<!-- 一对多,要使用collection映射. collection:对关联查询到的多条记录映射到集合中 ;property:将关联查询到的多条记录映射到user类的那个属性 
+			ofType:指定映射的集合属性中pojo的类型 -->
+		<collection property="permissions" ofType="com.jl.mis.model.Permission">
+			<!-- id:唯一标识 ;property：要将权限的唯一标识映射到com.jl.mis.model.Permission的那个属性 -->
+			<id column="pid" jdbcType="INTEGER" property="id" />
+			<result column="user_id" jdbcType="INTEGER" property="userId" />
+			<result column="menu_id" jdbcType="INTEGER" property="menuId" />
+			<result column="poperator_identifier" jdbcType="VARCHAR"
+				property="operatorIdentifier" />
+			<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+			<association property="menu" javaType="Menu" resultMap="MenuMap"/>
+		</collection>
+	</resultMap>
+
+
+	<resultMap id="MenuMap" type="com.jl.mis.model.Menu">
+	    <id column="mid" jdbcType="INTEGER" property="id" />
+	    <result column="mparent_id" jdbcType="INTEGER" property="parentId" />
+	    <result column="mname" jdbcType="VARCHAR" property="name" />
+	    <result column="url" jdbcType="VARCHAR" property="url" />
+	    <result column="icon" jdbcType="VARCHAR" property="icon" />
+	    <result column="sort" jdbcType="INTEGER" property="sort" />
+	    <result column="is_effective" jdbcType="INTEGER" property="isEffective" />
+	  </resultMap>
+		
+
+
+	<sql id="Base_Column_List">
+		id, identifier, login_name, name, password, phone,
+		user_group,
+		administrator_or_user,is_VIP_time,
+		is_VIP, pic_url, is_effective,
+		operator_identifier, create_time, weixin,
+		zhifubao,
+		QQ
+	</sql>
+
+	<!--定义一个sql片段 -->
+	<sql id="query_where">
+		<if test="name!=null and name!=''">
+			AND u.name like '%${name}%'
+		</if>
+		<if test="telphoneNo!=null and telphoneNo!=''">
+			AND u.phone like '%${telphoneNo}%'
+		</if>
+		<if test="operatorTime!=null and operatorTime!=''">
+			AND DATE_FORMAT(u.create_time,'%Y-%m-%d') = '${operatorTime}'
+		</if>
+	</sql>
+	
+	<sql id="query_where_user">
+		<if test="name!=null and name!=''">
+			AND us.name like '%${name}%'
+		</if>
+		<if test="telphoneNo!=null and telphoneNo!=''">
+			AND us.phone like '%${telphoneNo}%'
+		</if>
+		<if test="identifier!=null and identifier!=''">
+			AND us.identifier like '%${identifier}%'
+		</if>
+		<if test="operatorIdentifierName!=null and operatorIdentifierName!=''">
+			AND oname. NAME like '%${operatorIdentifierName}%'
+		</if>
+		<if test="lowestPayMoney!=null and lowestPayMoney!=''">
+			AND odrderMsg.monthPayPrice &gt;=#{lowestPayMoney}
+		</if>
+		<if test="onlinePayMoney!=null and onlinePayMoney!=''">
+			AND odrderMsg.monthPayPrice &lt;=#{onlinePayMoney}
+		</if>
+		<if test="historyPayMoney!=null and historyPayMoney!=''">
+			AND odrderMsg.payPrice &gt;=#{historyPayMoney}
+		</if>
+		<if test="historyPayNum!=-1">
+			<if test="historyPayNum!=0">
+			AND odrderMsg.odrderNum =#{historyPayNum}
+			</if>
+			<if test="historyPayNum==0">
+			AND (odrderMsg.odrderNum =0 or odrderMsg.odrderNum IS NULL)
+			</if>
+		</if>
+		
+		<if test="operatorTime!=null and operatorTime!=''">
+			AND DATE_FORMAT(us.create_time,'%Y-%m-%d') = '${operatorTime}'
+		</if>
+		<if test="isVipTime!=null and isVipTime!=''">
+			AND DATE_FORMAT(us.is_VIP_time,'%Y-%m-%d') = '${isVipTime}'
+		</if>
+		
+		
+	</sql>
+
+	<!-- 根据主键查询信息 -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from user
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<!-- 根据电话查询信息-->
+	<select id="selectByPhone" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from user
+		where phone = #{phone,jdbcType=VARCHAR}
+		<!-- 用户 -->
+		and administrator_or_user =1
+	</select>
+
+	<!-- 获取所有有效的APP用户 -->
+	<select id="selectAllEffectiveAppUser" resultMap="BaseResultMap">
+		select * from user where administrator_or_user = 1 and is_effective = 1
+	</select>
+
+	<!-- 根据主键删除 信息 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from user
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+
+	<!-- 保存全部信息 -->
+	<insert id="insert" parameterType="com.jl.mis.model.User">
+		insert into user (
+		identifier,
+		login_name,
+		name, password, phone,
+		user_group,
+		administrator_or_user,
+		is_VIP,
+		pic_url, is_effective,
+		operator_identifier,
+		create_time, weixin,
+		zhifubao,
+		QQ)
+		values
+		(#{#{identifier,jdbcType=VARCHAR},
+		#{loginName,jdbcType=VARCHAR},
+		#{name,jdbcType=VARCHAR},
+		#{password,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR},
+		#{userGroup,jdbcType=INTEGER},
+		#{administratorOrUser,jdbcType=INTEGER}, #{isVip,jdbcType=INTEGER},
+		#{picUrl,jdbcType=VARCHAR}, #{isEffective,jdbcType=INTEGER},
+		#{operatorIdentifier,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP}, #{weixin,jdbcType=VARCHAR},
+		#{zhifubao,jdbcType=VARCHAR},
+		#{qq,jdbcType=VARCHAR})
+	</insert>
+
+	<!-- 保存所选内容的信息    (APP & PC通用)-->
+	<insert id="insertSelective" parameterType="com.jl.mis.model.User"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="identifier != null">
+				identifier,
+			</if>
+			<if test="loginName != null">
+				login_name,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="password != null">
+				password,
+			</if>
+			<if test="phone != null">
+				phone,
+			</if>
+			<if test="userGroup != null">
+				user_group,
+			</if>
+			<if test="administratorOrUser != null">
+				administrator_or_user,
+			</if>
+			<if test="isVipTime != null">
+				is_VIP_time,
+			</if>
+			<if test="isVip != null">
+				is_VIP,
+			</if>
+			<if test="picUrl != null">
+				pic_url,
+			</if>
+			<if test="isEffective != null">
+				is_effective,
+			</if>
+			<if test="operatorIdentifier != null">
+				operator_identifier,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="weixin != null">
+				weixin,
+			</if>
+			<if test="zhifubao != null">
+				zhifubao,
+			</if>
+			<if test="qq != null">
+				QQ,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="identifier != null">
+				#{identifier,jdbcType=VARCHAR},
+			</if>
+			<if test="loginName != null">
+				#{loginName,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null">
+				#{password,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				#{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="userGroup != null">
+				#{userGroup,jdbcType=INTEGER},
+			</if>
+			<if test="administratorOrUser != null">
+				#{administratorOrUser,jdbcType=INTEGER},
+			</if>
+			<if test="isVipTime != null">
+				#{isVipTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="isVip != null">
+				#{isVip,jdbcType=INTEGER},
+			</if>
+			<if test="picUrl != null">
+				#{picUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="isEffective != null">
+				#{isEffective,jdbcType=INTEGER},
+			</if>
+			<if test="operatorIdentifier != null">
+				#{operatorIdentifier,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="weixin != null">
+				#{weixin,jdbcType=VARCHAR},
+			</if>
+			<if test="zhifubao != null">
+				#{zhifubao,jdbcType=VARCHAR},
+			</if>
+			<if test="qq != null">
+				#{qq,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 根据主键更新所选内容       (APP & PC通用)-->
+	<update id="updateByPrimaryKeySelective" parameterType="com.jl.mis.model.User">
+		update user
+		<set>
+			<if test="identifier != null">
+				identifier = #{identifier,jdbcType=VARCHAR},
+			</if>
+			<if test="loginName != null">
+				login_name = #{loginName,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null">
+				password = #{password,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				phone = #{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="userGroup != null">
+				user_group = #{userGroup,jdbcType=INTEGER},
+			</if>
+			<if test="administratorOrUser != null">
+				administrator_or_user =
+				#{administratorOrUser,jdbcType=INTEGER},
+			</if>
+			<if test="isVipTime != null">
+				is_VIP_time = #{isVipTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="isVip != null">
+				is_VIP = #{isVip,jdbcType=INTEGER},
+			</if>
+			<if test="picUrl != null">
+				pic_url = #{picUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="isEffective != null">
+				is_effective = #{isEffective,jdbcType=INTEGER},
+			</if>
+			<if test="operatorIdentifier != null">
+				operator_identifier =
+				#{operatorIdentifier,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="weixin != null">
+				weixin = #{weixin,jdbcType=VARCHAR},
+			</if>
+			<if test="zhifubao != null">
+				zhifubao = #{zhifubao,jdbcType=VARCHAR},
+			</if>
+			<if test="qq != null">
+				QQ = #{qq,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<!-- 根据主键更新全部内容 -->
+	<update id="updateByPrimaryKey" parameterType="com.jl.mis.model.User">
+		update user
+		set
+		identifier = #{identifier,jdbcType=VARCHAR},
+		login_name =
+		#{loginName,jdbcType=VARCHAR},
+		name = #{name,jdbcType=VARCHAR},
+		password = #{password,jdbcType=VARCHAR},
+		phone =
+		#{phone,jdbcType=VARCHAR},
+		user_group = #{userGroup,jdbcType=INTEGER},
+		administrator_or_user = #{administratorOrUser,jdbcType=INTEGER},
+		is_VIP_time = #{isVipTime,jdbcType=TIMESTAMP},
+		is_VIP = #{isVip,jdbcType=INTEGER},
+		pic_url =
+		#{picUrl,jdbcType=VARCHAR},
+		is_effective =
+		#{isEffective,jdbcType=INTEGER},
+		operator_identifier =
+		#{operatorIdentifier,jdbcType=VARCHAR},
+		create_time =
+		#{createTime,jdbcType=TIMESTAMP},
+		weixin = #{weixin,jdbcType=VARCHAR},
+		zhifubao = #{zhifubao,jdbcType=VARCHAR},
+		QQ = #{qq,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 根据主键批量更新用户状态(从VIP改为一般用户/从一般用户改为VIP用户) -->
+	<update id="updateBatchByIdentifier">
+		update user
+		set	
+		is_VIP = #{isVip,jdbcType=INTEGER},
+		operator_identifier =
+		#{operatorIdentifier,jdbcType=VARCHAR},
+		is_VIP_time =
+		#{isVipTime,jdbcType=TIMESTAMP}
+		where identifier in (
+		<foreach collection="list" item="item" separator=",">
+			#{item}
+		</foreach>
+		)
+	</update>
+	
+	<!-- 根据手机号更新用户状态(从一般用户改为VIP) -->
+	<update id="updateUserIsVipByPhone">
+		update user
+		set	
+		is_VIP = 1,
+		operator_identifier =
+		#{operatorIdentifier,jdbcType=VARCHAR},
+		is_VIP_time =
+		#{isVipTime,jdbcType=TIMESTAMP}	
+		where phone =#{phone,jdbcType=VARCHAR}
+		<!-- 用户 -->
+		and administrator_or_user =1
+	</update>
+
+	<!-- 根据登录名获取管理员信息 -->
+	<select id="selectAdminByLoginName" resultMap="BaseResultMap">
+		select *
+		from user
+		where administrator_or_user =0
+		and is_effective = 1
+		and login_name=#{loginName}
+
+	</select>
+
+	<!-- 根据登录名和主键获取管理员信息 -->
+	<select id="selectByPrimaryKeyAndLoginName" parameterType="com.jl.mis.model.User"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from user
+		where id != #{id,jdbcType=INTEGER}
+		and login_name =
+		#{loginName,jdbcType=VARCHAR}
+	</select>
+
+	<!-- 根据主键联合查询user表和permission权限表 -->
+	<select id="selectAdminMsgById" resultMap="BaseResultMap">
+		SELECT
+		u.id,
+		u.identifier,
+		u.login_name,
+		u.`name`,
+		u.`password`,
+		u.phone,
+		u.user_group,
+		u.administrator_or_user,
+		u.is_effective,
+		u.create_time,
+		u.operator_identifier,
+		p.id AS pid,
+		p.user_id,
+		p.menu_id,
+		p.operator_identifier AS poperator_identifier,
+		p.create_time,
+		m.id AS mid,
+		m.parent_id AS mparent_id,
+		m.`name` AS mname,
+		m.url,
+		m.icon,
+		m.sort,
+		m.is_effective
+		FROM
+		`user` AS u
+		LEFT JOIN permission AS p ON u.id = p.user_id
+		LEFT JOIN menu AS m ON p.menu_id = m.id
+		WHERE
+		u.id = #{id}
+	</select>
+
+	<!-- 用户VIP页面的导出操作 -->
+	<select id="userExport" resultMap="BaseResultMap">
+	SELECT
+			us.*, oname. NAME operatorName,
+			oname.identifier,
+			odrderMsg.*
+		FROM
+			user us
+		LEFT JOIN (
+		#查询该条信息的操作人姓名
+			SELECT
+				NAME,
+				identifier
+			FROM
+				`user` u
+		) oname ON us.operator_identifier = oname.identifier
+		LEFT JOIN (
+		#查询用户的交易总额和交易笔数，以及近30天用户的交易总额和交易笔数
+			SELECT
+				SUM(ot.order_present_price) + SUM(ot.postage) payPrice,
+				COUNT(ot.id) odrderNum,
+				ot.user_id,
+				monthOtMsg.monthPayPrice,
+				monthOtMsg.monthOdrderNum
+			FROM
+				order_table ot
+				LEFT JOIN 
+				(
+				#查询近30天用户的交易总额和交易笔数
+					SELECT
+						SUM(
+							monthOt.order_present_price
+						) + SUM(monthOt.postage) monthPayPrice,
+						COUNT(monthOt.id) monthOdrderNum,
+						monthOt.user_id
+					FROM
+						order_table monthOt
+					WHERE
+						DATE_SUB(CURDATE(), INTERVAL 30 DAY) &lt;= monthOt.pay_time
+						
+					GROUP BY
+						monthOt.user_id
+				) monthOtMsg
+			on
+				monthOtMsg.user_id = ot.user_id
+			GROUP BY
+				ot.user_id,
+				monthOtMsg.monthPayPrice,
+				monthOtMsg.monthOdrderNum 
+		) odrderMsg ON odrderMsg.user_id = us.id
+		where 
+		<!-- 用户 -->
+		administrator_or_user =1
+		<include refid="query_where_user"></include>
+		and is_VIP=1
+	</select>
+
+
+	<!-- 获取管理员信息 datatable 分页 start -->
+	<!-- 查询记录总条数 -->
+	<select id="iTotalRecords" resultType="java.lang.Integer">
+		select count(1)
+		from user
+		where
+		<!-- 管理员 -->
+		administrator_or_user =0
+	</select>
+	<!-- 查询所有信息 结果集 -->
+	<select id="selectForSearch" resultMap="BaseResultMap">
+		select u.*,us.name operatorName
+		from user u
+		LEFT JOIN (select name,identifier from user ) us on us.identifier=u.operator_identifier
+		where 
+		<!-- 管理员 -->
+		administrator_or_user =0
+		<include refid="query_where"></include>
+		<if test="desc!=null and desc!='' ">
+			order by ${desc} desc
+		</if>
+		<if test="asc!=null and asc!='' ">
+			order by ${asc} asc
+		</if>
+		limit ${iDisplayStart},${pageDisplayLength}
+	</select>
+	<!-- 通过查询条件过滤后的总记录 -->
+	<select id="iTotalDisplayRecords" resultType="java.lang.Integer">
+		select count(1)
+		from user u
+		LEFT JOIN (select name,identifier from user ) us on us.identifier=u.operator_identifier
+		where 
+		<!-- 管理员 -->
+		administrator_or_user = 0
+		<include refid="query_where"></include>
+		
+	</select>
+	<!-- datatable 分页 end -->
+
+
+	<!-- 获取用户信息 datatable 分页 start -->
+	<!-- 查询用户记录总条数 -->
+	<select id="iTotalRecordsUser" resultType="java.lang.Integer">
+		select count(1)
+		from user
+		where
+		<!-- 用户 -->
+		administrator_or_user =1
+		<!-- 判断是否是VIP 0：不是 1：是 -->
+		<if test="isVip==0">
+			and is_VIP=0
+		</if>
+		<if test="isVip==1">
+			and is_VIP=1
+		</if>
+	</select>
+	<!-- 查询用户所有信息 结果集 -->
+	<select id="selectForSearchUser" resultMap="BaseResultMap">
+		SELECT
+			us.*, oname. NAME operatorName,
+			oname.identifier,
+			odrderMsg.*
+		FROM
+			user us
+		LEFT JOIN (
+		#查询该条信息的操作人姓名
+			SELECT
+				NAME,
+				identifier
+			FROM
+				`user` u
+		) oname ON us.operator_identifier = oname.identifier
+		LEFT JOIN (
+		#查询用户的交易总额和交易笔数，以及近30天用户的交易总额和交易笔数
+			SELECT
+				SUM(ot.order_present_price) + SUM(ot.postage) payPrice,
+				COUNT(ot.id) odrderNum,
+				ot.user_id,
+				monthOtMsg.monthPayPrice,
+				monthOtMsg.monthOdrderNum
+			FROM
+				order_table ot
+				LEFT JOIN 
+				(
+				#查询近30天用户的交易总额和交易笔数
+					SELECT
+						SUM(
+							monthOt.order_present_price
+						) + SUM(monthOt.postage) monthPayPrice,
+						COUNT(monthOt.id) monthOdrderNum,
+						monthOt.user_id
+					FROM
+						order_table monthOt
+					WHERE
+						DATE_SUB(CURDATE(), INTERVAL 30 DAY) &lt;= monthOt.pay_time
+						<if test="startPayTime!=null and startPayTime!=''">
+							AND date_format(monthOt.pay_time,'%Y-%m-%d') &gt;= #{startPayTime}
+						</if>
+						<if test="endPayTime!=null and endPayTime!=''">
+							AND date_format(monthOt.pay_time,'%Y-%m-%d') &lt;= #{endPayTime}
+						</if>
+					GROUP BY
+						monthOt.user_id
+				) monthOtMsg
+			on
+				monthOtMsg.user_id = ot.user_id
+				where 1=1
+				<if test="startPayTime!=null and startPayTime!=''">
+					AND date_format(ot.pay_time,'%Y-%m-%d') &gt;= #{startPayTime}
+				</if>
+				<if test="endPayTime!=null and endPayTime!=''">
+					AND date_format(ot.pay_time,'%Y-%m-%d') &lt;= #{endPayTime}
+				</if>
+			GROUP BY
+				ot.user_id,
+				monthOtMsg.monthPayPrice,
+				monthOtMsg.monthOdrderNum 
+		) odrderMsg ON odrderMsg.user_id = us.id
+		where 
+		<!-- 用户 -->
+		administrator_or_user =1
+		<include refid="query_where_user"></include>
+		<!-- 判断是否是VIP 0：不是 1：是 -->
+		<if test="isVip==0">
+			and is_VIP=0
+		</if>
+		<if test="isVip==1">
+			and is_VIP=1
+		</if>
+
+		<if test="desc!=null and desc!='' ">
+			order by ${desc} desc
+		</if>
+		<if test="asc!=null and asc!='' ">
+			order by ${asc} asc
+		</if>
+		limit ${iDisplayStart},${pageDisplayLength}
+	</select>
+	<!-- 通过查询条件过滤后的用户总记录 -->
+	<select id="iTotalDisplayRecordsUser" resultType="java.lang.Integer">
+		SELECT
+			count(1)
+		FROM
+			user us
+		LEFT JOIN (
+		#查询该条信息的操作人姓名
+			SELECT
+				NAME,
+				identifier
+			FROM
+				`user` u
+		) oname ON us.operator_identifier = oname.identifier
+		LEFT JOIN (
+		#查询用户的交易总额和交易笔数，以及近30天用户的交易总额和交易笔数
+			SELECT
+				SUM(ot.order_present_price) + SUM(ot.postage) payPrice,
+				COUNT(ot.id) odrderNum,
+				ot.user_id,
+				monthOtMsg.monthPayPrice,
+				monthOtMsg.monthOdrderNum
+			FROM
+				order_table ot
+				LEFT JOIN 
+				(
+				#查询近30天用户的交易总额和交易笔数
+					SELECT
+						SUM(
+							monthOt.order_present_price
+						) + SUM(monthOt.postage) monthPayPrice,
+						COUNT(monthOt.id) monthOdrderNum,
+						monthOt.user_id
+					FROM
+						order_table monthOt
+					WHERE
+						DATE_SUB(CURDATE(), INTERVAL 30 DAY) &lt;= monthOt.pay_time
+					GROUP BY
+						monthOt.user_id
+				) monthOtMsg
+			on
+				monthOtMsg.user_id = ot.user_id
+			GROUP BY
+				ot.user_id,
+				monthOtMsg.monthPayPrice,
+				monthOtMsg.monthOdrderNum 
+		) odrderMsg ON odrderMsg.user_id = us.id
+		where
+		<!-- 用户 -->
+		administrator_or_user = 1
+		<include refid="query_where_user"></include>	
+		<!-- 判断是否是VIP 0：不是 1：是 -->
+		<if test="isVip==0">
+			and is_VIP=0
+		</if>
+		<if test="isVip==1">
+			and is_VIP=1
+		</if>
+	</select>
+	<!-- datatable 分页 end -->
+	
+	
+	<!-- 客服聊天   用户使用的发送订单接口 start-->
+	<resultMap id="ApiOrderMap" type="com.jl.mis.model.ApiOrderMsg">
+	    <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
+	    <result column="goods_cover_url" jdbcType="VARCHAR" property="goodsCoverUrl" />
+	    <result column="orderPrice" jdbcType="DOUBLE" property="orderPrice" />
+	    <result column="order_state" jdbcType="INTEGER" property="orderState" />
+	    <result column="place_order_time" jdbcType="TIMESTAMP" property="placeOrderTime" />
+	  </resultMap>
+	
+	<!-- 根据用户id获取订单信息 api -->
+	<select id="selectOrderMsgByUserId" resultMap="ApiOrderMap">
+	SELECT
+		ot.order_no,
+		ot.place_order_time,
+		ot.order_present_price+ot.postage orderPrice,
+		od.goods_cover_url,
+		ot.order_state
+	FROM
+		order_table ot
+	LEFT JOIN order_detail od on ot.id=od.order_id
+	where ot.user_id=#{userId}
+	</select>
+	<!-- 客服聊天   用户使用的发送订单接口 end-->
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- APP 接口 -->
+	
+	<!--根据帐号和帐号类型查询用户信息-->
+	<select id="getUserByAccount" parameterType="java.util.Map"  resultMap="BaseResultMap">
+		select * from user where administrator_or_user = 1 
+		<if test="type==0">
+			and phone=#{account}
+		</if>
+		<if test="type==1">
+			and weixin=#{account}
+		</if>
+		<if test="type==2">
+			and QQ=#{account}
+		</if>
+		<if test="type==3">
+			and zhifubao=#{account}
+		</if>
+		
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+</mapper>

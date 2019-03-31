@@ -1,0 +1,18 @@
+#serach {
+	padding: 10px 5px 0px 5px;
+}
+
+.search_style ul li{
+	float:left;
+	margin: 5px 5px 5px 5px;
+	font-size:14px
+}
+
+.search_style ul li input,.search_style ul li select{
+	width:130px;
+	height:28px;
+	margin-right:10px;
+}
+
+
+

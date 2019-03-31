@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jl.mis.mapper.ShippingAddressMapper">
+	
+	<resultMap id="BaseResultMap" type="com.jl.mis.model.ShippingAddress">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="user_id" jdbcType="INTEGER" property="userId" />
+		<result column="consignee_name" jdbcType="VARCHAR" property="consigneeName" />
+		<result column="consignee_tel" jdbcType="VARCHAR" property="consigneeTel" />
+		<result column="region" jdbcType="VARCHAR" property="region" />
+		<result column="detailed_address" jdbcType="VARCHAR" property="detailedAddress" />
+		<result column="is_commonly_used" jdbcType="INTEGER" property="isCommonlyUsed" />
+		<result column="province_code" jdbcType="VARCHAR" property="provinceCode" />
+		<result column="city_code" jdbcType="VARCHAR" property="cityCode" />
+		<result column="county_code" jdbcType="VARCHAR" property="countyCode" />
+		<result column="ring_code" jdbcType="VARCHAR" property="ringCode" />
+		<result column="operator_time" jdbcType="TIMESTAMP" property="operatorTime" />
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		id, user_id, consignee_name, consignee_tel, region,
+		detailed_address,
+		is_commonly_used,
+		province_code,
+		city_code,
+		county_code,
+		ring_code,
+		operator_time
+	</sql>
+	
+	<!-- 根据主键查询信息 -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from shipping_address
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<!-- 根据主键删除 信息 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		shipping_address
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	
+	<!-- 保存全部信息  -->
+	<insert id="insert" parameterType="com.jl.mis.model.ShippingAddress">
+		insert into shipping_address
+		(user_id, consignee_name,
+		consignee_tel, region, detailed_address,
+		is_commonly_used,
+		province_code,
+		city_code,
+		county_code,
+		ring_code, operator_time)
+		values
+		#{userId,jdbcType=INTEGER},
+		#{consigneeName,jdbcType=VARCHAR},
+		#{consigneeTel,jdbcType=VARCHAR}, #{region,jdbcType=VARCHAR},
+		#{detailedAddress,jdbcType=VARCHAR},
+		#{isCommonlyUsed,jdbcType=INTEGER},
+		#{provinceCode,jdbcType=VARCHAR},
+		#{cityCode,jdbcType=VARCHAR},
+		#{countyCode,jdbcType=VARCHAR},
+		#{ringCode,jdbcType=VARCHAR},
+		#{operatorTime,jdbcType=TIMESTAMP})
+	</insert>
+	
+	<!-- 保存所选内容的信息 -->
+	<insert id="insertSelective" parameterType="com.jl.mis.model.ShippingAddress">
+		insert into shipping_address
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="consigneeName != null">
+				consignee_name,
+			</if>
+			<if test="consigneeTel != null">
+				consignee_tel,
+			</if>
+			<if test="region != null">
+				region,
+			</if>
+			<if test="detailedAddress != null">
+				detailed_address,
+			</if>
+			<if test="isCommonlyUsed != null">
+				is_commonly_used,
+			</if>
+			<if test="provinceCode != null">
+				province_code,
+			</if>
+			<if test="cityCode != null">
+				city_code,
+			</if>
+			<if test="countyCode != null">
+				county_code,
+			</if>
+			<if test="ringCode != null">
+				ring_code,
+			</if>
+			<if test="operatorTime != null">
+				operator_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="userId != null">
+				#{userId,jdbcType=INTEGER},
+			</if>
+			<if test="consigneeName != null">
+				#{consigneeName,jdbcType=VARCHAR},
+			</if>
+			<if test="consigneeTel != null">
+				#{consigneeTel,jdbcType=VARCHAR},
+			</if>
+			<if test="region != null">
+				#{region,jdbcType=VARCHAR},
+			</if>
+			<if test="detailedAddress != null">
+				#{detailedAddress,jdbcType=VARCHAR},
+			</if>
+			<if test="isCommonlyUsed != null">
+				#{isCommonlyUsed,jdbcType=INTEGER},
+			</if>
+			<if test="provinceCode != null">
+				#{provinceCode,jdbcType=VARCHAR},
+			</if>
+			<if test="cityCode != null">
+				#{cityCode,jdbcType=VARCHAR},
+			</if>
+			<if test="countyCode != null">
+				#{countyCode,jdbcType=VARCHAR},
+			</if>
+			<if test="ringCode != null">
+				#{ringCode,jdbcType=VARCHAR},
+			</if>
+			<if test="operatorTime != null">
+				#{operatorTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 根据主键更新所选内容 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.jl.mis.model.ShippingAddress">
+		update shipping_address
+		<set>
+			<if test="userId != null">
+				user_id = #{userId,jdbcType=INTEGER},
+			</if>
+			<if test="consigneeName != null">
+				consignee_name = #{consigneeName,jdbcType=VARCHAR},
+			</if>
+			<if test="consigneeTel != null">
+				consignee_tel = #{consigneeTel,jdbcType=VARCHAR},
+			</if>
+			<if test="region != null">
+				region = #{region,jdbcType=VARCHAR},
+			</if>
+			<if test="detailedAddress != null">
+				detailed_address = #{detailedAddress,jdbcType=VARCHAR},
+			</if>
+			<if test="isCommonlyUsed != null">
+				is_commonly_used = #{isCommonlyUsed,jdbcType=INTEGER},
+			</if>
+			<if test="provinceCode != null">
+				province_code = #{provinceCode,jdbcType=VARCHAR},
+			</if>
+			<if test="cityCode != null">
+				city_code = #{cityCode,jdbcType=VARCHAR},
+			</if>
+			<if test="countyCode != null">
+				county_code = #{countyCode,jdbcType=VARCHAR},
+			</if>
+			<if test="ringCode != null">
+				ring_code = #{ringCode,jdbcType=VARCHAR},
+			</if>
+			<if test="operatorTime != null">
+				operator_time = #{operatorTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 根据主键更新全部内容 -->
+	<update id="updateByPrimaryKey" parameterType="com.jl.mis.model.ShippingAddress">
+		update
+		shipping_address
+		set user_id = #{userId,jdbcType=INTEGER},
+		consignee_name = #{consigneeName,jdbcType=VARCHAR},
+		consignee_tel =
+		#{consigneeTel,jdbcType=VARCHAR},
+		region = #{region,jdbcType=VARCHAR},
+		detailed_address = #{detailedAddress,jdbcType=VARCHAR},
+		is_commonly_used = #{isCommonlyUsed,jdbcType=INTEGER},
+		province_code = #{provinceCode,jdbcType=VARCHAR},
+		city_code = #{cityCode,jdbcType=VARCHAR},
+		county_code = #{countyCode,jdbcType=VARCHAR},
+		ring_code = #{ringCode,jdbcType=VARCHAR},
+		operator_time =
+		#{operatorTime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	
+	
+	<!-- 移动端使用 -->
+	
+	<!-- 根据用户id查询信息 -->
+	<select id="selectByUserId" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from shipping_address
+		where user_id = #{userId,jdbcType=INTEGER}
+		ORDER BY is_commonly_used DESC
+	</select>
+	
+	<!-- 根据用户id更改用户的收货人地址都为不默认 -->
+	<update id="setNoCommonlyByUserId" parameterType="com.jl.mis.model.ShippingAddress">
+		update
+		shipping_address
+		set 
+		is_commonly_used = 0
+		where user_id = #{userId,jdbcType=INTEGER}
+	</update>
+</mapper>

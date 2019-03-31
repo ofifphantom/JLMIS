@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jl.mis.mapper.InvoiceUnitMapper">
+  <resultMap id="BaseResultMap" type="com.jl.mis.model.InvoiceUnit">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="unit_name" jdbcType="VARCHAR" property="unitName" />
+    <result column="taxpayer_identification_number" jdbcType="VARCHAR" property="taxpayerIdentificationNumber" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="operator_time" jdbcType="TIMESTAMP" property="operatorTime" />
+  </resultMap>
+  
+  
+  <sql id="Base_Column_List">
+    id, unit_name, taxpayer_identification_number, user_id, operator_time
+  </sql>
+  
+  <!-- 根据主键查询信息 （PC & APP 通用） -->
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from invoice_unit
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+   <!-- 根据主键删除信息 （PC & APP 通用） -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from invoice_unit
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <!-- 保存全部信息  -->
+  <insert id="insert" parameterType="com.jl.mis.model.InvoiceUnit">
+    insert into invoice_unit (id, unit_name, taxpayer_identification_number, 
+      user_id, operator_time)
+    values (#{id,jdbcType=INTEGER}, #{unitName,jdbcType=VARCHAR}, #{taxpayerIdentificationNumber,jdbcType=VARCHAR}, 
+      #{userId,jdbcType=INTEGER}, #{operatorTime,jdbcType=TIMESTAMP})
+  </insert>
+  
+  <!-- 保存所选内容的信息  （PC & APP 通用）-->
+  <insert id="insertSelective" parameterType="com.jl.mis.model.InvoiceUnit">
+    insert into invoice_unit
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="unitName != null">
+        unit_name,
+      </if>
+      <if test="taxpayerIdentificationNumber != null">
+        taxpayer_identification_number,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="operatorTime != null">
+        operator_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="unitName != null">
+        #{unitName,jdbcType=VARCHAR},
+      </if>
+      <if test="taxpayerIdentificationNumber != null">
+        #{taxpayerIdentificationNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="operatorTime != null">
+        #{operatorTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 根据主键更新所选内容  （PC & APP 通用）-->
+  <update id="updateByPrimaryKeySelective" parameterType="com.jl.mis.model.InvoiceUnit">
+    update invoice_unit
+    <set>
+      <if test="unitName != null">
+        unit_name = #{unitName,jdbcType=VARCHAR},
+      </if>
+      <if test="taxpayerIdentificationNumber != null">
+        taxpayer_identification_number = #{taxpayerIdentificationNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="operatorTime != null">
+        operator_time = #{operatorTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 根据主键更新全部内容 -->
+  <update id="updateByPrimaryKey" parameterType="com.jl.mis.model.InvoiceUnit">
+    update invoice_unit
+    set unit_name = #{unitName,jdbcType=VARCHAR},
+      taxpayer_identification_number = #{taxpayerIdentificationNumber,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=INTEGER},
+      operator_time = #{operatorTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <!-- APP 接口 -->
+	
+	 <!--根据用户id查询该用户的普票信息-->
+	<select id="selectInvoiceUnitByUserId" parameterType="java.lang.Integer"  resultMap="BaseResultMap">
+		SELECT * from invoice_unit where user_id = #{userId} ORDER BY operator_time desc
+	</select>
+  
+  
+  
+  
+  
+  
+</mapper>

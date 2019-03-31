@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jl.mis.mapper.ActivityMessageMapper">
+  <resultMap id="BaseResultMap" type="com.jl.mis.model.ActivityMessage">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="get_time" jdbcType="TIMESTAMP" property="getTime" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="activity_informat_id" jdbcType="INTEGER" property="activityInformatId" />
+    <association property="activityInformation" javaType="com.jl.mis.model.ActivityInformation"
+			resultMap="ActivityInformationResultMap" />
+  </resultMap>
+  
+  <resultMap id="ActivityInformationResultMap" type="com.jl.mis.model.ActivityInformation">
+		
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="introduction" jdbcType="VARCHAR" property="introduction" />
+		<result column="message_pic_url" jdbcType="VARCHAR" property="messagePicUrl" />
+		<result column="begin_validity_time" jdbcType="DATE" property="beginValidityTime" />
+		<result column="end_validity_time" jdbcType="DATE" property="endValidityTime" />
+		
+	</resultMap>
+  
+  <sql id="Base_Column_List">
+    id, user_id, get_time, status, activity_informat_id
+  </sql>
+  
+	<!-- 根据主键查询信息 -->
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from activity_message
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 根据主键删除 信息 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from activity_message
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <!-- 保存全部信息  -->
+  <insert id="insert" parameterType="com.jl.mis.model.ActivityMessage">
+    insert into activity_message (id, user_id, get_time, 
+      status, activity_informat_id)
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{getTime,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=INTEGER}, #{activityInformatId,jdbcType=INTEGER})
+  </insert>
+  
+  <!-- 保存所选内容的信息 -->
+  <insert id="insertSelective" parameterType="com.jl.mis.model.ActivityMessage">
+    insert into activity_message
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="getTime != null">
+        get_time,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="activityInformatId != null">
+        activity_informat_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="getTime != null">
+        #{getTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="activityInformatId != null">
+        #{activityInformatId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 根据主键更新所选内容 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.jl.mis.model.ActivityMessage">
+    update activity_message
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="getTime != null">
+        get_time = #{getTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="activityInformatId != null">
+        activity_informat_id = #{activityInformatId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 根据主键更新全部内容 -->
+  <update id="updateByPrimaryKey" parameterType="com.jl.mis.model.ActivityMessage">
+    update activity_message
+    set user_id = #{userId,jdbcType=INTEGER},
+      get_time = #{getTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER},
+      activity_informat_id = #{activityInformatId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <!-- APP 接口 -->
+	
+	 <!--根据用户id查询该用户的活动消息信息-->
+	<select id="selectActivityMessageByUserId" parameterType="java.lang.Integer"  resultMap="BaseResultMap">
+		SELECT
+			am.*, 
+			ai. NAME,
+			ai.message_pic_url,
+			ai.introduction,
+			ai.begin_validity_time,
+			ai.end_validity_time
+		FROM
+			activity_message am,
+			activity_information ai
+		WHERE
+			am.activity_informat_id = ai.id
+		AND user_id = #{userId}
+		ORDER BY
+			get_time DESC
+	</select>
+  
+  	 <!--根据用户id查询该用户未读的活动消息数量-->
+	<select id="selectUnreadActivityMessageNumByUserId" parameterType="java.lang.Integer"  resultType="java.lang.Integer">
+		SELECT COUNT(1) from activity_message where user_id = #{userId} and status = 0
+	</select>
+
+   <!-- 根据主键更新全部内容 -->
+  <update id="updateByStatusByUserId" parameterType="java.lang.Integer">
+    update activity_message
+    set 
+      status = 1
+    where user_id = #{userId,jdbcType=INTEGER}
+    and status = 0
+  </update>
+  
+</mapper>

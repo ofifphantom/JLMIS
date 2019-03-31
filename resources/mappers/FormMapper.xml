@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jl.mis.mapper.FormMapper">
+	<resultMap id="BaseResultMap" type="com.jl.mis.model.OrderTable">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="order_no" jdbcType="VARCHAR" property="orderNo" />
+		<result column="order_state" jdbcType="INTEGER" property="orderState" />
+		<result column="place_order_time" jdbcType="TIMESTAMP" property="placeOrderTime" />	
+		<result column="pay_time" jdbcType="TIMESTAMP" property="payTime" />
+		<result column="car_id_send" jdbcType="VARCHAR" property="carIdSend" />
+		<result column="consignee_name" jdbcType="VARCHAR" property="consigneeName" />
+		<result column="consignee_tel" jdbcType="VARCHAR" property="consigneeTel" />
+		<result column="consignee_address" jdbcType="VARCHAR" property="consigneeAddress" />
+		<result column="order_original_price" jdbcType="DOUBLE" property="orderOriginalPrice" />
+		<result column="order_present_price" jdbcType="DOUBLE" property="orderPresentPrice" />
+		<association property="user" javaType="com.jl.mis.model.User"
+			resultMap="UserResultMap" />
+		<association property="invoice" javaType="com.jl.mis.model.Invoice" resultMap="InvoiceResultMap" />
+		<collection property="orderDetails" ofType="com.jl.mis.model.OrderDetail"
+			resultMap="OrderDetailResultMap" />
+	</resultMap>
+
+	<!-- 用户详情 -->
+	<resultMap id="UserResultMap" type="com.jl.mis.model.User">
+		 <id column="uId" jdbcType="INTEGER" property="id" />
+		<result column="Uname" jdbcType="VARCHAR" property="name" />
+		<result column="phone" jdbcType="VARCHAR" property="phone" />
+	</resultMap>
+
+	<!-- 订单详情 -->
+	<resultMap id="OrderDetailResultMap" type="com.jl.mis.model.OrderDetail">
+		<id column="odId" jdbcType="INTEGER" property="id" />
+		<result column="goods_details_id" jdbcType="INTEGER" property="goodsDetailsId" />
+		<result column="goods_quantity" jdbcType="INTEGER" property="goodsQuantity" />
+		<result column="goods_purchasing_price" jdbcType="DOUBLE" property="goodsPurchasingPrice" />
+		<result column="goods_name" jdbcType="VARCHAR" property="goodsName" />
+		<result column="goods_specification_name" jdbcType="VARCHAR" property="goodsSpecificationName" />
+		<association property="goodsDetails" javaType="com.jl.mis.model.GoodsDetails" resultMap="GoodsDetailsMap" />
+	</resultMap>
+	
+	<!-- 发票详情 -->	
+	<resultMap id="InvoiceResultMap" type="com.jl.mis.model.Invoice">
+	    <id column="invId" jdbcType="INTEGER" property="id" />
+	    <result column="order_id" jdbcType="INTEGER" property="orderId" />
+	    <result column="invoice_type" jdbcType="INTEGER" property="invoiceType" />
+	    <result column="invoice_content" jdbcType="INTEGER" property="invoiceContent" />
+	    <result column="invoice_looked_up_type" jdbcType="INTEGER" property="invoiceLookedUpType" />
+	    <result column="unit_name" jdbcType="VARCHAR" property="unitName" />
+	    <result column="taxpayer_identification_number" jdbcType="VARCHAR" property="taxpayerIdentificationNumber" />
+	    <result column="registered_address" jdbcType="VARCHAR" property="registeredAddress" />
+	    <result column="registered_tel" jdbcType="VARCHAR" property="registeredTel" />
+	    <result column="deposit_bank" jdbcType="VARCHAR" property="depositBank" />
+	    <result column="bank_account" jdbcType="VARCHAR" property="bankAccount" />
+	    <result column="business_license_url" jdbcType="VARCHAR" property="businessLicenseUrl" />
+ 	 </resultMap>
+ 	 
+	<resultMap id="GoodsDetailsMap" type="com.jl.mis.model.GoodsDetails">
+		<id column="GDid" jdbcType="INTEGER" property="id" />
+		<result column="classification_id" jdbcType="INTEGER" property="classificationId" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="key_word" jdbcType="VARCHAR" property="keyWord" />
+		<result column="introdution" jdbcType="VARCHAR" property="introdution" />
+		<result column="recom" jdbcType="INTEGER" property="recom" />
+		<result column="recom_time" jdbcType="TIMESTAMP" property="recomTime" />
+		<result column="saleCount" jdbcType="INTEGER" property="saleCount" />
+		<association property="classification" javaType="com.jl.mis.model.Classification"
+			resultMap="classificationResultMap" />
+	</resultMap> 
+		
+	<resultMap id="classificationResultMap" type="com.jl.mis.model.Classification">
+		<id column="cid" jdbcType="INTEGER" property="id" />
+		<result column="identifier" jdbcType="VARCHAR" property="identifier" />
+		<result column="CFname" jdbcType="VARCHAR" property="name" />
+	</resultMap>
+	 
+<select id="Search" parameterType="Map" resultMap="BaseResultMap">
+	SELECT
+		O.order_no,
+		OD.goods_name,
+		OD.goods_specification_name,
+		U.`name` AS Uname,
+		U.phone,
+		O.place_order_time,
+		OD.id AS odId,
+		O.id,
+		U.id AS uId
+	FROM
+		order_detail AS OD ,
+		order_table AS O ,
+		`user` AS U
+	WHERE
+		OD.order_id = O.id
+		AND O.user_id = U.id
+		<if test="name!= null and name!=''">and U.`name` LIKE CONCAT(CONCAT('%', #{name}),'%')</if>
+		<if test="phone!= null and phone!=''">and U.phone LIKE CONCAT(CONCAT('%', #{phone}),'%')</if>
+		<if test="Sname!= null and Sname!=''">and OD.goods_name LIKE CONCAT(CONCAT('%', #{Sname}),'%')</if>
+		<if test="OrderNo!= null and OrderNo!=''">and O.order_no LIKE CONCAT(CONCAT('%', #{OrderNo}),'%')</if>
+		<if test="OrderTime!= null and OrderTime!=''">and to_days(O.place_order_time) = to_days( #{OrderTime})</if>
+	Order By O.place_order_time
+ </select>
+ <select id="Order" parameterType="Map" resultMap="BaseResultMap">
+	SELECT
+		O.order_no,
+		O.order_state,
+		CF.`name` AS CFname,
+		O.place_order_time,
+		O.pay_time,
+		U.`name` AS Uname,
+		U.phone,
+		O.consignee_name,
+		O.consignee_tel,
+		O.consignee_address,
+		<!-- I.invoice_content,
+		i.invoice_type,
+		i.unit_name,
+		i.taxpayer_identification_number, -->
+		O.order_original_price,
+		O.order_present_price,
+		O.postage,
+		OD.goods_name,
+		U.identifier,
+		OD.goods_specification_name,
+		OD.goods_quantity,
+		OD.goods_purchasing_price,
+		O.consignee_name,
+		O.consignee_tel,
+		O.car_id_send,
+		O.id,
+		OD.id AS odId,
+		GD.id AS GDid,
+		CF.id AS CFid,
+		U.id AS uId
+		<!-- ,I.id AS invId -->
+	FROM
+	order_table AS O,
+	order_detail AS OD,
+	goods_details AS GD,
+	classification AS CF,
+	`user` AS U
+	<!-- ,invoice AS I  -->
+	WHERE
+	OD.order_id = O.id
+	and GD.id = OD.goods_details_id
+	and GD.classification_id = CF.id
+	and O.user_id = U.id
+	<!-- and I.order_id = O.id -->
+	<if test="choosetime != null and choosetime !=''">and  to_days(#{start})&lt;=to_days(O.place_order_time) and  to_days(O.place_order_time)&lt;=to_days(#{end}) </if>
+	<if test="selectType != null">
+		<if test="selectType == -1">
+		</if>
+		<if test="selectType == 0">
+		AND O.order_state = 0
+		</if>
+		<if test="selectType == 1">
+		AND O.order_state = 1
+		</if>
+		<if test="selectType == 2">
+		AND O.order_state = 2
+		</if>
+		<if test="selectType == 3">
+		AND ( O.order_state = 3 or O.order_state = 10)
+		</if>
+		<if test="selectType == 4">
+		AND O.order_state = 4
+		</if>
+		<if test="selectType == 5">
+		AND (O.order_state = 5 or O.order_state = 7 or O.order_state = 8)
+		</if>
+		<if test="selectType == 6">
+		AND O.order_state = 6
+		</if>
+		<if test="selectType == 9">
+		AND O.order_state = 9
+		</if>
+	</if>
+	Order By O.place_order_time
+ </select>
+ <select id="Goods" parameterType="Map" resultType="Map">
+	SELECT
+	OD.goods_name,
+	OD.goods_specification_name,
+	cs.specification_identifier identifier,
+	Sum(OD.goods_quantity) AS `NUM`,
+	Sum(CASE WHEN order_state=7 THEN OD.goods_quantity else 0 END) AS `SNUM`
+	FROM
+	order_table AS O ,
+	order_detail AS OD ,
+	goods_specification_details,
+	goods_details,
+	jlgxc.commodity_specification cs
+	WHERE
+	O.id = OD.order_id
+	AND OD.goods_specification_details_id = goods_specification_details.id 
+	AND goods_specification_details.goods_id = goods_details.id	
+	and cs.id=goods_specification_details.commodity_specification_id
+	<if test="choosetime != null and choosetime !=''">and  to_days(#{start})&lt;=to_days(O.place_order_time) and  to_days(O.place_order_time)&lt;=to_days(#{end}) </if>
+	<if test="classificationOne != null">
+		<if test="classificationTwo != null">
+		AND goods_details.classification_id = #{classificationTwo}
+		</if>
+		<if test="classificationTwo == null">
+			AND goods_details.classification_id in
+			<foreach item="item" index="index" collection="listOne" open="(" separator="," close=")">
+	                 #{listOne[${index}].id}
+			</foreach>
+		</if>
+	</if>
+	GROUP BY
+	OD.goods_name,
+	OD.goods_specification_name,
+	cs.specification_identifier
+	<!--Order By O.place_order_time-->
+ </select>
+</mapper>

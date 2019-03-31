@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jl.mis.mapper.HotCategoriesMapper">
+	
+	<resultMap id="BaseResultMap" type="com.jl.mis.model.HotCategories">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="categories_name" jdbcType="VARCHAR" property="categoriesName" />
+		<result column="categories_url" jdbcType="VARCHAR" property="categoriesUrl" />
+		<result column="advertisement_information_id" jdbcType="INTEGER"
+			property="advertisementInformationId" />
+		<result column="operator_identifier" jdbcType="VARCHAR"
+			property="operatorIdentifier" />
+		<result column="operator_time" jdbcType="TIMESTAMP" property="operatorTime" />
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		id, categories_name, categories_url,
+		advertisement_information_id,
+		operator_identifier,
+		operator_time
+	</sql>
+	
+	<!-- 根据主键查询信息 -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from hot_categories
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<!-- 根据主键删除 信息 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		hot_categories
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	
+	<!-- 保存全部信息  -->
+	<insert id="insert" parameterType="com.jl.mis.model.HotCategories">
+		insert into hot_categories
+		(id, categories_name, categories_url,
+		advertisement_information_id,
+		operator_identifier,
+		operator_time)
+		values (#{id,jdbcType=INTEGER},
+		#{categoriesName,jdbcType=VARCHAR},
+		#{categoriesUrl,jdbcType=VARCHAR},
+		#{advertisementInformationId,jdbcType=INTEGER},
+		#{operatorIdentifier,jdbcType=VARCHAR},
+		#{operatorTime,jdbcType=TIMESTAMP})
+	</insert>
+	
+	<!-- 保存所选内容的信息 -->
+	<insert id="insertSelective" parameterType="com.jl.mis.model.HotCategories">
+		insert into hot_categories
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="categoriesName != null">
+				categories_name,
+			</if>
+			<if test="categoriesUrl != null">
+				categories_url,
+			</if>
+			<if test="advertisementInformationId != null">
+				advertisement_information_id,
+			</if>
+			<if test="operatorIdentifier != null">
+				operator_identifier,
+			</if>
+			<if test="operatorTime != null">
+				operator_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="categoriesName != null">
+				#{categoriesName,jdbcType=VARCHAR},
+			</if>
+			<if test="categoriesUrl != null">
+				#{categoriesUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="advertisementInformationId != null">
+				#{advertisementInformationId,jdbcType=INTEGER},
+			</if>
+			<if test="operatorIdentifier != null">
+				#{operatorIdentifier,jdbcType=VARCHAR},
+			</if>
+			<if test="operatorTime != null">
+				#{operatorTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 根据主键更新所选内容 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.jl.mis.model.HotCategories">
+		update hot_categories
+		<set>
+			<if test="categoriesName != null">
+				categories_name = #{categoriesName,jdbcType=VARCHAR},
+			</if>
+			<if test="categoriesUrl != null">
+				categories_url = #{categoriesUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="advertisementInformationId != null">
+				advertisement_information_id =
+				#{advertisementInformationId,jdbcType=INTEGER},
+			</if>
+			<if test="operatorIdentifier != null">
+				operator_identifier =
+				#{operatorIdentifier,jdbcType=VARCHAR},
+			</if>
+			<if test="operatorTime != null">
+				operator_time = #{operatorTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 根据主键更新全部内容 -->
+	<update id="updateByPrimaryKey" parameterType="com.jl.mis.model.HotCategories">
+		update
+		hot_categories
+		set categories_name =
+		#{categoriesName,jdbcType=VARCHAR},
+		categories_url =
+		#{categoriesUrl,jdbcType=VARCHAR},
+		advertisement_information_id =
+		#{advertisementInformationId,jdbcType=INTEGER},
+		operator_identifier =
+		#{operatorIdentifier,jdbcType=VARCHAR},
+		operator_time =
+		#{operatorTime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

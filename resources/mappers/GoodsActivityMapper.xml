@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jl.mis.mapper.GoodsActivityMapper">
+
+	<resultMap id="BaseResultMap" type="com.jl.mis.model.GoodsActivity">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="goods_id" jdbcType="INTEGER" property="goodsId" />
+		<result column="activity_information_id" jdbcType="INTEGER"
+			property="activityInformationId" />
+		<result column="state" jdbcType="INTEGER" property="state" />
+		<association property="goodsSpecificationDetails"
+			javaType="GoodsSpecificationDetails" resultMap="GoodsSpecificationDetailsMap" />
+		<association property="goodsDetails" javaType="GoodsDetails"
+			resultMap="ResultMapWithBLOBs" />
+		<association property="classification" javaType="Classification"
+			resultMap="ClassificationMap" />
+		<association property="activityInformation" javaType="ActivityInformation"
+			resultMap="ActivityInformationMap" />
+	</resultMap>
+
+
+	<resultMap id="ActivityInformationMap" type="com.jl.mis.model.ActivityInformation">
+		<id column="aiId" jdbcType="INTEGER" property="id" />
+		<result column="aiidentifier" jdbcType="VARCHAR" property="identifier" />
+		<result column="ainame" jdbcType="VARCHAR" property="name" />
+		<result column="aiactivity_type" jdbcType="INTEGER" property="activityType" />
+		<result column="aiprice" jdbcType="DOUBLE" property="price" />
+		<result column="aidiscount" jdbcType="DOUBLE" property="discount" />
+		<result column="aimax_num" jdbcType="INTEGER" property="maxNum" />
+		<result column="aiintroduction" jdbcType="VARCHAR" property="introduction" />
+		<result column="aimessage_pic_url" jdbcType="VARCHAR" property="messagePicUrl" />
+		<result column="aishow_pic_url" jdbcType="VARCHAR" property="showPicUrl" />
+		<result column="aibudget" jdbcType="DOUBLE" property="budget" />
+		<result column="aibegin_validity_time" jdbcType="DATE"
+			property="beginValidityTime" />
+		<result column="aiend_validity_time" jdbcType="DATE" property="endValidityTime" />
+		<result column="aistate" jdbcType="INTEGER" property="state" />
+		<result column="aioperator_identifier" jdbcType="VARCHAR"
+			property="operatorIdentifier" />
+		<result column="aioperator_time" jdbcType="TIMESTAMP" property="operatorTime" />
+	</resultMap>
+
+
+	<resultMap id="GoodsSpecificationDetailsMap" type="com.jl.mis.model.GoodsSpecificationDetails">
+		<id column="gsdid" jdbcType="INTEGER" property="id" />
+		<result column="gsdcommodity_specification_id" jdbcType="INTEGER" property="commoditySpecificationId" />
+		<result column="gsdold_price" jdbcType="DOUBLE" property="oldPrice" />
+		<result column="gsdidentifier" jdbcType="VARCHAR" property="identifier" />
+		<result column="gsdspecifications" jdbcType="VARCHAR" property="specifications" />
+		<result column="gsdprice" jdbcType="DOUBLE" property="price" />
+		<result column="gsdmini_price" jdbcType="DOUBLE" property="miniPrice" />
+		<result column="gsdgoods_id" jdbcType="INTEGER" property="goodsId" />
+		<result column="gsdsales_count" jdbcType="INTEGER" property="salesCount" />
+		<result column="gsdstate" jdbcType="INTEGER" property="state" />
+		<result column="gsdon_shelves_time" jdbcType="DATE" property="onShelvesTime" />
+		<result column="gsdoff_shelves_time" jdbcType="DATE" property="offShelvesTime" />
+		<result column="gsdoperator_identifier" jdbcType="VARCHAR"
+			property="operatorIdentifier" />
+		<result column="gsdoperator_time" jdbcType="TIMESTAMP" property="operatorTime" />
+	</resultMap>
+
+
+	<resultMap id="GoodsDetailsMap" type="com.jl.mis.model.GoodsDetails">
+		<id column="gdid" jdbcType="INTEGER" property="id" />
+		<result column="gdcommodityId" jdbcType="INTEGER" property="commodityId" />
+		<result column="gdclassification_id" jdbcType="INTEGER" property="classificationId" />
+		<result column="gdname" jdbcType="VARCHAR" property="name" />
+		<result column="gdkey_word" jdbcType="VARCHAR" property="keyWord" />
+		<result column="gdintrodution" jdbcType="VARCHAR" property="introdution" />
+		<result column="gdrecom" jdbcType="INTEGER" property="recom" />
+		<result column="gdrecom_time" jdbcType="TIMESTAMP" property="recomTime" />
+	</resultMap>
+	<resultMap extends="GoodsDetailsMap" id="ResultMapWithBLOBs"
+		type="com.jl.mis.model.GoodsDetails">
+		<result column="gddetails" jdbcType="LONGVARCHAR" property="details" />
+	</resultMap>
+
+
+	<resultMap id="ClassificationMap" type="com.jl.mis.model.Classification">
+		<id column="cid" jdbcType="INTEGER" property="id" />
+		<result column="cidentifier" jdbcType="VARCHAR" property="identifier" />
+		<result column="cname" jdbcType="VARCHAR" property="name" />
+		<result column="ckey_word" jdbcType="VARCHAR" property="keyWord" />
+		<result column="cparent_id" jdbcType="INTEGER" property="parentId" />
+		<result column="cpic_url" jdbcType="VARCHAR" property="picUrl" />
+		<result column="csort" jdbcType="INTEGER" property="sort" />
+		<result column="coperator_identifier" jdbcType="VARCHAR"
+			property="operatorIdentifier" />
+		<result column="coperator_time" jdbcType="TIMESTAMP" property="operatorTime" />
+	</resultMap>
+
+
+
+	<!-- 移动端返回值 -->
+	
+		<resultMap id="appBaseResultMap" type="com.jl.mis.model.GoodsActivity">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="goods_id" jdbcType="INTEGER" property="goodsId" />
+		<result column="activity_information_id" jdbcType="INTEGER"
+			property="activityInformationId" />
+		<result column="state" jdbcType="INTEGER" property="state" />
+		<association property="activityInformation" javaType="ActivityInformation"
+			resultMap="ActivityInformationMap" />
+	</resultMap>
+	
+
+
+
+	<sql id="Base_Column_List">
+		id, goods_id, activity_information_id,state
+	</sql>
+
+	<!--勿改 查询所有的活动商品信息 -->
+	<select id="selectAllMsg" resultMap="BaseResultMap">
+		SELECT
+		ga.*, ai.activity_type aiactivity_type
+		FROM
+		goods_activity ga
+		LEFT JOIN activity_information ai ON ga.activity_information_id = ai.id
+	</select>
+
+	<!-- 根据主键查询信息 -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from goods_activity
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<!-- 根据活动id获取信息  （APP & PC通用）-->
+	<select id="getMsgByActivityInformationId" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select * from goods_activity where activity_information_id =
+		#{activityInformationId}
+	</select>
+
+	<!--state=0 联合商品表和商品规格表 根据活动id获取信息   （APP & PC通用） -->
+	<select id="getMsgByActivityInformationId0" resultMap="BaseResultMap">
+		SELECT
+			c. NAME gdname,
+			gd.id gdid,
+			gd.classification_id gdclassification_id,
+			cs.specification_name gsdspecifications,
+			un.commonly_price gsdprice,
+		 	un.mini_price gsdmini_price,
+			gsd.id gsdid
+		FROM
+			goods_activity ga,
+			goods_details gd,
+			goods_specification_details gsd,
+			jlgxc.commodity_specification cs,
+			jlgxc.commodity c,
+			jlgxc.unit un
+		WHERE
+			ga.goods_id = gsd.id
+		AND gsd.goods_id = gd.id
+		AND cs.id = gsd.commodity_specification_id
+		AND c.id = gd.commodity_id
+		AND un.specification_id = cs.id
+		AND un.basic_unit = 1
+		AND activity_information_id = #{activityInformationId}
+		AND ga.goods_id = #{goodsId}
+		AND ga.state = 0
+	</select>
+
+	<!-- state=1 联合商品表 根据活动id获取信息    （APP & PC通用）-->
+	<select id="getMsgByActivityInformationId1" resultMap="BaseResultMap">
+		SELECT
+			c. NAME gdname,
+			gd.id gdid,
+			gd.classification_id gdclassification_id
+		FROM
+			goods_activity ga,
+			goods_details gd,
+			jlgxc.commodity c
+		
+		WHERE
+			ga.goods_id = gd.id
+		AND ga.activity_information_id = #{activityInformationId}
+		AND ga.goods_id = #{goodsId}
+		AND ga.state = 1
+		AND c.id = gd.commodity_id
+	</select>
+
+	<!-- state=2 联合分类表 根据活动id获取信息   （APP & PC通用）-->
+	<select id="getMsgByActivityInformationId2"  resultMap="BaseResultMap">
+		select c.name cname,c.id cid,c.parent_id cparent_id   
+		from goods_activity ga, classification c
+		where ga.goods_id = c.id 
+		and activity_information_id = #{activityInformationId} 
+		and ga.goods_id = #{goodsId} 
+		and ga.state = 2
+	</select>
+
+	<!-- 根据主键删除 信息 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		goods_activity
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+
+	<!-- 根据活动id删除信息 -->
+	<delete id="deleteByActivityInformationId" parameterType="java.lang.Integer">
+		DELETE
+		from goods_activity where activity_information_id =
+		#{activityInformationId}
+	</delete>
+
+	<!-- 根据活动id数组删除信息 -->
+	<delete id="deleteByActivityInformationIds" parameterType="java.util.List">
+		DELETE from goods_activity where activity_information_id in (
+		<foreach collection="list" item="item" separator=",">
+			#{item}
+		</foreach>
+		)
+	</delete>
+
+	<!-- 保存全部信息 -->
+	<insert id="insert" parameterType="com.jl.mis.model.GoodsActivity">
+		insert into goods_activity (
+		goods_id, activity_information_id, state
+		)
+		values (
+		#{goodsId,jdbcType=INTEGER},
+		#{activityInformationId,jdbcType=INTEGER}, #{state,jdbcType=INTEGER}
+		)
+	</insert>
+
+	<!-- 保存所选内容的信息 -->
+	<insert id="insertSelective" parameterType="com.jl.mis.model.GoodsActivity">
+		insert into goods_activity
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="goodsId != null">
+				goods_id,
+			</if>
+			<if test="activityInformationId != null">
+				activity_information_id,
+			</if>
+			<if test="state != null">
+				state,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="goodsId != null">
+				#{goodsId,jdbcType=INTEGER},
+			</if>
+			<if test="activityInformationId != null">
+				#{activityInformationId,jdbcType=INTEGER},
+			</if>
+			<if test="state != null">
+				#{state,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 根据主键更新所选内容 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.jl.mis.model.GoodsActivity">
+		update goods_activity
+		<set>
+			<if test="goodsId != null">
+				goods_id = #{goodsId,jdbcType=INTEGER},
+			</if>
+			<if test="activityInformationId != null">
+				activity_information_id =
+				#{activityInformationId,jdbcType=INTEGER},
+			</if>
+			<if test="state != null">
+				state = #{state,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<!-- 根据主键更新全部内容 -->
+	<update id="updateByPrimaryKey" parameterType="com.jl.mis.model.GoodsActivity">
+		update
+		goods_activity
+		set goods_id = #{goodsId,jdbcType=INTEGER},
+		activity_information_id = #{activityInformationId,jdbcType=INTEGER},
+		state = #{state,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 勿改 根据商品详情ID查找所参与的活动-->
+	<select id="selectGoodsActivityBySpecificationId" resultMap="BaseResultMap">
+	SELECT
+		ga.*
+	FROM
+		goods_activity ga
+	<if test="isGoodsId=='false'">
+		LEFT JOIN goods_specification_details gsd on gsd.id=ga.goods_id
+		where ga.state=0
+	</if>
+	<if test="isGoodsId=='true'">
+		LEFT JOIN goods_details gd on gd.id=ga.goods_id
+		LEFT JOIN goods_specification_details gsd on gsd.goods_id=gd.id
+		where ga.state=1
+	</if>
+	and gsd.id=#{goodsSpecificationDetailsId}
+	</select>
+	
+	
+	
+	
+	
+	<!-- 移动端  -->
+	
+	<!--勿改 根据商品Id或者分类ID查询商品所参加的活动信息 -->
+	<select id="getGoodsActivityMsgByStateAndGoodsId" resultMap="appBaseResultMap">
+	SELECT
+		ga.id,
+		ga.goods_id,
+		ga.activity_information_id,
+		ga.state,
+		ai.id aiId,
+		ai.name ainame,
+		ai.activity_type aiactivity_type,
+		ai.price aiprice,
+		ai.discount aidiscount,
+		ai.begin_validity_time aibegin_validity_time,
+		ai.end_validity_time aiend_validity_time,
+		ai.max_num aimax_num,
+		ai.state aistate
+	FROM
+		goods_activity ga
+	LEFT JOIN activity_information ai ON ai.id = ga.activity_information_id
+	WHERE
+	ai.state=4
+	<if test="isGoodsId=='true'">
+		and ga.state = 1	
+	</if>
+	<if test="isGoodsId=='false'">
+		and ga.state = 2
+	</if>
+	and ga.goods_id=#{goodsId}
+	</select>
+	
+	
+</mapper>

@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jl.mis.mapper.AdvertisementInformationMapper">
+	
+	<resultMap id="BaseResultMap" type="com.jl.mis.model.AdvertisementInformation">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="identifier" jdbcType="VARCHAR" property="identifier" />
+		<result column="type" jdbcType="INTEGER" property="type" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		
+		<result column="pic_url"  jdbcType="VARCHAR"  property="picUrl" />
+		<result column="url_type"  jdbcType="INTEGER"  property="urlType" />
+		<result column="url_parameter_id" jdbcType="INTEGER"  property="urlParameterId" />
+		<result column="effect_time" jdbcType="DATE" property="effectTime" />
+		<result column="effect" jdbcType="INTEGER"  property="effect" />
+		
+		<result column="operator_identifier" jdbcType="VARCHAR"	property="operatorIdentifier" />
+		<result column="operator_time" jdbcType="TIMESTAMP" property="operatorTime" />
+		<association property="user" javaType="com.jl.mis.model.User"
+			resultMap="UserResultMap" />
+	</resultMap>
+	
+	<resultMap id="UserResultMap" type="com.jl.mis.model.User">
+		<result column="userName" jdbcType="VARCHAR" property="name" />
+	</resultMap>
+	
+	
+	
+	<sql id="Base_Column_List">
+		id, identifier, type, name, pic_url, url_type, url_parameter_id,
+		effect_time, effect, operator_identifier, operator_time
+	</sql>
+
+	<!-- 根据主键查询信息 （APP & PC通用）-->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from advertisement_information
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<!-- 根据广告编号查询广告id-->
+	<select id="selectByIdentifier" parameterType="java.lang.String"  resultType="java.lang.Integer">
+		select id from advertisement_information where identifier = #{identifier}
+	</select>
+	
+	<!-- 查询已生效的首页广告（type = 1）的数量 -->
+	<select id="selectNumOfHomeAdEffect"  resultType="java.lang.Integer">
+		select count(1) from advertisement_information where type = 1 and effect = 0
+	</select>
+	
+	<!--根据id列表获取广告信息-->
+	<select id="getAdvertisementInformationByIds" parameterType="java.util.List" resultMap="BaseResultMap">
+		 select * from advertisement_information where id  in (
+		<foreach collection="list" item="item" separator=",">
+          #{item}
+      	</foreach>
+      	) 
+
+	</select>
+	
+	<!-- 根据广告名称和type=4 查询广告图片url-->
+	<select id="selectByAdName" parameterType="java.lang.String"  resultMap="BaseResultMap">
+		select * from advertisement_information where  type = 4 and name = #{name}
+	</select>
+
+	<!-- 根据主键删除 信息 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from advertisement_information
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	
+	<!-- 根据id列表删除广告信息 -->
+	<delete id="deleteAdvertisementInformationByIds" parameterType="java.util.List">
+ 		delete from advertisement_information where id in (
+      	<foreach collection="list" item="item" separator=",">
+          #{item}
+      	</foreach>
+      )
+
+	</delete>
+	
+	<!-- 删除热门分类广告信息 -->
+	<delete id="deleteHotCategoriesAd">
+		DELETE from advertisement_information where type = 4
+	</delete>
+
+	<!-- 保存全部信息 -->
+	<insert id="insert" parameterType="com.jl.mis.model.AdvertisementInformation">
+		insert into advertisement_information (id, identifier, type,
+		name, pic_url, url_type,
+		url_parameter_id, effect_time,
+		effect, operator_identifier, operator_time
+		)
+		values (#{id,jdbcType=INTEGER}, 
+		#{identifier,jdbcType=VARCHAR},
+		#{type,jdbcType=INTEGER},
+		#{name,jdbcType=VARCHAR}, 
+		#{picUrl,jdbcType=VARCHAR},
+		#{urlType,jdbcType=INTEGER},
+		#{urlParameterId,jdbcType=INTEGER},
+		#{effectTime,jdbcType=DATE},
+		#{effect,jdbcType=INTEGER},
+		#{operatorIdentifier,jdbcType=VARCHAR},
+		#{operatorTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+
+	<!-- 保存所选内容的信息 -->
+	<insert id="insertSelective" parameterType="com.jl.mis.model.AdvertisementInformation">
+		insert into advertisement_information
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="identifier != null">
+				identifier,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="picUrl != null">
+				pic_url,
+			</if>
+			<if test="urlType != null">
+				url_type,
+			</if>
+			<if test="urlParameterId != null">
+				url_parameter_id,
+			</if>
+			<if test="effectTime != null">
+				effect_time,
+			</if>
+			<if test="effect != null">
+				effect,
+			</if>
+			<if test="operatorIdentifier != null">
+				operator_identifier,
+			</if>
+			<if test="operatorTime != null">
+				operator_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="identifier != null">
+				#{identifier,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=INTEGER},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="picUrl != null">
+				#{picUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="urlType != null">
+				#{urlType,jdbcType=INTEGER},
+			</if>
+			<if test="urlParameterId != null">
+				#{urlParameterId,jdbcType=INTEGER},
+			</if>
+			<if test="effectTime != null">
+				#{effectTime,jdbcType=DATE},
+			</if>
+			<if test="effect != null">
+				#{effect,jdbcType=INTEGER},
+			</if>
+			<if test="operatorIdentifier != null">
+				#{operatorIdentifier,jdbcType=VARCHAR},
+			</if>
+			<if test="operatorTime != null">
+				#{operatorTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 根据主键更新所选内容 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.jl.mis.model.AdvertisementInformation">
+		update advertisement_information
+		<set>
+			<if test="identifier != null">
+				identifier = #{identifier,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				type = #{type,jdbcType=INTEGER},
+			</if>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="picUrl != null">
+				pic_url = #{picUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="urlType != null">
+				url_type = #{urlType,jdbcType=INTEGER},
+			</if>
+			<if test="urlParameterId != null">
+				url_parameter_id = #{urlParameterId,jdbcType=INTEGER},
+			</if>
+			<if test="effectTime != null">
+				effect_time = #{effectTime,jdbcType=DATE},
+			</if>
+			<if test="effect != null">
+				effect = #{effect,jdbcType=INTEGER},
+			</if>
+			<if test="operatorIdentifier != null">
+				operator_identifier = #{operatorIdentifier,jdbcType=VARCHAR},
+			</if>
+			<if test="operatorTime != null">
+				operator_time = #{operatorTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 生效广告（仅一个有效） -->
+	<update id="updateOneAdToEffect" parameterType="com.jl.mis.model.AdvertisementInformation">
+		update advertisement_information 
+		<set>
+			<if test="effectTime != null">
+				effect_time = #{effectTime,jdbcType=DATE},effect = 0 
+			</if>
+			<if test="effectTime == null">
+				effect = 0 
+			</if>
+			
+		</set> 
+		where id = #{id} and type = #{type}
+	</update>
+	
+	<!-- 生效广告（仅一个有效）时   失效其他广告 -->
+	<update id="updateOtherAdToInvalid" parameterType="com.jl.mis.model.AdvertisementInformation">
+		update advertisement_information set effect = 1 where id != #{id} and type = #{type}
+	</update>
+
+
+
+	<!-- 生效限时抢购（仅一个有效） -->
+	<update id="updateOneXSQGToEffect" parameterType="com.jl.mis.model.AdvertisementInformation">
+		update advertisement_information 
+		<set>
+			effect = 0 
+		</set> 
+		where TO_DAYS(effect_time)=TO_DAYS(DATE(NOW()))  and type = 3
+	</update>
+	
+	<!-- 生效限时抢购（仅一个有效）时   失效限时抢购 -->
+	<update id="updateOtherXSQGToInvalid" parameterType="com.jl.mis.model.AdvertisementInformation">
+		update advertisement_information set effect = 1 where TO_DAYS(effect_time)!=TO_DAYS(DATE(NOW()))  and type = 3
+	</update>
+
+
+
+
+
+
+	<!-- 根据id和type更改广告是否有效 -->
+	<update id="updateEffectByIdAndType" parameterType="com.jl.mis.model.AdvertisementInformation">
+		update advertisement_information set effect = #{effect} where id = #{id} and type = #{type}
+	</update>
+	
+	<!-- 根据主键更新全部内容 -->
+	<update id="updateByPrimaryKey" parameterType="com.jl.mis.model.AdvertisementInformation">
+		update advertisement_information
+		set identifier = #{identifier,jdbcType=VARCHAR},
+		type = #{type,jdbcType=INTEGER},
+		name = #{name,jdbcType=VARCHAR},
+		pic_url = #{picUrl,jdbcType=VARCHAR},
+		url_type = #{urlType,jdbcType=INTEGER},
+		url_parameter_id = #{urlParameterId,jdbcType=INTEGER},
+		effect_time = #{effectTime,jdbcType=DATE},
+		effect = #{effect,jdbcType=INTEGER}
+		operator_identifier = #{operatorIdentifier,jdbcType=VARCHAR},
+		operator_time = #{operatorTime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+
+	<!--定义一个sql片段-->
+	<sql id="query_where">
+		<if test="identifier!=null and identifier!=''">
+			AND a.identifier like '%${identifier}%'
+		</if>
+		<if test="name!=null and name!=''">
+			AND a.name like '%${name}%'
+		</if>
+		<if test="operatorIdentifier!=null and operatorIdentifier!=''">
+			AND u.name like '%${operatorIdentifier}%'
+		</if>
+		<if test="operatorTime!=null and operatorTime!=''">
+			AND DATE_FORMAT(a.operator_time,'%Y-%m-%d') = '${operatorTime}'
+		</if>
+	</sql>
+	
+	<select id="selectMsgOrderBySearchMsg" resultMap="BaseResultMap">
+		select a.* ,u.name userName
+		from advertisement_information a LEFT JOIN user u on u.identifier=a.operator_identifier
+		where a.type=#{type}
+		<include refid="query_where"></include>
+	</select>
+	
+	
+	<!-- datatable 分页 start -->
+    <!-- 查询记录总条数 -->
+	<select id="iTotalRecords" resultType="java.lang.Integer">
+		select count(1)
+		from advertisement_information a LEFT JOIN user u on u.identifier=a.operator_identifier
+		where a.type=#{type}
+	</select>
+	<!-- 查询所有信息 结果集 -->
+	<select id="selectForSearch" resultMap="BaseResultMap">
+		
+	     select a.* ,u.name userName
+		from advertisement_information a LEFT JOIN user u on u.identifier=a.operator_identifier
+		where a.type=#{type}
+		<include refid="query_where"></include>
+		
+		<if test="desc!=null and desc!='' ">
+			order by ${desc} desc
+		</if>
+		<if test="asc!=null and asc!=''">
+			order by ${asc} asc
+		</if>
+		limit ${iDisplayStart},${pageDisplayLength}
+	</select>
+	<!-- 通过搜索条件过滤后的总记录 -->
+	<select id="iTotalDisplayRecords" resultType="java.lang.Integer">
+		select count(1)
+		from advertisement_information a LEFT JOIN user u on u.identifier=a.operator_identifier
+		where a.type=#{type}
+		<include refid="query_where"></include>
+			
+	</select>
+
+	<!-- 根据商品详情id查询其所属的商品是否在广告中 -->
+	<select id="selectAdvertismentBySpecificationId" resultMap="BaseResultMap">
+	SELECT
+		ai.*
+	FROM
+		advertisement_information ai
+	LEFT JOIN  goods_details gd on gd.id=ai.url_parameter_id
+	LEFT JOIN goods_specification_details gsd on gsd.goods_id=gd.id
+	where ai.url_type=0
+	and gsd.id=#{goodsSpecificationDetailsId}
+	</select>
+
+
+
+<!-- APP 接口-->
+
+
+
+	<!-- 根据广告类型和广告是否有效查询广告信息-->
+	<select id="selectByTypeAndEffect" parameterType="com.jl.mis.model.AdvertisementInformation"  resultMap="BaseResultMap">
+		select * from advertisement_information where type=#{type} and effect=#{effect}
+			<if test="effectTime != null">
+				and DATE_FORMAT(NOW(),'%Y-%m-%d') = effect_time
+			</if>
+	</select>
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+</mapper>

@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jl.mis.mapper.AfterSaleDetailMapper">
+	<resultMap id="BaseResultMap" type="com.jl.mis.model.AfterSaleDetail">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="service_type" jdbcType="INTEGER" property="serviceType" />
+		
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="phone" jdbcType="VARCHAR" property="phone" />
+		<result column="status" jdbcType="INTEGER" property="status" />
+		<result column="order_id" jdbcType="INTEGER" property="orderId" />
+		<result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+		<association property="user" javaType="com.jl.mis.model.User"
+			resultMap="UserResultMap" />
+		<association property="orderTable" javaType="com.jl.mis.model.OrderTable"
+			resultMap="OrderTableResultMap" />
+		<collection property="afterSalePics" ofType="com.jl.mis.model.AfterSalePic"
+			resultMap="AfterSalePicResultMap" />
+	</resultMap>
+	<resultMap extends="BaseResultMap" id="ResultMapWithBLOBs"
+		type="com.jl.mis.model.AfterSaleDetail">
+		<result column="problem_description" jdbcType="LONGVARCHAR"
+			property="problemDescription" />
+	</resultMap>
+
+	<!-- 售后图片表 -->
+	<resultMap id="AfterSalePicResultMap" type="com.jl.mis.model.AfterSalePic">
+		<id column="aspId" jdbcType="INTEGER" property="id" />
+		<result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
+		<result column="after_sale_detail_id" jdbcType="INTEGER"
+			property="afterSaleDetailId" />
+	</resultMap>
+	
+	<!-- 订单表 -->
+	<resultMap id="OrderTableResultMap" type="com.jl.mis.model.OrderTable">
+		<id column="otId" jdbcType="INTEGER" property="id" />
+		<result column="order_no" jdbcType="VARCHAR" property="orderNo" />
+		<result column="order_original_price" jdbcType="DOUBLE"
+			property="orderOriginalPrice" />
+		<result column="order_present_price" jdbcType="DOUBLE"
+			property="orderPresentPrice" />
+		<result column="user_id" jdbcType="INTEGER" property="userId" />
+		<result column="place_order_time" jdbcType="TIMESTAMP"
+			property="placeOrderTime" />
+		<result column="order_state" jdbcType="INTEGER" property="orderState" />
+		<result column="consignee_name" jdbcType="VARCHAR" property="consigneeName" />
+		<result column="consignee_tel" jdbcType="VARCHAR" property="consigneeTel" />
+		<result column="consignee_address" jdbcType="VARCHAR" property="consigneeAddress" />
+		<result column="pay_type" jdbcType="INTEGER" property="payType" />
+		<result column="pay_time" jdbcType="TIMESTAMP" property="payTime" />
+		<result column="postage" jdbcType="DOUBLE" property="postage" />
+		<result column="postage_pay_type" jdbcType="INTEGER" property="postagePayType" />
+		<result column="deliver_goods_time" jdbcType="DATE" property="deliverGoodsTime" />
+		<result column="pay_mode" jdbcType="INTEGER" property="payMode" />
+		<result column="preferential_type" jdbcType="VARCHAR" property="preferentialType" />
+		<result column="car_id_send" jdbcType="VARCHAR" property="carIdSend" />
+		<result column="car_id_change_return" jdbcType="VARCHAR"
+			property="carIdChangeReturn" />
+		<result column="car_id_change_send" jdbcType="VARCHAR"
+			property="carIdChangeSend" />
+		<collection property="orderDetails" ofType="com.jl.mis.model.OrderDetail"
+			resultMap="OrderDetailResultMap" />
+	</resultMap>
+	
+	<!-- 订单详情 -->
+	<resultMap id="OrderDetailResultMap" type="com.jl.mis.model.OrderDetail">
+		<id column="odId" jdbcType="INTEGER" property="id" />
+		<result column="goods_details_id" jdbcType="INTEGER" property="goodsDetailsId" />
+		<result column="goods_quantity" jdbcType="INTEGER" property="goodsQuantity" />
+		<result column="goods_specification_details_id" jdbcType="INTEGER"
+			property="goodsSpecificationDetailsId" />
+		<result column="goods_purchasing_price" jdbcType="DOUBLE"
+			property="goodsPurchasingPrice" />
+		<result column="goods_original_price" jdbcType="DOUBLE"
+			property="goodsOriginalPrice" />
+		<result column="goods_payment_price" jdbcType="DOUBLE"
+			property="goodsPaymentPrice" />
+		<result column="goods_name" jdbcType="VARCHAR" property="goodsName" />
+		<result column="goods_cover_url" jdbcType="VARCHAR" property="goodsCoverUrl" />
+		<result column="goods_specification_name" jdbcType="VARCHAR"
+			property="goodsSpecificationName" />
+		<result column="odOrderId" jdbcType="INTEGER" property="orderId" />
+	</resultMap>
+
+	<!-- 用户详情 -->
+	<resultMap id="UserResultMap" type="com.jl.mis.model.User">
+		<id column="uId" jdbcType="INTEGER" property="id" />
+		<result column="uName" jdbcType="VARCHAR" property="name" />
+		<result column="uPhone" jdbcType="VARCHAR" property="phone" />
+		<result column="is_VIP" jdbcType="INTEGER" property="isVip" />
+		<result column="upicUrl" jdbcType="VARCHAR" property="picUrl" />
+	</resultMap>
+	
+
+
+	<sql id="Base_Column_List">
+		id, service_type, name, phone, status, order_id,
+		add_time
+	</sql>
+	<sql id="Blob_Column_List">
+		problem_description
+	</sql>
+
+	<!-- 根据主键查询信息 -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="ResultMapWithBLOBs">
+		select
+		id, service_type, problem_description, name, phone, status, order_id,
+		add_time
+		from after_sale_detail
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<!-- 根据主键删除 信息 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from after_sale_detail
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+
+	<!-- 保存全部信息 -->
+	<insert id="insert" parameterType="com.jl.mis.model.AfterSaleDetail">
+		insert into after_sale_detail (id, service_type, problem_description,
+		name, phone, status,
+		order_id, add_time)
+		values (#{id,jdbcType=INTEGER}, #{serviceType,jdbcType=INTEGER},
+		#{problemDescription,jdbcType=LONGVARCHAR},
+		#{name,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER},
+		#{orderId,jdbcType=INTEGER}, #{addTime,jdbcType=TIMESTAMP})
+	</insert>
+
+	<!-- 保存所选内容的信息 -->
+	<insert id="insertSelective" parameterType="com.jl.mis.model.AfterSaleDetail"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into after_sale_detail
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="serviceType != null">
+				service_type,
+			</if>
+			<if test="problemDescription != null">
+				problem_description,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="phone != null">
+				phone,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="orderId != null">
+				order_id,
+			</if>
+			<if test="addTime != null">
+				add_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="serviceType != null">
+				#{serviceType,jdbcType=INTEGER},
+			</if>
+			<if test="problemDescription != null">
+				#{problemDescription,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				#{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="orderId != null">
+				#{orderId,jdbcType=INTEGER},
+			</if>
+			<if test="addTime != null">
+				#{addTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- 根据主键更新所选内容 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.jl.mis.model.AfterSaleDetail">
+		update after_sale_detail
+		<set>
+			<if test="serviceType != null">
+				service_type = #{serviceType,jdbcType=INTEGER},
+			</if>
+			<if test="problemDescription != null">
+				problem_description = #{problemDescription,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				phone = #{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="orderId != null">
+				order_id = #{orderId,jdbcType=INTEGER},
+			</if>
+			<if test="addTime != null">
+				add_time = #{addTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<!-- 根据主键更新全部内容 -->
+	<update id="updateByPrimaryKey" parameterType="com.jl.mis.model.AfterSaleDetail">
+		update after_sale_detail
+		set service_type = #{serviceType,jdbcType=INTEGER},
+		problem_description = #{problemDescription,jdbcType=LONGVARCHAR},
+		name = #{name,jdbcType=VARCHAR},
+		phone = #{phone,jdbcType=VARCHAR},
+		status = #{status,jdbcType=INTEGER},
+		order_id = #{orderId,jdbcType=INTEGER},
+		add_time = #{addTime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+
+
+
+
+	<!-- 移动端使用 -->
+
+	<!-- 根据用户id 和 主键查询售后详情 -->
+	<select id="selectByUserIdAndPrimaryKey" resultMap="ResultMapWithBLOBs">
+		SELECT
+		asd.*, asp.id aspId,
+		asp.pic_url,
+		asp.after_sale_detail_id,
+		od.id odId,
+		od.goods_cover_url,
+		od.goods_details_id,
+		od.goods_name,
+		od.goods_original_price,
+		od.goods_payment_price,
+		od.goods_purchasing_price,
+		od.goods_quantity,
+		od.goods_specification_details_id,
+		od.goods_specification_name,
+		od.order_id odOrderId,
+		ot.id otId,
+		ot.car_id_change_return,
+		ot.car_id_change_send,
+		ot.car_id_send,
+		ot.consignee_address,
+		ot.consignee_name,
+		ot.consignee_tel,
+		ot.deliver_goods_time,
+		ot.order_no,
+		ot.order_original_price,
+		ot.order_present_price,
+		ot.order_state,
+		ot.pay_mode,
+		ot.pay_time,
+		ot.pay_type,
+		ot.place_order_time,
+		ot.postage,
+		ot.postage_pay_type,
+		ot.preferential_type,
+		ot.user_id,
+		u.id uId,
+		u.`name`
+		uName,
+		u.phone uPhone,
+		u.is_VIP,
+		u.pic_url upicUrl
+		FROM
+		after_sale_detail asd
+		LEFT JOIN after_sale_pic asp ON asp.after_sale_detail_id = asd.id
+		LEFT JOIN order_table ot ON asd.order_id = ot.id
+		LEFT JOIN order_detail od ON ot.id = od.order_id
+		LEFT JOIN `user` u ON u.id = ot.user_id
+		where asd.id=#{id}
+		and u.id=#{userId}
+	</select>
+	
+	<!-- 根据订单id 和 用户id 查询售后详情-->
+	<select id="selectByUserIdAndOrderId" resultMap="ResultMapWithBLOBs">
+		SELECT
+		asd.*, asp.id aspId,
+		asp.pic_url,
+		asp.after_sale_detail_id,
+		od.id odId,
+		od.goods_cover_url,
+		od.goods_details_id,
+		od.goods_name,
+		od.goods_original_price,
+		od.goods_payment_price,
+		od.goods_purchasing_price,
+		od.goods_quantity,
+		od.goods_specification_details_id,
+		od.goods_specification_name,
+		od.order_id odOrderId,
+		ot.id otId,
+		ot.car_id_change_return,
+		ot.car_id_change_send,
+		ot.car_id_send,
+		ot.consignee_address,
+		ot.consignee_name,
+		ot.consignee_tel,
+		ot.deliver_goods_time,
+		ot.order_no,
+		ot.order_original_price,
+		ot.order_present_price,
+		ot.order_state,
+		ot.pay_mode,
+		ot.pay_time,
+		ot.pay_type,
+		ot.place_order_time,
+		ot.postage,
+		ot.postage_pay_type,
+		ot.preferential_type,
+		ot.user_id,
+		u.id uId,
+		u.`name`
+		uName,
+		u.phone uPhone,
+		u.is_VIP,
+		u.pic_url upicUrl
+		FROM
+		after_sale_detail asd
+		LEFT JOIN after_sale_pic asp ON asp.after_sale_detail_id = asd.id
+		LEFT JOIN order_table ot ON asd.order_id = ot.id
+		LEFT JOIN order_detail od ON ot.id = od.order_id
+		LEFT JOIN `user` u ON u.id = ot.user_id
+		where asd.order_id = #{orderId,jdbcType=INTEGER}
+		and u.id=#{userId}
+	</select>
+	<!-- 根据订单id查询信息 -->
+	<select id="selectByOrderId" parameterType="java.lang.Integer"
+		resultMap="ResultMapWithBLOBs">
+		select
+		*
+		from after_sale_detail
+		where order_id = #{orderId,jdbcType=INTEGER}
+	</select>
+</mapper>
